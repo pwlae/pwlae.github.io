@@ -1,0 +1,138 @@
+<p class="lead">Recursion is when a function <b>calls itself</b> on a smaller piece of the problem. It sounds like a trick, but it is the natural way to handle things that contain smaller copies of themselves: trees, folders, and many puzzles.</p>
+
+<h3>The idea</h3>
+<p>Think of Russian dolls. You open a doll and find a smaller doll inside. You open that one, and there's an even smaller one. You stop when you reach the tiniest doll, the one that doesn't open.</p>
+<p>A recursive function works the same way. Every recursive function needs two rules:</p>
+<ol>
+  <li><b>A base case</b>: the tiniest doll. A small input where you know the answer straight away, so the function stops calling itself.</li>
+  <li><b>A smaller step</b>: every other call works on a <b>smaller</b> input than the one it was given, so it gets closer to the base case each time.</li>
+</ol>
+<p>Forget rule 1 or rule 2 and the function calls itself forever (until Python gives up with an error).</p>
+<p>Example: add up a list. The sum of <code>[3, 1, 2]</code> is "the first number, plus the sum of the rest". The sum of an empty list is 0. That's the base case.</p>
+<pre class="mermaid" data-alt="Calls go down: total of 3, 1, 2 calls total of 1, 2, which calls total of 2, which calls total of the empty list. The empty list returns 0. Answers come back up: 2 plus 0 is 2, 1 plus 2 is 3, 3 plus 3 is 6.">
+flowchart TD
+  A["total([3, 1, 2])<br/>= 3 + total([1, 2])"] --> B["total([1, 2])<br/>= 1 + total([2])"]
+  B --> C["total([2])<br/>= 2 + total([])"]
+  C --> D["total([]) = 0<br/>base case: stop"]
+  D -.->|"returns 0"| E["2 + 0 = 2"]
+  E -.->|"returns 2"| F["1 + 2 = 3"]
+  F -.->|"returns 3"| G["3 + 3 = 6"]
+</pre>
+<p>Calls go <b>down</b> until the base case. Then the answers come back <b>up</b>, one level at a time. Python remembers each waiting call on the <b>call stack</b>, a <a href="#stack">stack</a> of unfinished calls: the last call to start is the first to finish.</p>
+
+<h3>In Python</h3>
+<pre><code class="language-python">def total(nums):
+    # 1. base case: empty list
+    if not nums:
+        return 0
+    # 2. smaller step: the rest of the list
+    return nums[0] + total(nums[1:])
+
+def countdown(n):
+    if n == 0:          # base case
+        print("Go!")
+        return
+    print(n)
+    countdown(n - 1)    # smaller step
+</code></pre>
+<p><b>How to write one without getting lost.</b> Don't try to follow every call in your head. Instead, make a leap of faith: <i>assume the smaller call already works</i>. For <code>total</code>: "if <code>total(nums[1:])</code> gives me the sum of the rest, what do I do with it?" Add the first number. Done. Then check the base case. That's all.</p>
+<p><b>The recursion limit.</b> Python allows about <b>1000</b> calls waiting at once. A list of 5000 items in <code>total</code> crashes with <code>RecursionError</code>. For long lists, a plain loop is safer. Recursion shines when each call goes only a few levels deep, like halving a number or walking a tree.</p>
+
+<h3>Worked example: Fibonacci</h3>
+<p>The Fibonacci numbers are 0, 1, 1, 2, 3, 5, 8, … Each one is the sum of the two before it. That's already a recursive rule:</p>
+<pre><code class="language-python">def fib(n):
+    # base cases: fib(0) = 0, fib(1) = 1
+    if n &lt; 2:
+        return n
+    # two smaller calls
+    return fib(n - 1) + fib(n - 2)
+</code></pre>
+<p>It's correct, but slow. Here are all the calls that <code>fib(4)</code> makes:</p>
+<pre class="mermaid" data-alt="Call tree of fib(4). fib(4) calls fib(3) and fib(2). fib(3) calls fib(2) and fib(1). Each fib(2) calls fib(1) and fib(0). fib(2) is computed twice: once under fib(4) and once under fib(3).">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 10, "padding": 6}}}%%
+flowchart TD
+  A["fib(4)"] --> B["fib(3)"]
+  A --> C["fib(2)<br/>twice!"]
+  B --> D["fib(2)<br/>twice!"]
+  B --> E["fib(1)"]
+  D --> F["fib(1)"]
+  D --> G["fib(0)"]
+  C --> H["fib(1)"]
+  C --> I["fib(0)"]
+</pre>
+<p><code>fib(2)</code> is worked out twice. For <code>fib(30)</code>, the same small answers are recomputed again and again: about 2.7 million calls in total, for 31 different answers. Each step up in <code>n</code> makes about 1.6 times more calls, so the cost grows exponentially.</p>
+<p>The fix: <b>remember</b> each answer the first time you compute it. This is called <b>memoisation</b>. Python does it for you with <code>@cache</code>:</p>
+<pre><code class="language-python">from functools import cache
+
+@cache   # remembers every fib(n) it has seen
+def fib(n):
+    if n &lt; 2:
+        return n
+    return fib(n - 1) + fib(n - 2)
+</code></pre>
+<p>Now each <code>fib(k)</code> is computed only once, so <code>fib(n)</code> takes O(n) time instead of exponential time. "Recursion + remember the answers" has a name: <b>dynamic programming</b>. It gets its own lessons later.</p>
+
+<h3>Your turn</h3>
+<p>For each problem, say the two rules out loud first: what is the base case, and what is the smaller step?</p>
+
+<leetcode slug="fibonacci-number" num="509" title="Fibonacci Number" level="Easy" minutes="5">
+  <hint>The worked example. Write it from memory: base case <code>n &lt; 2</code>, then two smaller calls. Add <code>@cache</code> to make it fast.</hint>
+  <solution>
+<pre><code class="language-python">from functools import cache
+
+class Solution:
+    def fib(self, n: int) -> int:
+        @cache
+        def f(k):
+            if k &lt; 2:               # base cases: f(0) = 0, f(1) = 1
+                return k
+            return f(k - 1) + f(k - 2)
+        return f(n)
+# O(n) time: each f(k) is computed once.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="power-of-two" num="231" title="Power of Two" level="Easy" minutes="10">
+  <hint>Base cases: <code>1</code> is a power of two (2⁰). Zero, negatives and odd numbers above 1 are not. Smaller step: if <code>n</code> is even, the answer for <code>n</code> is the answer for <code>n // 2</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isPowerOfTwo(self, n: int) -> bool:
+        if n == 1:                  # base case: 2 to the power 0
+            return True
+        if n &lt;= 0 or n % 2 == 1:    # base case: can't be a power of two
+            return False
+        return self.isPowerOfTwo(n // 2)   # smaller step: halve it
+# Each call halves n, so about log n calls: O(log n).
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="power-of-three" num="326" title="Power of Three" level="Easy" minutes="10">
+  <hint>The same shape as Power of Two. Swap "even" for "divides by 3" and "halve" for "divide by 3".</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isPowerOfThree(self, n: int) -> bool:
+        if n == 1:                  # base case: 3 to the power 0
+            return True
+        if n &lt;= 0 or n % 3 != 0:    # base case: not a power of three
+            return False
+        return self.isPowerOfThree(n // 3)  # smaller step
+</code></pre>
+  </solution>
+</leetcode>
+
+<p><b>Bonus: solve an old problem a new way.</b> Go back to <a href="#p-reverse-linked-list">Reverse Linked List</a> from the linked-list lesson and solve it with recursion. Leap of faith: assume <code>reverseList(head.next)</code> already reverses the rest and returns its new head. Now <code>head.next</code> is the <i>last</i> node of that reversed part. Hook <code>head</code> on after it, and set <code>head.next = None</code>. Base case: an empty list or a single node is already reversed.</p>
+
+<fact title="Your computer's folders are recursive">
+  <p>A folder holds files and other folders, which hold files and other folders, and so on: Russian dolls again. So any tool that works on a whole folder has to dig through it level by level.</p>
+  <p>The Unix command <code>du</code> ("disk usage") reports how much space a folder takes. Its size is the size of its own files <b>plus</b> the size of each sub-folder, and each sub-folder's size is worked out the same way. The base case is a folder with no sub-folders. <code>rm -r</code>, <code>cp -r</code> and <code>grep -r</code> work the same way. The <code>-r</code> stands for "recursive".</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Two rules: a base case that stops, and every call works on a smaller input.</li>
+    <li>Leap of faith: assume the smaller call works, then just use its answer.</li>
+    <li>Same small calls repeated? Add <code>@cache</code> (memoisation). Python's limit is about 1000 calls deep.</li>
+  </ul>
+</recap>
