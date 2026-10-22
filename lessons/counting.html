@@ -1,0 +1,109 @@
+<p class="lead">Lots of problems become easy once you know <b>how many times each thing appears</b>. Build that tally first, then answer the question from the tally.</p>
+
+<h3>The idea</h3>
+<p>Picture a teacher counting votes on the board: one tick next to a name for every vote. When counting is done, questions like "who won?", "did anyone get exactly one vote?" or "did two people tie?" are answered just by looking at the board.</p>
+<p>In code, the board is a <code>dict</code> from item to count, often called a <b>frequency map</b>.</p>
+
+<pre class="mermaid" data-alt="The word banana becomes a tally: b appears 1 time, a appears 3 times, n appears 2 times.">
+flowchart TD
+  W["'banana'"] --> C["count each letter"]
+  C --> B["b: 1"]
+  C --> A["a: 3"]
+  C --> N["n: 2"]
+</pre>
+
+<h3>In Python</h3>
+<p>By hand, with the <code>.get(key, 0)</code> trick from the toolkit lesson:</p>
+<pre><code class="language-python">count = {}
+for ch in "banana":
+    count[ch] = count.get(ch, 0) + 1
+# {'b': 1, 'a': 3, 'n': 2}
+</code></pre>
+<p>Python has a ready-made tool for this, <code>Counter</code>. It is a dict with extras:</p>
+<pre><code class="language-python">from collections import Counter
+
+count = Counter("banana")   # Counter({'a': 3, 'n': 2, 'b': 1})
+count["a"]                  # 3
+count["z"]                  # 0, missing keys count as 0 (no error)
+count.most_common(1)        # [('a', 3)], the top item
+Counter("listen") == Counter("silent")   # True: same letters, same counts
+</code></pre>
+<p>Building the tally is one pass: <b>O(n) time</b>, and <b>O(k) space</b> where k is the number of different items. On LeetCode, <code>Counter</code> is already imported for you.</p>
+
+<h3>Two passes: count, then look</h3>
+<p>The usual shape is two loops one after the other (not one inside the other, so still O(n)):</p>
+<ol>
+  <li><b>Pass 1:</b> build the counts.</li>
+  <li><b>Pass 2:</b> go through the input (or the counts) again and answer the question.</li>
+</ol>
+<p>For example, "first letter that appears only once": pass 1 counts every letter, pass 2 walks the word in order and returns the first letter whose count is 1.</p>
+
+<h3>Shortcut for letters only</h3>
+<p>If the input is only lowercase letters <code>a</code> to <code>z</code>, you can use a list of 26 zeros instead of a dict. The letter's position is <code>ord(ch) - ord("a")</code> (from the Strings lesson):</p>
+<pre><code class="language-python">count = [0] * 26
+for ch in "banana":
+    count[ord(ch) - ord("a")] += 1
+# count[0] is "a": 3,  count[1] is "b": 1,  count[13] is "n": 2
+</code></pre>
+
+<h3>Your turn</h3>
+
+<leetcode slug="first-unique-character-in-a-string" num="387" title="First Unique Character in a String" level="Easy" minutes="10">
+  <hint>Two passes. Count all letters first. Then walk the string with <code>enumerate</code> and return the first index whose letter has count 1.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def firstUniqChar(self, s: str) -> int:
+        count = Counter(s)                 # pass 1: tally
+        for i, ch in enumerate(s):         # pass 2: in original order
+            if count[ch] == 1:
+                return i
+        return -1
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="majority-element" num="169" title="Majority Element" level="Easy" minutes="10">
+  <hint>Count everything, then return the number whose count is bigger than <code>len(nums) // 2</code>. <code>most_common(1)</code> does it in one call.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        return Counter(nums).most_common(1)[0][0]
+# O(n) time, O(n) space.
+#
+# Bonus, O(1) space (Boyer-Moore voting): keep one candidate and a score.
+# Same number as the candidate: +1. Different: -1. Score hits 0: pick a new
+# candidate. The majority has more votes than everyone else combined, so it
+# is the one left standing.
+#     candidate, score = None, 0
+#     for x in nums:
+#         if score == 0:
+#             candidate = x
+#         score += 1 if x == candidate else -1
+#     return candidate
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="unique-number-of-occurrences" num="1207" title="Unique Number of Occurrences" level="Easy" minutes="10">
+  <hint>Count first. Then look only at the counts (<code>count.values()</code>): are they all different? Putting them in a <code>set</code> removes repeats.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def uniqueOccurrences(self, arr: List[int]) -> bool:
+        counts = list(Counter(arr).values())   # e.g. [3, 2, 1]
+        return len(counts) == len(set(counts))  # no count repeated?
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Counting billions of visitors in 12 KB">
+  <p>To count <i>exactly</i> how many different people visited a website, you'd have to remember every visitor: gigabytes for a big site. Often "about 2.3 million, give or take 1%" is good enough.</p>
+  <p><b>HyperLogLog</b> gives that kind of estimate using a tiny fixed amount of memory. Redis, a popular in-memory database, has it built in (<code>PFADD</code> / <code>PFCOUNT</code>): each counter uses at most 12 KB, whether it has seen a thousand items or billions, with an error of about 0.81%. Analytics tools use the same idea to count unique users.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Tally first: <code>Counter(items)</code> or <code>count[x] = count.get(x, 0) + 1</code>. O(n).</li>
+    <li>Then answer from the tally, often in a second pass over the input to keep the original order.</li>
+    <li>Letters only? A list of 26 counts with <code>ord(ch) - ord("a")</code> also works.</li>
+  </ul>
+</recap>
