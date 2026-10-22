@@ -96,7 +96,9 @@ Markup available in lesson files (build.py expands it):
 ```
 
 Mermaid tips: keep diagrams narrow (`flowchart TD` or short `LR` rows) so they read on a
-phone. Labels are plain text (`<br/>` for line breaks; no `<b>`). Theme is Mermaid's standard "default" theme.
+phone. Check the built `<img ... width=...>` in index.html: aim for **≤ 450px wide**. Wider
+images shrink to fit the phone and the text gets tiny. Don't put two subgraphs side by side;
+use two separate diagrams instead. Labels are plain text (`<br/>` for line breaks; no `<b>`). Theme is Mermaid's standard "default" theme.
 Supported: flowchart, sequence, state, class, etc.
 
 Look at `lessons/python-toolkit.html` as the model lesson.

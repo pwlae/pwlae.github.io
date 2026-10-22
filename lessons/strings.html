@@ -1,0 +1,126 @@
+<p class="lead">A string is a row of characters, so almost everything you learned about lists works on strings too. This lesson adds the few string-only rules and tools you need for LeetCode.</p>
+
+<h3>The idea</h3>
+<p>Think of a string as a row of letter tiles, like in Scrabble. Each tile has an index, starting from 0, just like a list.</p>
+<pre><code class="language-python">s = "hello"
+s[0]        # "h"
+s[-1]       # "o"
+len(s)      # 5
+s[1:4]      # "ell"
+s[::-1]     # "olleh", reversed
+for ch in s:
+    print(ch)   # h, e, l, l, o
+</code></pre>
+<p>There is one big difference from lists: <b>you can't change a string</b>. <code>s[0] = "H"</code> is an error. Strings are <b>immutable</b> ("unchangeable"). Every "change" actually builds a brand-new string.</p>
+
+<h3>Build a list, then join</h3>
+<p>Because every change makes a new string, gluing letters on one at a time with <code>+=</code> can copy the whole string again and again. The safe habit: collect the pieces in a list, then glue them once with <code>"".join(...)</code>.</p>
+
+<p><b>With <code>s += ch</code></b>, every step makes a new copy:</p>
+<pre class="mermaid" data-alt="With plus-equals, each step makes a new copy of the string: h, then he, then hel, then hell, then hello.">
+flowchart TD
+  A1["h"] --> A2["he"] --> A3["hel"] --> A4["hell"] --> A5["hello"]
+</pre>
+<p><b>With a list and join</b>, you collect the pieces and copy once at the end:</p>
+<pre class="mermaid" data-alt="With a list and join, the pieces h, e, l, l, o are collected in a list and joined once into hello.">
+flowchart LR
+  B1["['h', 'e', 'l', 'l', 'o']"] -->|"''.join()"| B2["hello"]
+</pre>
+
+<pre><code class="language-python">pieces = []
+for ch in "hello":
+    pieces.append(ch.upper())
+result = "".join(pieces)    # "HELLO"
+</code></pre>
+<p>For short strings either way is fine. For long ones, the list-then-join way is reliably <b>O(n)</b>.</p>
+
+<h3>Handy string tools</h3>
+<pre><code class="language-python">"a,b,c".split(",")       # ["a", "b", "c"]
+"  hi  ".strip()          # "hi" (removes spaces at both ends)
+"Hello".lower()           # "hello"
+"a.b".replace(".", "!")   # "a!b"
+"abc".isalpha()           # True: only letters?
+"123".isdigit()           # True: only digits?
+"-".join(["a", "b"])      # "a-b"
+</code></pre>
+
+<h3>Characters are numbers underneath</h3>
+<p>Every character has a number code. <code>ord</code> turns a character into its number, and <code>chr</code> turns it back. Letters are in order, so you can do maths with them:</p>
+<pre><code class="language-python">ord("a")        # 97
+ord("b")        # 98
+chr(97)         # "a"
+ord("A")        # 65, capitals come 32 before lowercase
+
+ord("c") - ord("a")   # 2: "c" is letter number 2 (counting from 0)
+</code></pre>
+
+<h3>Your turn</h3>
+<p>Easiest first. For the first two, try both the built-in way and a "by hand" loop.</p>
+
+<leetcode slug="to-lower-case" num="709" title="To Lower Case" level="Easy" minutes="5">
+  <hint><code>s.lower()</code> is one line. By hand: for each character, if it is between "A" and "Z", add 32 to its <code>ord</code> and turn it back with <code>chr</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def toLowerCase(self, s: str) -> str:
+        pieces = []
+        for ch in s:
+            if "A" &lt;= ch &lt;= "Z":
+                ch = chr(ord(ch) + 32)   # "A" (65) -> "a" (97)
+            pieces.append(ch)
+        return "".join(pieces)
+# One line also works: return s.lower()
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="defanging-an-ip-address" num="1108" title="Defanging an IP Address" level="Easy" minutes="5">
+  <hint>Replace every <code>"."</code> with <code>"[.]"</code>. There's a method for that.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def defangIPaddr(self, address: str) -> str:
+        return address.replace(".", "[.]")
+# By hand: loop, append "[.]" for a dot, else the character, then join.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="length-of-last-word" num="58" title="Length of Last Word" level="Easy" minutes="10">
+  <hint>Watch out for spaces at the end, like <code>"fly me   to   the moon  "</code>. <code>split()</code> with no argument splits on any run of spaces and drops empty pieces.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def lengthOfLastWord(self, s: str) -> int:
+        return len(s.split()[-1])
+# Without split: walk from the end, skip spaces,
+# then count letters until the next space. O(n), O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="longest-common-prefix" num="14" title="Longest Common Prefix" level="Easy" minutes="15">
+  <hint>Look at the first word, one position <code>i</code> at a time. Check that every other word has the same character at <code>i</code>. Stop at the first mismatch, or when a word is too short.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        first = strs[0]
+        for i in range(len(first)):
+            for word in strs[1:]:
+                # word too short, or a different letter here: stop
+                if i == len(word) or word[i] != first[i]:
+                    return first[:i]
+        return first   # the whole first word is shared
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="UTF-8 was sketched on a placemat">
+  <p>Computers store text as numbers, and for years every country used different numbering systems that clashed. In September 1992, Ken Thompson and Rob Pike designed <b>UTF-8</b> over dinner in a New Jersey diner, sketching it on a placemat. It stores plain English letters in 1 byte and other characters in 2–4 bytes.</p>
+  <p>Today almost every web page uses UTF-8. It's why <code>len("é")</code> in Python is 1 (one character) while <code>len("é".encode())</code> is 2 (two bytes).</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Strings work like lists (index, slice, loop, <code>[::-1]</code>) but can't be changed.</li>
+    <li>Build long strings as a list of pieces, then <code>"".join(pieces)</code>.</li>
+    <li><code>ord</code>/<code>chr</code> turn characters into numbers and back: <code>ord(c) - ord("a")</code> is the letter's position.</li>
+  </ul>
+</recap>
