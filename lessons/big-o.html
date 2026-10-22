@@ -1,0 +1,131 @@
+<p class="lead">Big O is a short way to say <b>how much slower your code gets when the input gets bigger</b>. You need it to tell whether your answer will pass on LeetCode before you even press Submit.</p>
+
+<h3>The idea</h3>
+<p>Imagine your input grows from 1,000 items to 1,000,000. Does your code take the same time? A thousand times longer? A million times longer? Big O answers that question, and ignores small details like "this line runs twice".</p>
+<p>Here are the five you will meet most, with everyday pictures:</p>
+<ul>
+  <li><b>O(1), constant.</b> Opening locker number 42. It takes the same time with 10 lockers or 10,000.</li>
+  <li><b>O(log n), logarithmic.</b> Finding a name in a paper phone book by opening it in the middle, then the middle of the half you need, and so on. Doubling the book adds just one more step.</li>
+  <li><b>O(n), linear.</b> Walking down a train carriage checking every seat. Twice the seats, twice the time.</li>
+  <li><b>O(n log n).</b> Good sorting. A bit more than linear, still fast.</li>
+  <li><b>O(n²), quadratic.</b> Everyone at a party shakes hands with everyone else. Twice the people, <i>four</i> times the handshakes.</li>
+</ul>
+<p>"n" just means "how big the input is", usually the length of the list or string.</p>
+
+<pre class="mermaid" data-alt="Steps needed for one million items. O(1): 1 step. O(log n): about 20 steps. O(n): 1 million steps. O(n log n): about 20 million steps. O(n squared): a million million steps, which would take about a day in Python.">
+flowchart TD
+  A["O(1): 1 step"] --> B["O(log n): about 20 steps"]
+  B --> C["O(n): 1,000,000 steps"]
+  C --> D["O(n log n): about 20,000,000 steps"]
+  D --> E["O(n²): 1,000,000,000,000 steps<br/>(about a day in Python)"]
+</pre>
+<p class="muted">Steps for n = 1,000,000, fastest at the top. Python does very roughly 10 million simple steps a second.</p>
+
+<h3>How to spot it in Python</h3>
+<p>You don't need maths. Look at the shape of the code:</p>
+<pre><code class="language-python">nums[5]                 # O(1): jump straight to a box
+x in some_set           # O(1): sets and dicts look up instantly
+x in some_list          # O(n): checks the boxes one by one
+
+for x in nums:          # one loop over n items: O(n)
+    total += x
+
+for a in nums:          # a loop inside a loop: O(n²)
+    for b in nums:
+        if a + b == 10:
+            count += 1
+
+sorted(nums)            # O(n log n)
+</code></pre>
+<p>Watch out for hidden loops: <code>x in some_list</code>, <code>nums.index(x)</code>, <code>nums.count(x)</code> and slicing <code>nums[a:b]</code> all walk through the list. Put one inside a <code>for</code> loop and you have O(n²) without seeing two loops.</p>
+
+<h3>Memory counts too</h3>
+<p>Big O also describes <b>extra memory</b> ("space"). Keeping a few variables like <code>total</code> or <code>best</code> is O(1) space. Building a new list or set as big as the input is O(n) space. Often you trade memory for speed: a set costs O(n) memory but turns O(n) lookups into O(1).</p>
+
+<h3>Will my answer pass?</h3>
+<p>Every LeetCode problem lists limits like <code>1 &lt;= nums.length &lt;= 10^4</code>. Use them as a quick check before you code:</p>
+<table>
+  <tr><th>Biggest n</th><th>What is usually fast enough</th></tr>
+  <tr><td>up to about 1,000</td><td>O(n²) is fine</td></tr>
+  <tr><td>up to about 10,000</td><td>O(n²) is borderline in Python. Try for better</td></tr>
+  <tr><td>100,000 or more</td><td>you need O(n log n) or O(n)</td></tr>
+</table>
+<p>So if n is small, the simple double loop is a perfectly good answer. Don't make it clever when it doesn't need to be.</p>
+
+<h3>Worked example</h3>
+<p>"Count how many numbers in the list are smaller than each number." The simple way compares every pair:</p>
+<pre><code class="language-python">result = []
+for a in nums:              # n times...
+    smaller = 0
+    for b in nums:          # ...n times each
+        if b &lt; a:
+            smaller += 1
+    result.append(smaller)
+# n × n comparisons: O(n²) time, O(n) space for the result
+</code></pre>
+<p>If the list has 500 numbers, that's 250,000 comparisons: instant. With 1,000,000 numbers it's a million million: far too slow. The problem's limits tell you which world you are in.</p>
+
+<h3>Your turn</h3>
+<p>For each problem, say the Big O of your answer out loud (or in your head on the train) before you submit.</p>
+
+<leetcode slug="find-numbers-with-even-number-of-digits" num="1295" title="Find Numbers with Even Number of Digits" level="Easy" minutes="5">
+  <hint><code>len(str(x))</code> is the number of digits. Count the numbers where it is even.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def findNumbers(self, nums: List[int]) -> int:
+        count = 0
+        for x in nums:
+            if len(str(x)) % 2 == 0:   # even number of digits
+                count += 1
+        return count
+# One loop: O(n). Each number has at most 6 digits, so str() is O(1) here.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="palindrome-number" num="9" title="Palindrome Number" level="Easy" minutes="10">
+  <hint>A palindrome reads the same backwards. <code>s[::-1]</code> reverses a string. Negative numbers can never be palindromes (the "-" is only at the front).</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isPalindrome(self, x: int) -> bool:
+        s = str(x)
+        return s == s[::-1]
+# O(d) time and space, where d is the number of digits.
+# The follow-up asks for no string: build the reversed number
+# with x % 10 (last digit) and x // 10 (drop it). Same O(d) time, O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="how-many-numbers-are-smaller-than-the-current-number" num="1365" title="How Many Numbers Are Smaller Than the Current Number" level="Easy" minutes="10">
+  <hint>Check the limits: the list has at most 500 numbers. Is the double loop from the worked example fast enough?</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def smallerNumbersThanCurrent(self, nums: List[int]) -> List[int]:
+        result = []
+        for a in nums:
+            smaller = 0
+            for b in nums:
+                if b &lt; a:
+                    smaller += 1
+            result.append(smaller)
+        return result
+# O(n²), and with n ≤ 500 that's at most 250,000 steps: fast enough.
+# Faster idea for later: sort a copy, and the first position of each
+# number in the sorted list is how many numbers are smaller. O(n log n).
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="When the worst case is an attack">
+  <p>A Python <code>dict</code> is O(1) on average, but if many keys land on the same shelf it slows down to O(n). In 2003, researchers Scott Crosby and Dan Wallach showed that attackers could <b>pick keys on purpose</b> to make that happen. In 2011 the same trick was shown to freeze web servers in PHP, Java, Ruby and Python by sending one form full of carefully chosen field names.</p>
+  <p>Python's fix was to add a random secret to its string hashing, chosen fresh every time Python starts. It is on by default since Python 3.3, so attackers can no longer guess which keys collide.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Big O = how the work grows as the input grows. Common ones, fast to slow: O(1), O(log n), O(n), O(n log n), O(n²).</li>
+    <li>One loop is O(n), a loop inside a loop is O(n²), and <code>in list</code> hides a loop. <code>in set</code> doesn't.</li>
+    <li>Read the limits first: small n means the simple answer is fine.</li>
+  </ul>
+</recap>
