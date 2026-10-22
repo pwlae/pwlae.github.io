@@ -1,0 +1,8 @@
+{
+  "name": "commute-algorithms",
+  "private": true,
+  "description": "Build-time tools only. The site itself ships no npm code.",
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "11.16.0"
+  }
+}

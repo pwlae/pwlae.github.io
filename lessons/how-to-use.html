@@ -1,0 +1,57 @@
+<p class="lead">This guide is for people who learn on the way to work. One lesson fits one commute: about 10 minutes of reading, then a few small LeetCode problems.</p>
+
+<h3>The idea</h3>
+<p>You get better at algorithms by solving <b>many easy problems quickly</b>, not by spending three days on one hard problem. Each solved problem is a small win, and the small wins add up.</p>
+<p>So every lesson works the same way:</p>
+<ol>
+  <li><b>Read the idea.</b> Short, plain words, one picture.</li>
+  <li><b>See it in Python.</b> One small piece of code you can reuse.</li>
+  <li><b>Solve 3–6 problems</b> on LeetCode, easiest first. Each one has a time box.</li>
+</ol>
+
+<pre class="mermaid" data-alt="The study loop: read the lesson, try a problem. If you are stuck for 15 minutes, open the hint. Still stuck after 5 more minutes, read the solution and type it yourself. Then mark it solved and go to the next problem.">
+flowchart TD
+  A["Read the lesson"] --> B["Try a problem"]
+  B --> C{"Solved?"}
+  C -->|yes| F["Tick Solved, next problem"]
+  C -->|"stuck 15 min"| D["Open the hint"]
+  D --> E{"Solved?"}
+  E -->|yes| F
+  E -->|"stuck 5 more min"| G["Read the solution,<br/>then type it yourself"]
+  G --> F
+  F --> B
+</pre>
+
+<h3>The 15-minute rule</h3>
+<p>Your commute ends whether you finished or not. If you think too long, you lose the thread by the next train. So:</p>
+<ul>
+  <li><b>Stuck for 15 minutes?</b> Open the <b>Hint</b>.</li>
+  <li><b>Stuck 5 minutes after that?</b> Open the <b>Solution</b>. Read it, close it, and type it in LeetCode yourself. This still counts. You learned the trick.</li>
+  <li><b>Tomorrow,</b> solve that problem again from memory. It should take a few minutes.</li>
+</ul>
+<p>Move to the next lesson when the easy problems feel quick, about 10 minutes each. You do not need to be perfect.</p>
+
+<h3>Opening problems</h3>
+<p>Every problem looks like this card. Tap the title to open it on LeetCode. If the LeetCode app is installed, your phone may open it there.</p>
+<leetcode slug="two-sum" num="1" title="Two Sum" level="Easy" minutes="15">
+  <hint>This is only an example card. You will meet this problem properly in the lesson on hash maps.</hint>
+</leetcode>
+<p>Tick <b>Solved</b> when you are done. Ticks are saved on this phone only. There is no account and nothing is sent anywhere.</p>
+
+<h3>Reading on paper</h3>
+<p>Prefer paper to a screen on the morning train? Every lesson has a <b>Print this lesson</b> button. It gives you a clean black-and-white page: hints open, problem links written out, and solutions moved to the last page so you do not see them by accident. On a phone, choose <b>Save as PDF</b> in the print screen.</p>
+
+<h3>No signal in the tunnel</h3>
+<p>Open this page once while you have signal. After that it works offline, pictures included. You still need signal to submit on LeetCode. You can read the problem, think, and write your answer on paper until the next station with signal.</p>
+
+<fact title="Spaced repetition">
+  <p>Solving a problem again "tomorrow" is based on the <b>spacing effect</b>. Hermann Ebbinghaus measured it on himself in the 1880s: you remember much longer when you review across days instead of all at once. Flashcard apps like Anki plan your reviews around this idea.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>One lesson per commute: read, then solve small problems.</li>
+    <li>15 minutes stuck, open the hint. 5 more, read the solution and retype it.</li>
+    <li>Many quick wins beat one long fight.</li>
+  </ul>
+</recap>

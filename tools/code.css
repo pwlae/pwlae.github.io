@@ -1,0 +1,8 @@
+/* Pygments token colours. Dark enough to read when printed in black and white. */
+.code .k,.code .kn,.code .kc,.code .kd,.code .kr,.code .ow{color:#7a1fa2;font-weight:600}
+.code .nf,.code .nc,.code .fm{color:#1a4fb4}
+.code .nb,.code .bp{color:#005c7a}
+.code .s,.code .s1,.code .s2,.code .sa,.code .se,.code .si,.code .sd{color:#0f6b2d}
+.code .m,.code .mi,.code .mf,.code .mh{color:#a34800}
+.code .c,.code .c1,.code .ch,.code .cm{color:#6a6a6a;font-style:italic}
+.code .nd{color:#a34800}

@@ -1,0 +1,146 @@
+<p class="lead">Before any algorithm, you need a few Python tools you will use in almost every problem: lists, loops, dictionaries and sets. This lesson is the toolbox.</p>
+
+<h3>What a LeetCode answer looks like</h3>
+<p>LeetCode gives you a class with one method. You fill in the method and <code>return</code> the answer. You never read input or print output yourself.</p>
+<pre><code class="language-python">class Solution:
+    def getConcatenation(self, nums: List[int]) -> List[int]:
+        return nums + nums
+</code></pre>
+<p><code>nums: List[int]</code> is only a label: "nums is a list of whole numbers". <code>-> List[int]</code> says what you return. Python does not check these labels. They are there to help you read.</p>
+
+<h3>Lists: a row of boxes</h3>
+<p>A list is a row of boxes. Each box has a number called its <b>index</b>, starting from <b>0</b>.</p>
+<pre class="mermaid" data-alt="A list with values 7, 2, 9, 4. Index 0 holds 7, index 1 holds 2, index 2 holds 9, index 3 holds 4. Negative indexes count from the end: -1 is 4.">
+flowchart LR
+  subgraph nums
+    direction LR
+    A["index 0<br/>7"] --- B["index 1<br/>2"] --- C["index 2<br/>9"] --- D["index 3 (or -1)<br/>4"]
+  end
+</pre>
+<pre><code class="language-python">nums = [7, 2, 9, 4]
+nums[0]        # 7, the first box
+nums[-1]       # 4, the last box
+len(nums)      # 4 boxes
+nums[1:3]      # [2, 9], from index 1 up to (not including) 3
+nums.append(5) # add a box at the end -> [7, 2, 9, 4, 5]
+</code></pre>
+
+<h3>Loops: visit every box</h3>
+<p>Most easy problems are "walk through the list once and keep track of something".</p>
+<pre><code class="language-python">for x in nums:                 # just the values
+    print(x)
+
+for i in range(len(nums)):     # just the indexes 0, 1, 2, ...
+    print(i, nums[i])
+
+for i, x in enumerate(nums):   # both at once (usually the nicest)
+    print(i, x)
+</code></pre>
+
+<h3>Handy built-ins</h3>
+<pre><code class="language-python">sum(nums)              # add everything up
+max(nums), min(nums)   # biggest, smallest
+sorted(nums)           # a new sorted list, nums stays the same
+[x * 2 for x in nums]  # a new list built from nums ("list comprehension")
+</code></pre>
+
+<h3>Dictionaries: labelled boxes</h3>
+<p>A dictionary (<code>dict</code>) stores <b>key → value</b> pairs, like a phone book. Looking up a key is instant. You do not search through everything.</p>
+<pre><code class="language-python">age = {"ann": 31, "bob": 25}
+age["ann"]               # 31
+age["cat"] = 40          # add or change
+"bob" in age             # True
+age.get("dan", 0)        # 0 if "dan" is missing (no error)
+
+count = {}
+for word in ["a", "b", "a"]:
+    count[word] = count.get(word, 0) + 1   # {"a": 2, "b": 1}
+</code></pre>
+
+<h3>Sets: "have I seen this?"</h3>
+<p>A set keeps each value once, and checking "is it in there?" is instant.</p>
+<pre><code class="language-python">seen = set()
+seen.add(3)
+3 in seen          # True
+len(set([1, 1, 2]))  # 2, duplicates are dropped
+</code></pre>
+
+<h3>Your turn</h3>
+<p>These problems only need lists and loops. Aim for 5–10 minutes each.</p>
+
+<leetcode slug="concatenation-of-array" num="1929" title="Concatenation of Array" level="Easy" minutes="5">
+  <hint>Adding two lists with <code>+</code> puts them one after the other.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def getConcatenation(self, nums: List[int]) -> List[int]:
+        return nums + nums
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="running-sum-of-1d-array" num="1480" title="Running Sum of 1d Array" level="Easy" minutes="5">
+  <hint>Keep a running <code>total</code>. For each number, add it to the total and append the total to a new list.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def runningSum(self, nums: List[int]) -> List[int]:
+        result = []
+        total = 0
+        for x in nums:
+            total += x
+            result.append(total)
+        return result
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="shuffle-the-array" num="1470" title="Shuffle the Array" level="Easy" minutes="10">
+  <hint>The x's are at indexes <code>0..n-1</code>. The y's are at <code>n..2n-1</code>. So the pair number <code>i</code> is <code>nums[i]</code> and <code>nums[i + n]</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def shuffle(self, nums: List[int], n: int) -> List[int]:
+        result = []
+        for i in range(n):
+            result.append(nums[i])      # x_i
+            result.append(nums[i + n])  # y_i
+        return result
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="richest-customer-wealth" num="1672" title="Richest Customer Wealth" level="Easy" minutes="5">
+  <hint>Each row is one customer. <code>sum(row)</code> is their wealth. You want the biggest one.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def maximumWealth(self, accounts: List[List[int]]) -> int:
+        return max(sum(row) for row in accounts)
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="number-of-good-pairs" num="1512" title="Number of Good Pairs" level="Easy" minutes="10">
+  <hint>The list is small, so two loops are fine: for every <code>i</code>, check every <code>j</code> after it. Bonus: a <code>dict</code> of counts makes it one loop.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def numIdenticalPairs(self, nums: List[int]) -> int:
+        pairs = 0
+        count = {}
+        for x in nums:
+            # x makes a good pair with every equal number seen before it
+            pairs += count.get(x, 0)
+            count[x] = count.get(x, 0) + 1
+        return pairs
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Why append is fast">
+  <p>A Python list asks for <b>a bit more memory than it needs</b>, about 12% extra. Most <code>append</code> calls then just fill a spare box. Only now and then does the list move to a bigger block of memory. Java's <code>ArrayList</code>, C++'s <code>std::vector</code> and Go's slices use the same trick, so adding to the end is cheap on average in all of them.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Lists start at index 0. <code>nums[-1]</code> is the last item.</li>
+    <li><code>for i, x in enumerate(nums)</code> gives index and value together.</li>
+    <li><code>dict</code> for "key → value", <code>set</code> for "have I seen it?". Both look things up instantly.</li>
+  </ul>
+</recap>
