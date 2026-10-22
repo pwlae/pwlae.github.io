@@ -1,0 +1,160 @@
+<p class="lead">A linked list is a chain of small boxes, where each box knows only <b>where the next one is</b>. Most linked-list problems are about walking that chain carefully and re-pointing arrows without losing anything.</p>
+
+<h3>The idea</h3>
+<p>Think of a treasure hunt. Each note has a clue (the value) and says where the next note is hidden. To reach note 5 you can't jump there. You have to follow notes 1, 2, 3, 4. The last note says "the end".</p>
+<p>Each box is called a <b>node</b>. It holds a <code>val</code> and a <code>next</code> arrow pointing to the following node. The last node's <code>next</code> is <code>None</code>. The first node is the <b>head</b>, and you're usually given just that.</p>
+
+<pre class="mermaid" data-alt="A linked list: head node 1 points to node 2, which points to node 3, which points to None.">
+%%{init: {"flowchart": {"rankSpacing": 22, "nodeSpacing": 20}}}%%
+flowchart LR
+  H["1 (head)"] --> B["2"] --> C["3"] --> N["None"]
+</pre>
+
+<h3>In Python</h3>
+<p>LeetCode gives you this class (it's shown in a comment above your code):</p>
+<pre><code class="language-python">class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+# walking the whole list: O(n)
+node = head
+while node:              # stops after the last node (node becomes None)
+    print(node.val)
+    node = node.next
+</code></pre>
+<p>Compared with a Python list: adding or removing a node <i>once you're standing next to it</i> is O(1), just re-point arrows. But finding the 5th node is O(n), because you have to walk there.</p>
+
+<h3>Three tricks</h3>
+<p><b>1. Dummy head.</b> When building a new list, start with a fake node, so you never need a special case for "the list is still empty". Return <code>dummy.next</code> at the end.</p>
+<pre><code class="language-python">dummy = ListNode()
+tail = dummy
+for v in [4, 5, 6]:
+    tail.next = ListNode(v)   # attach a new node
+    tail = tail.next          # move to the new end
+return dummy.next             # skip the fake node
+</code></pre>
+<p><b>2. Fast and slow pointers.</b> From the two-pointers lesson: <code>slow</code> moves 1 step, <code>fast</code> moves 2. When <code>fast</code> hits the end, <code>slow</code> is in the <b>middle</b>. And if the list loops back on itself, <code>fast</code> will eventually <b>lap</b> <code>slow</code>, like a faster runner on a track. That's how you detect a cycle.</p>
+<p><b>3. Save before you re-point.</b> Changing <code>node.next</code> throws away the old arrow. If you still need the rest of the list, save it in a variable first.</p>
+
+<h3>Worked example: reverse a list</h3>
+<p>Turn 1 → 2 → 3 into 3 → 2 → 1. Walk the list, flipping each arrow to point backwards. Three variables: <code>prev</code> (the already-reversed part), <code>cur</code> (the node we're flipping), and <code>nxt</code> (trick 3: the rest, saved before we flip).</p>
+<pre><code class="language-python">prev, cur = None, head
+while cur:
+    nxt = cur.next      # save the rest
+    cur.next = prev     # flip the arrow
+    prev = cur          # step forward
+    cur = nxt
+return prev             # the old last node is the new head
+</code></pre>
+<table>
+  <tr><th>step</th><th>reversed part (prev)</th><th>still to do (cur)</th></tr>
+  <tr><td>start</td><td>None</td><td>1 → 2 → 3</td></tr>
+  <tr><td>1</td><td>1 → None</td><td>2 → 3</td></tr>
+  <tr><td>2</td><td>2 → 1 → None</td><td>3</td></tr>
+  <tr><td>3</td><td>3 → 2 → 1 → None</td><td>None, done</td></tr>
+</table>
+<pre class="mermaid" data-alt="After reversing: head is now node 3, which points to 2, which points to 1, which points to None.">
+%%{init: {"flowchart": {"rankSpacing": 22, "nodeSpacing": 20}}}%%
+flowchart LR
+  H["3 (head)"] --> B["2"] --> C["1"] --> N["None"]
+</pre>
+
+<h3>Your turn</h3>
+
+<leetcode slug="middle-of-the-linked-list" num="876" title="Middle of the Linked List" level="Easy" minutes="10">
+  <hint>Fast and slow pointers. Move <code>slow</code> one step and <code>fast</code> two steps while <code>fast</code> and <code>fast.next</code> exist. Return <code>slow</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="remove-duplicates-from-sorted-list" num="83" title="Remove Duplicates from Sorted List" level="Easy" minutes="10">
+  <hint>Duplicates sit next to each other. While the next node has the same value as the current one, skip it: <code>node.next = node.next.next</code>. Only move forward when they differ.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        node = head
+        while node and node.next:
+            if node.next.val == node.val:
+                node.next = node.next.next   # skip the duplicate
+            else:
+                node = node.next
+        return head
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="reverse-linked-list" num="206" title="Reverse Linked List" level="Easy" minutes="10">
+  <hint>The worked example. Write the four lines inside the loop from memory: save, flip, step, step.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev, cur = None, head
+        while cur:
+            nxt = cur.next
+            cur.next = prev
+            prev = cur
+            cur = nxt
+        return prev
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="merge-two-sorted-lists" num="21" title="Merge Two Sorted Lists" level="Easy" minutes="15">
+  <hint>Dummy head plus two pointers: attach whichever current node is smaller, then move that list forward. When one list runs out, attach the rest of the other.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = ListNode()
+        tail = dummy
+        while list1 and list2:
+            if list1.val &lt;= list2.val:
+                tail.next = list1
+                list1 = list1.next
+            else:
+                tail.next = list2
+                list2 = list2.next
+            tail = tail.next
+        tail.next = list1 or list2     # whatever is left
+        return dummy.next
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="linked-list-cycle" num="141" title="Linked List Cycle" level="Easy" minutes="10">
+  <hint>Fast and slow again. If there's no cycle, <code>fast</code> reaches the end. If there is one, <code>fast</code> laps <code>slow</code> and they land on the same node: check <code>slow is fast</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow is fast:         # the fast runner lapped the slow one
+                return True
+        return False
+# O(n) time, O(1) space. A set of seen nodes also works, with O(n) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="The Linux kernel is full of linked lists">
+  <p>The Linux kernel keeps its running processes, open files, device drivers and much more in linked lists. They all use one shared design, <code>struct list_head</code>. It is a tiny pair of arrows (next and previous) placed <b>inside</b> each object, instead of a separate box pointing at the object.</p>
+  <p>Because the arrows live inside the object, one object can sit in several lists at once by holding several pairs of arrows, and adding or removing it never needs extra memory. That's exactly the "O(1) once you're standing next to it" strength from this lesson.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>A node has <code>val</code> and <code>next</code>. Walk with <code>while node: node = node.next</code>.</li>
+    <li>Building a list? Use a dummy head and return <code>dummy.next</code>. Re-pointing? Save <code>next</code> first.</li>
+    <li>Slow/fast pointers find the middle and detect cycles in O(1) space.</li>
+  </ul>
+</recap>
