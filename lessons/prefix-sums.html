@@ -1,0 +1,119 @@
+<p class="lead">If you need the sum of many different stretches of a list, add things up <b>once</b> in advance. After that, the sum of any stretch is a single subtraction.</p>
+
+<h3>The idea</h3>
+<p>Think of your contactless or Oyster card history, which shows your <b>total spent so far</b> after each journey. How much did journeys 4 to 7 cost? You don't add up those four fares. You take "total after journey 7" minus "total after journey 3". Done.</p>
+<p>A <b>prefix sum</b> list stores exactly that: the running total up to each position. You met it already in the toolkit lesson as Running Sum.</p>
+<p>The trick that avoids special cases is to start the list with a <b>0</b> ("total before anything"). Then <code>prefix[i]</code> is the sum of the first <code>i</code> numbers:</p>
+
+<pre class="mermaid" data-alt="Building the prefix list for nums 3, 1, 4, 1, 5. prefix 0 is 0. prefix 1 is 0 plus 3 equals 3. prefix 2 is 3 plus 1 equals 4. prefix 3 is 4 plus 4 equals 8. prefix 4 is 8 plus 1 equals 9. prefix 5 is 9 plus 5 equals 14.">
+flowchart TD
+  P0["prefix[0] = 0"] -->|"+ 3"| P1["prefix[1] = 3"]
+  P1 -->|"+ 1"| P2["prefix[2] = 4"]
+  P2 -->|"+ 4"| P3["prefix[3] = 8"]
+  P3 -->|"+ 1"| P4["prefix[4] = 9"]
+  P4 -->|"+ 5"| P5["prefix[5] = 14"]
+</pre>
+
+<p>Now the sum of <code>nums[left]</code> up to and including <code>nums[right]</code> is:</p>
+<pre><code class="language-python">prefix[right + 1] - prefix[left]
+</code></pre>
+<p>Example with <code>nums = [3, 1, 4, 1, 5]</code>: the sum of indexes 1 to 3 is <code>1 + 4 + 1 = 6</code>, and the formula gives <code>prefix[4] - prefix[1] = 9 - 3 = 6</code>. ✓</p>
+
+<h3>In Python</h3>
+<pre><code class="language-python">prefix = [0]
+for x in nums:
+    prefix.append(prefix[-1] + x)   # previous total + this number
+# prefix has len(nums) + 1 items
+
+def range_sum(left, right):         # inclusive on both ends
+    return prefix[right + 1] - prefix[left]
+</code></pre>
+<p>Building the list is one pass: <b>O(n)</b> time and O(n) space. Every range sum after that is <b>O(1)</b>. Without it, each range sum would loop over the range: O(n) each time.</p>
+
+<h3>Left side and right side</h3>
+<p>Some problems ask about "everything to the left of i" and "everything to the right of i". You don't even need the whole prefix list, just the total and a running left sum:</p>
+<pre><code class="language-python">total = sum(nums)
+left_sum = 0
+for i, x in enumerate(nums):
+    right_sum = total - left_sum - x   # everything after i
+    # ...compare left_sum and right_sum here...
+    left_sum += x                      # now includes nums[i]
+</code></pre>
+
+<h3>Your turn</h3>
+
+<leetcode slug="range-sum-query-immutable" num="303" title="Range Sum Query - Immutable" level="Easy" minutes="10">
+  <hint>This one is a small class. Build the prefix list in <code>__init__</code> and store it as <code>self.prefix</code>. Then <code>sumRange</code> is the one-line formula.</hint>
+  <solution>
+<pre><code class="language-python">class NumArray:
+    def __init__(self, nums: List[int]):
+        self.prefix = [0]
+        for x in nums:
+            self.prefix.append(self.prefix[-1] + x)
+
+    def sumRange(self, left: int, right: int) -> int:
+        return self.prefix[right + 1] - self.prefix[left]
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="minimum-value-to-get-positive-step-by-step-sum" num="1413" title="Minimum Value to Get Positive Step by Step Sum" level="Easy" minutes="10">
+  <hint>Track the running total and its <b>lowest point</b>. If the lowest point is, say, -4, the start value must lift it to at least 1, so you need 5. The answer is never below 1.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def minStartValue(self, nums: List[int]) -> int:
+        total = 0
+        lowest = 0                 # lowest running total seen
+        for x in nums:
+            total += x
+            lowest = min(lowest, total)
+        return 1 - lowest          # lifts the lowest point up to exactly 1
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="left-and-right-sum-differences" num="2574" title="Left and Right Sum Differences" level="Easy" minutes="10">
+  <hint>Use the "left side and right side" template. Neither side includes <code>nums[i]</code> itself. Remember <code>abs()</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def leftRightDifference(self, nums: List[int]) -> List[int]:
+        total = sum(nums)
+        left_sum = 0
+        answer = []
+        for x in nums:
+            right_sum = total - left_sum - x
+            answer.append(abs(left_sum - right_sum))
+            left_sum += x
+        return answer
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="find-pivot-index" num="724" title="Find Pivot Index" level="Easy" minutes="10">
+  <hint>Same template again. Return the first index where <code>left_sum == right_sum</code>, or <code>-1</code> if there isn't one.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def pivotIndex(self, nums: List[int]) -> int:
+        total = sum(nums)
+        left_sum = 0
+        for i, x in enumerate(nums):
+            if left_sum == total - left_sum - x:
+                return i
+            left_sum += x
+        return -1
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Prefix sums found faces in photos">
+  <p>The same trick works in 2D. Store, for every pixel, the sum of all pixels above and to the left of it (a "summed-area table" or <b>integral image</b>). Then the brightness of <i>any</i> rectangle in the photo takes just four lookups, however big the rectangle.</p>
+  <p>In 2001, Paul Viola and Michael Jones used this to build the first face detector fast enough to run live on video. It checks thousands of rectangles per frame. Their method was used for years in digital cameras and is still built into OpenCV.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Build <code>prefix</code> with a leading 0: <code>prefix[i+1] = prefix[i] + nums[i]</code>.</li>
+    <li>Sum of <code>nums[left..right]</code> = <code>prefix[right+1] - prefix[left]</code>, in O(1).</li>
+    <li>"Left of i vs right of i": keep <code>left_sum</code>, and <code>right = total - left_sum - nums[i]</code>.</li>
+  </ul>
+</recap>
