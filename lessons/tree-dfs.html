@@ -1,0 +1,253 @@
+<p class="lead">A binary tree is like a linked list where each node can point to <b>two</b> next nodes instead of one. Depth-first search walks it by going all the way down one branch before trying the next, and <a href="#recursion">recursion</a> makes that only a few lines long.</p>
+
+<h3>The idea</h3>
+<p>Think of a family tree drawn upside down: one person at the top, their children below, their grandchildren below that. A binary tree is the same, but every person has at most two children, a <b>left</b> one and a <b>right</b> one.</p>
+<p>A few words you will see everywhere:</p>
+<ul>
+  <li><b>Node</b>: one box in the tree. It holds a value and two links, <code>left</code> and <code>right</code>. A missing child is <code>None</code>.</li>
+  <li><b>Root</b>: the node at the top. You are given only the root, just like you are given only the <code>head</code> of a <a href="#linked-list">linked list</a>.</li>
+  <li><b>Child</b>: a node directly below another one. <b>Leaf</b>: a node with no children.</li>
+  <li><b>Depth</b> (or <b>height</b>) of a tree: how many nodes are on the longest path from the root down to a leaf.</li>
+</ul>
+<pre class="mermaid" data-alt="A binary tree. The root is 4. Its left child is 2 and its right child is 7. Node 2 has children 1 and 3. Node 7 has children 6 and 9. The nodes 1, 3, 6 and 9 are leaves. The tree has depth 3.">
+%%{init: {"flowchart": {"rankSpacing": 40, "nodeSpacing": 30, "padding": 14}}}%%
+flowchart TD
+  A["4"] --> B["2"]
+  A --> C["7"]
+  B --> D["1"]
+  B --> E["3"]
+  C --> F["6"]
+  C --> G["9"]
+</pre>
+<p><b>Depth-first</b> means: from a node, go down the left branch as far as it goes, come back, then go down the right branch. You finish a whole branch before you start the next one.</p>
+<p>The trick is that every child is the root of a smaller tree (a <b>subtree</b>). So a tree problem splits into the same problem on the left subtree and on the right subtree. That's recursion's "smaller step". The base case is the empty tree, <code>None</code>.</p>
+
+<h3>In Python</h3>
+<p>LeetCode gives you this class (it's in a comment above your code):</p>
+<pre><code class="language-python">class TreeNode:
+    def __init__(self, val=0,
+                 left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+</code></pre>
+<p>Almost every depth-first solution has the same shape:</p>
+<pre><code class="language-python">def solve(node):
+    # 1. base case: the empty tree
+    if node is None:
+        return ...
+    # 2. leap of faith: solve each side
+    left = solve(node.left)
+    right = solve(node.right)
+    # 3. combine them with this node
+    return ...
+</code></pre>
+<p>Each node is visited once, so it takes O(n) time for n nodes. The waiting calls take O(h) space, where h is the depth of the tree.</p>
+
+<p><b>Pre-order, in-order, post-order.</b> These three names only say <i>when</i> you look at the node itself: before both subtrees, between them, or after them.</p>
+<pre><code class="language-python">def walk(node, out):
+    if node is None:
+        return
+    # pre-order: node first
+    out.append(node.val)
+    walk(node.left, out)
+    # in-order: node in the middle
+    walk(node.right, out)
+    # post-order: node last
+</code></pre>
+<p>Move the <code>out.append</code> line to one of the three spots. For the tree above you get:</p>
+<table>
+  <tr><th>Order</th><th>When</th><th>Result</th></tr>
+  <tr><td>Pre-order</td><td>node, left, right</td><td>4 2 1 3 7 6 9</td></tr>
+  <tr><td>In-order</td><td>left, node, right</td><td>1 2 3 4 6 7 9</td></tr>
+  <tr><td>Post-order</td><td>left, right, node</td><td>1 3 2 6 9 7 4</td></tr>
+</table>
+<p>Notice the in-order result is sorted. That's no accident: this tree is a binary search tree, the topic of a later lesson.</p>
+
+<p><b>Without recursion.</b> Recursion uses Python's call stack. You can use your own <a href="#stack">stack</a> instead. Pre-order: pop a node, record it, push its right child, then its left child (so the left one is popped first).</p>
+<pre><code class="language-python">def preorder(root):
+    out = []
+    stack = [root] if root else []
+    while stack:
+        node = stack.pop()
+        out.append(node.val)
+        # push right first,
+        # so left comes out first
+        if node.right:
+            stack.append(node.right)
+        if node.left:
+            stack.append(node.left)
+    return out
+</code></pre>
+<p>Handy for very deep trees, where recursion would pass Python's limit of about 1000 calls.</p>
+
+<h3>Worked example: maximum depth</h3>
+<p>The depth of a tree is 1 (for the root) plus the depth of its deeper subtree. The empty tree has depth 0.</p>
+<pre><code class="language-python">def max_depth(node):
+    if node is None:
+        return 0
+    left = max_depth(node.left)
+    right = max_depth(node.right)
+    return 1 + max(left, right)
+</code></pre>
+<p>On the tree above, answers come back up from the leaves:</p>
+<table>
+  <tr><th>Node</th><th>left</th><th>right</th><th>returns</th></tr>
+  <tr><td>1, 3, 6, 9 (leaves)</td><td>0</td><td>0</td><td>1</td></tr>
+  <tr><td>2</td><td>1</td><td>1</td><td>2</td></tr>
+  <tr><td>7</td><td>1</td><td>1</td><td>2</td></tr>
+  <tr><td>4 (root)</td><td>2</td><td>2</td><td>3</td></tr>
+</table>
+
+<h3>Your turn</h3>
+<p>For each one, ask: what do I return for <code>None</code>, and how do I combine the left and right answers?</p>
+
+<leetcode slug="maximum-depth-of-binary-tree" num="104" title="Maximum Depth of Binary Tree" level="Easy" minutes="5">
+  <hint>The worked example. Write it from memory: <code>None</code> gives 0, otherwise 1 plus the bigger of the two subtree depths.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def maxDepth(
+        self, root: Optional[TreeNode]
+    ) -> int:
+        # empty tree has depth 0
+        if root is None:
+            return 0
+        left = self.maxDepth(root.left)
+        right = self.maxDepth(root.right)
+        # this node adds one level
+        return 1 + max(left, right)
+# O(n) time. O(h) space for the calls.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="binary-tree-preorder-traversal" num="144" title="Binary Tree Preorder Traversal" level="Easy" minutes="5">
+  <hint>Use the <code>walk</code> function above with the node first. Keep one list outside the helper and append to it.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def preorderTraversal(
+        self, root: Optional[TreeNode]
+    ) -> List[int]:
+        out = []
+
+        def walk(node):
+            if node is None:
+                return
+            # node, then left, then right
+            out.append(node.val)
+            walk(node.left)
+            walk(node.right)
+
+        walk(root)
+        return out
+# Try the stack version from the lesson too.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="binary-tree-inorder-traversal" num="94" title="Binary Tree Inorder Traversal" level="Easy" minutes="5">
+  <hint>Same as the last one. Only move one line.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def inorderTraversal(
+        self, root: Optional[TreeNode]
+    ) -> List[int]:
+        out = []
+
+        def walk(node):
+            if node is None:
+                return
+            walk(node.left)
+            # node goes between the subtrees
+            out.append(node.val)
+            walk(node.right)
+
+        walk(root)
+        return out
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="invert-binary-tree" num="226" title="Invert Binary Tree" level="Easy" minutes="10">
+  <hint>"Invert" means mirror: every left child becomes a right child. At each node, swap <code>left</code> and <code>right</code>, then invert both subtrees. Return the root.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def invertTree(
+        self, root: Optional[TreeNode]
+    ) -> Optional[TreeNode]:
+        if root is None:
+            return None
+        # swap the two children
+        root.left, root.right = (
+            root.right, root.left)
+        # then mirror each subtree
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+        return root
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="same-tree" num="100" title="Same Tree" level="Easy" minutes="10">
+  <hint>Now you walk two trees at once. Base cases: both <code>None</code> means same; only one <code>None</code>, or different values, means not same. Otherwise both left subtrees and both right subtrees must match.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isSameTree(
+        self,
+        p: Optional[TreeNode],
+        q: Optional[TreeNode],
+    ) -> bool:
+        # both empty: same
+        if p is None and q is None:
+            return True
+        # only one empty: not same
+        if p is None or q is None:
+            return False
+        # values differ: not same
+        if p.val != q.val:
+            return False
+        # both sides must match
+        same = self.isSameTree
+        return (same(p.left, q.left)
+                and same(p.right, q.right))
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="symmetric-tree" num="101" title="Symmetric Tree" level="Easy" minutes="15">
+  <hint>Like Same Tree, but comparing the left subtree with the <i>mirror</i> of the right one. Write a helper <code>mirror(a, b)</code>: the values match, <code>a.left</code> mirrors <code>b.right</code>, and <code>a.right</code> mirrors <code>b.left</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isSymmetric(
+        self, root: Optional[TreeNode]
+    ) -> bool:
+
+        def mirror(a, b):
+            if a is None and b is None:
+                return True
+            if a is None or b is None:
+                return False
+            if a.val != b.val:
+                return False
+            # outside pair, then inside pair
+            outside = mirror(a.left, b.right)
+            inside = mirror(a.right, b.left)
+            return outside and inside
+
+        return mirror(root.left, root.right)
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Every web page is a tree">
+  <p>When a browser loads a page, it turns the HTML into a tree called the <b>DOM</b> (Document Object Model). <code>&lt;html&gt;</code> is the root, <code>&lt;head&gt;</code> and <code>&lt;body&gt;</code> are its children, and every tag inside is a node further down.</p>
+  <p>The DOM standard defines "tree order" as a <b>pre-order, depth-first</b> walk: a node first, then everything inside it, from first child to last. When JavaScript calls <code>document.querySelectorAll("a")</code>, the links come back in exactly this order, which is the order they appear in the HTML source.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>A tree node has <code>val</code>, <code>left</code>, <code>right</code>. Each child is the root of a smaller tree.</li>
+    <li>Pattern: <code>None</code> → base answer; solve left; solve right; combine. O(n) time.</li>
+    <li>Pre / in / post-order: look at the node before, between or after its two subtrees.</li>
+  </ul>
+</recap>
