@@ -1,5 +1,5 @@
 {
-  "theme": "neutral",
+  "theme": "default",
   "htmlLabels": false,
   "flowchart": { "htmlLabels": false, "useMaxWidth": true },
   "themeVariables": { "fontFamily": "Helvetica, Arial, sans-serif", "fontSize": "15px" }

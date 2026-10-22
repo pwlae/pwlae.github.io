@@ -106,7 +106,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <section id="map">
   <h2>The map</h2>
   <p class="muted">Go from top to bottom. Each stage builds on the one above it. Dashed boxes are stages still being written.</p>
-  <figure class="diagram"><a href="diagrams/8cfeb17b482e.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/8cfeb17b482e.svg" alt="Map of all lessons. Arrows point from a lesson to the lessons that build on it." width="275" height="1594" loading="lazy" decoding="async"></a></figure>
+  <figure class="diagram"><a href="diagrams/8cdc0eb5ff85.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/8cdc0eb5ff85.svg" alt="Map of all lessons. Arrows point from a lesson to the lessons that build on it." width="275" height="1594" loading="lazy" decoding="async"></a></figure>
   <ol class="toc"><li><b>Start here</b><ul><li><a href="#how-to-use">0. How to use this guide</a> <span class="toc-progress" data-lesson="how-to-use"></span></li></ul></li><li><b>Warm-up</b><ul><li><a href="#python-toolkit">1. Python toolkit for LeetCode</a> <span class="toc-progress" data-lesson="python-toolkit"></span></li><li class="soon">2. Big O in plain words <small>(coming soon)</small></li></ul></li><li><b>Arrays and strings</b><ul><li class="soon">3. Arrays: one loop does a lot <small>(coming soon)</small></li><li class="soon">4. Strings <small>(coming soon)</small></li><li class="soon">5. Hash maps and sets <small>(coming soon)</small></li><li class="soon">6. Counting things <small>(coming soon)</small></li></ul></li><li><b>First patterns</b><ul><li class="soon">7. Two pointers <small>(coming soon)</small></li><li class="soon">8. Sliding window <small>(coming soon)</small></li><li class="soon">9. Prefix sums <small>(coming soon)</small></li></ul></li><li><b>Stacks, queues, lists</b><ul><li class="soon">10. Stack <small>(coming soon)</small></li><li class="soon">11. Queue and deque <small>(coming soon)</small></li><li class="soon">12. Linked lists <small>(coming soon)</small></li></ul></li><li><b>Searching and sorting</b><ul><li class="soon">13. Binary search <small>(coming soon)</small></li><li class="soon">14. Sorting <small>(coming soon)</small></li></ul></li><li><b>Recursion and trees</b><ul><li class="soon">15. Recursion <small>(coming soon)</small></li><li class="soon">16. Binary trees: depth-first <small>(coming soon)</small></li><li class="soon">17. Binary trees: level by level <small>(coming soon)</small></li><li class="soon">18. Binary search trees <small>(coming soon)</small></li></ul></li><li><b>More tools</b><ul><li class="soon">19. Heaps <small>(coming soon)</small></li><li class="soon">20. Greedy choices <small>(coming soon)</small></li><li class="soon">21. Bit tricks <small>(coming soon)</small></li><li class="soon">22. Math tricks <small>(coming soon)</small></li></ul></li><li><b>Graphs and backtracking</b><ul><li class="soon">23. Graphs: BFS and DFS <small>(coming soon)</small></li><li class="soon">24. Backtracking <small>(coming soon)</small></li></ul></li><li><b>Dynamic programming</b><ul><li class="soon">25. Dynamic programming: 1D <small>(coming soon)</small></li><li class="soon">26. Dynamic programming: 2D <small>(coming soon)</small></li></ul></li><li><b>Next level</b><ul><li class="soon">27. Topological sort <small>(coming soon)</small></li><li class="soon">28. Union-Find <small>(coming soon)</small></li><li class="soon">29. Shortest paths (Dijkstra) <small>(coming soon)</small></li><li class="soon">30. Trie (prefix tree) <small>(coming soon)</small></li></ul></li></ol>
 </section>
 
@@ -121,7 +121,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
   <li><b>Solve 3–6 problems</b> on LeetCode, easiest first. Each one has a time box.</li>
 </ol>
 
-<figure class="diagram"><a href="diagrams/5a9138b8819a.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/5a9138b8819a.svg" alt="The study loop: read the lesson, try a problem. If you are stuck for 15 minutes, open the hint. Still stuck after 5 more minutes, read the solution and type it yourself. Then mark it solved and go to the next problem." width="376" height="812" loading="lazy" decoding="async"></a></figure>
+<figure class="diagram"><a href="diagrams/6018d224f93a.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/6018d224f93a.svg" alt="The study loop: read the lesson, try a problem. If you are stuck for 15 minutes, open the hint. Still stuck after 5 more minutes, read the solution and type it yourself. Then mark it solved and go to the next problem." width="376" height="812" loading="lazy" decoding="async"></a></figure>
 
 <h3>The 15-minute rule</h3>
 <p>Your commute ends whether you finished or not. If you think too long, you lose the thread by the next train. So:</p>
@@ -162,7 +162,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 
 <h3>Lists: a row of boxes</h3>
 <p>A list is a row of boxes. Each box has a number called its <b>index</b>, starting from <b>0</b>.</p>
-<figure class="diagram"><a href="diagrams/2ce75269ae21.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/2ce75269ae21.svg" alt="A list with values 7, 2, 9, 4. Index 0 holds 7, index 1 holds 2, index 2 holds 9, index 3 holds 4. Negative indexes count from the end: -1 is 4." width="795" height="150" loading="lazy" decoding="async"></a></figure>
+<figure class="diagram"><a href="diagrams/9ede6f780fe2.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/9ede6f780fe2.svg" alt="A list with values 7, 2, 9, 4. Index 0 holds 7, index 1 holds 2, index 2 holds 9, index 3 holds 4. Negative indexes count from the end: -1 is 4." width="795" height="150" loading="lazy" decoding="async"></a></figure>
 <pre class="code" data-lang="python"><code><span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>        <span class="c1"># 7, the first box</span>
 <span class="n">nums</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>       <span class="c1"># 4, the last box</span>
@@ -285,7 +285,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 </main>
 <script>
 (function(){
-  var KEY='ca-solved', LAST='ca-last', DIAGRAMS=["diagrams/2ce75269ae21.svg", "diagrams/5a9138b8819a.svg", "diagrams/8cfeb17b482e.svg"];
+  var KEY='ca-solved', LAST='ca-last', DIAGRAMS=["diagrams/6018d224f93a.svg", "diagrams/8cdc0eb5ff85.svg", "diagrams/9ede6f780fe2.svg"];
   function load(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
   function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
   var solved=load(KEY,{});
