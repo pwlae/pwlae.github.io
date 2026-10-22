@@ -161,8 +161,8 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <p><code>nums: List[int]</code> is only a label: "nums is a list of whole numbers". <code>-> List[int]</code> says what you return. Python does not check these labels. They are there to help you read.</p>
 
 <h3>Lists: a row of boxes</h3>
-<p>A list is a row of boxes. Each box has a number called its <b>index</b>, starting from <b>0</b>.</p>
-<figure class="diagram"><a href="diagrams/9ede6f780fe2.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/9ede6f780fe2.svg" alt="A list with values 7, 2, 9, 4. Index 0 holds 7, index 1 holds 2, index 2 holds 9, index 3 holds 4. Negative indexes count from the end: -1 is 4." width="795" height="150" loading="lazy" decoding="async"></a></figure>
+<p>A list is a row of boxes. Each box has a number called its <b>index</b>, starting from <b>0</b>. In the picture, the index is on top and the value below it.</p>
+<figure class="diagram"><a href="diagrams/b6bff1415f4c.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/b6bff1415f4c.svg" alt="A list with values 7, 2, 9, 4. Each box shows its index on top and its value below. Index 0 holds 7, index 1 holds 2, index 2 holds 9, index 3 holds 4. Index -1 also means the last box, 4." width="439" height="80" loading="lazy" decoding="async"></a></figure>
 <pre class="code" data-lang="python"><code><span class="n">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>        <span class="c1"># 7, the first box</span>
 <span class="n">nums</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>       <span class="c1"># 4, the last box</span>
@@ -637,7 +637,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 </main>
 <script>
 (function(){
-  var KEY='ca-solved', LAST='ca-last', DIAGRAMS=["diagrams/2f6cc23c2cd8.svg", "diagrams/6018d224f93a.svg", "diagrams/7703e1169f97.svg", "diagrams/9ede6f780fe2.svg", "diagrams/c18f9c81d1ed.svg", "diagrams/c5ea8ad51100.svg", "diagrams/c74066918490.svg"];
+  var KEY='ca-solved', LAST='ca-last', DIAGRAMS=["diagrams/2f6cc23c2cd8.svg", "diagrams/6018d224f93a.svg", "diagrams/7703e1169f97.svg", "diagrams/b6bff1415f4c.svg", "diagrams/c18f9c81d1ed.svg", "diagrams/c5ea8ad51100.svg", "diagrams/c74066918490.svg"];
   function load(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
   function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
   var solved=load(KEY,{});

@@ -9,13 +9,10 @@
 <p><code>nums: List[int]</code> is only a label: "nums is a list of whole numbers". <code>-> List[int]</code> says what you return. Python does not check these labels. They are there to help you read.</p>
 
 <h3>Lists: a row of boxes</h3>
-<p>A list is a row of boxes. Each box has a number called its <b>index</b>, starting from <b>0</b>.</p>
-<pre class="mermaid" data-alt="A list with values 7, 2, 9, 4. Index 0 holds 7, index 1 holds 2, index 2 holds 9, index 3 holds 4. Negative indexes count from the end: -1 is 4.">
+<p>A list is a row of boxes. Each box has a number called its <b>index</b>, starting from <b>0</b>. In the picture, the index is on top and the value below it.</p>
+<pre class="mermaid" data-alt="A list with values 7, 2, 9, 4. Each box shows its index on top and its value below. Index 0 holds 7, index 1 holds 2, index 2 holds 9, index 3 holds 4. Index -1 also means the last box, 4.">
 flowchart LR
-  subgraph nums
-    direction LR
-    A["index 0<br/>7"] --- B["index 1<br/>2"] --- C["index 2<br/>9"] --- D["index 3 (or -1)<br/>4"]
-  end
+  A["0<br/>7"] --- B["1<br/>2"] --- C["2<br/>9"] --- D["3<br/>4"]
 </pre>
 <pre><code class="language-python">nums = [7, 2, 9, 4]
 nums[0]        # 7, the first box
