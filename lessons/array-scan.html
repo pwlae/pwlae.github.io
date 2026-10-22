@@ -1,0 +1,119 @@
+<p class="lead">A surprising number of easy problems are solved by <b>walking through the list once</b> and keeping one or two numbers up to date as you go. This lesson teaches that habit.</p>
+
+<h3>The idea</h3>
+<p>Picture yourself walking down a long train, counting passengers. You don't write down every seat. You just keep a running total in your head, and maybe remember "the fullest carriage so far". When you reach the end, you have your answer.</p>
+<p>That is the <b>single scan</b>:</p>
+<ol>
+  <li>Before the loop, set up a few variables: the <b>current</b> thing you're tracking, and the <b>best</b> answer so far.</li>
+  <li>For each item, update <b>current</b>.</li>
+  <li>Then compare: if <b>current</b> beats <b>best</b>, update <b>best</b>.</li>
+  <li>After the loop, return <b>best</b>.</li>
+</ol>
+
+<pre class="mermaid" data-alt="The single scan loop for counting the longest run of 1s: for each number, if it is 1, add one to current, otherwise reset current to 0. Then set best to the larger of best and current. Move to the next number. At the end, return best.">
+flowchart TD
+  A["current = 0, best = 0"] --> B["take the next number x"]
+  B --> C{"x == 1 ?"}
+  C -->|yes| D["current += 1"]
+  C -->|no| E["current = 0"]
+  D --> F["best = max(best, current)"]
+  E --> F
+  F -->|more numbers| B
+  F -->|list finished| G["return best"]
+</pre>
+
+<h3>In Python</h3>
+<pre><code class="language-python">def scan(nums):
+    best = 0          # the answer so far
+    current = 0       # what we are tracking right now
+    for x in nums:
+        current = ...              # update using x
+        best = max(best, current)  # keep the best one seen
+    return best
+</code></pre>
+<p>It visits each item once, so it is <b>O(n) time</b>. It only keeps a couple of variables, so it is <b>O(1) extra space</b>. You can't do much better than that.</p>
+
+<h3>Worked example</h3>
+<p>Longest run of 1s in <code>[1, 1, 0, 1, 1, 1]</code>:</p>
+<table>
+  <tr><th>x</th><th>current</th><th>best</th></tr>
+  <tr><td>1</td><td>1</td><td>1</td></tr>
+  <tr><td>1</td><td>2</td><td>2</td></tr>
+  <tr><td>0</td><td>0 (reset)</td><td>2</td></tr>
+  <tr><td>1</td><td>1</td><td>2</td></tr>
+  <tr><td>1</td><td>2</td><td>2</td></tr>
+  <tr><td>1</td><td>3</td><td>3</td></tr>
+</table>
+<p>Answer: 3. Notice that <code>best</code> is updated <i>inside</i> the loop, every time. If you only update it when you see a 0, you forget the last run, which is the most common slip-up.</p>
+
+<h3>Two traps</h3>
+<ul>
+  <li><b>Starting values.</b> <code>best = 0</code> is fine when answers can't be negative. If they can, start with <code>best = float('-inf')</code> (smaller than any number) or with the first item, <code>nums[0]</code>.</li>
+  <li><b>What "current" means.</b> Say it in words before you code: "the length of the run of 1s ending here", "the lowest price so far". Once the sentence is clear, the update line is easy.</li>
+</ul>
+
+<h3>Your turn</h3>
+<p>All three are one loop with one or two variables.</p>
+
+<leetcode slug="max-consecutive-ones" num="485" title="Max Consecutive Ones" level="Easy" minutes="5">
+  <hint>This is exactly the worked example. Reset <code>current</code> on a 0, and update <code>best</code> on every step.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def findMaxConsecutiveOnes(self, nums: List[int]) -> int:
+        best = 0
+        current = 0          # length of the run of 1s ending here
+        for x in nums:
+            if x == 1:
+                current += 1
+            else:
+                current = 0
+            best = max(best, current)
+        return best
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="find-the-highest-altitude" num="1732" title="Find the Highest Altitude" level="Easy" minutes="5">
+  <hint>You start at altitude 0. <code>current</code> is your altitude now: add each gain to it. <code>best</code> is the highest altitude so far, and it starts at 0 because the start point counts.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def largestAltitude(self, gain: List[int]) -> int:
+        best = 0             # the starting point (altitude 0) counts
+        current = 0          # altitude right now
+        for g in gain:
+            current += g
+            best = max(best, current)
+        return best
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="best-time-to-buy-and-sell-stock" num="121" title="Best Time to Buy and Sell Stock" level="Easy" minutes="15">
+  <hint>Walk through the days. Keep the <b>lowest price so far</b> (the best day to have bought). On each day, ask: "if I sold today, what would I make?"</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        lowest = float('inf')   # cheapest price seen so far
+        best = 0                # best profit so far (0 = don't trade)
+        for p in prices:
+            lowest = min(lowest, p)
+            best = max(best, p - lowest)   # sell today?
+        return best
+# One pass: O(n) time, O(1) space. Two nested loops would be O(n²),
+# too slow for 100,000 prices.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Why computers love walking through arrays">
+  <p>Memory is slow compared with the processor. So when a CPU reads one number from memory, it actually fetches a whole block around it (a <b>cache line</b>, usually 64 bytes) and keeps it close by. When the CPU notices you are reading in order, it starts fetching the next blocks <b>before you ask</b>.</p>
+  <p>That's why a plain left-to-right scan over numbers stored side by side is one of the fastest things a computer can do. It's a big reason NumPy and databases like DuckDB store columns of numbers next to each other.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Single scan: one loop, a <code>current</code> value and a <code>best</code> value. O(n) time, O(1) space.</li>
+    <li>Update <code>best</code> on every step, not only at the "end" of something.</li>
+    <li>Say what <code>current</code> means in words first. Use <code>float('-inf')</code> / <code>float('inf')</code> as safe starting values.</li>
+  </ul>
+</recap>
