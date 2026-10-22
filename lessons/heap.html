@@ -1,0 +1,208 @@
+<p class="lead">A heap is a pile that always hands you its smallest item first. You can add and remove items quickly, and you never have to <a href="#sorting">sort</a> the whole thing.</p>
+
+<h3>The idea</h3>
+<p>Think of A&amp;E at a hospital. Patients do not wait in arrival order. The nurse always calls the <b>most urgent</b> patient next, even if they came in five minutes ago. New patients arrive all the time, and each one slots in by urgency.</p>
+<p>A <b>heap</b> does this with numbers. It answers one question fast: "what is the smallest item right now?" A heap where the smallest is on top is a <b>min-heap</b>. One with the biggest on top is a <b>max-heap</b>.</p>
+<ul>
+  <li>Look at the smallest: <b>O(1)</b>, it is always at the top.</li>
+  <li>Add an item, or remove the smallest: <b>O(log n)</b>.</li>
+</ul>
+<p>Sorting the list again after every change would cost O(n log n) each time. A heap only keeps things "roughly" in order: just enough to know who is on top.</p>
+<p>A heap is a binary tree with one rule: <b>every parent is smaller than (or equal to) its children</b>. So the root is the smallest of all. Left and right are not in order, unlike a <a href="#bst">binary search tree</a>.</p>
+<pre class="mermaid" data-alt="A min-heap drawn as a tree. The root is 1 at index 0. Its children are 3 at index 1 and 2 at index 2. Node 3 has children 7 at index 3 and 4 at index 4. Every parent is smaller than its children.">
+%%{init: {"flowchart": {"rankSpacing": 40, "nodeSpacing": 30, "padding": 14}}}%%
+flowchart TD
+  A["1<br/>i=0"] --> B["3<br/>i=1"]
+  A --> C["2<br/>i=2"]
+  B --> D["7<br/>i=3"]
+  B --> E["4<br/>i=4"]
+</pre>
+<p>The clever part: the tree is stored in a <b>plain list</b>, row by row. No node objects, no pointers. The tree above is just this list:</p>
+<pre class="mermaid" data-alt="The same heap stored as a list: index 0 holds 1, index 1 holds 3, index 2 holds 2, index 3 holds 7, index 4 holds 4.">
+%%{init: {"flowchart": {"rankSpacing": 22, "nodeSpacing": 20}}}%%
+flowchart LR
+  A["0<br/>1"] --- B["1<br/>3"] --- C["2<br/>2"] --- D["3<br/>7"] --- E["4<br/>4"]
+</pre>
+<p>The children of the item at index <code>i</code> sit at <code>2*i + 1</code> and <code>2*i + 2</code>. Its parent is at <code>(i - 1) // 2</code>. Check: the children of index 1 (value 3) are at 3 and 4 (values 7 and 4).</p>
+<p>How it stays a heap:</p>
+<ol>
+  <li><b>Add:</b> put the new item at the end of the list. While it is smaller than its parent, swap them. It "bubbles up".</li>
+  <li><b>Remove the smallest:</b> take the root. Move the last item to the root. While it is bigger than a child, swap it with the smaller child. It "sinks down".</li>
+</ol>
+<p>Each swap moves one level, and the tree has about log n levels. That is where O(log n) comes from.</p>
+
+<h3>In Python</h3>
+<p>You never write those swaps yourself. Python's <code>heapq</code> module does them on a normal list. It is a <b>min-heap</b>.</p>
+<pre><code class="language-python">import heapq
+
+heap = []
+heapq.heappush(heap, 5)
+heapq.heappush(heap, 1)
+heapq.heappush(heap, 3)
+# smallest, without removing: 1
+heap[0]
+# remove and return smallest: 1
+heapq.heappop(heap)
+
+# turn a whole list into a heap
+# in place, in O(n)
+nums = [4, 7, 2, 9]
+heapq.heapify(nums)
+</code></pre>
+<p>There is no max-heap in <code>heapq</code>. The trick: push <b>negative</b> numbers. The smallest negative is the biggest number. Flip the sign back when you pop.</p>
+<pre><code class="language-python">heap = [-x for x in [4, 7, 2]]
+heapq.heapify(heap)
+# biggest: 7
+biggest = -heapq.heappop(heap)
+</code></pre>
+<p>You can also push <b>tuples</b>, like <code>(priority, name)</code>. Python compares them by the first item, then the second if there is a tie.</p>
+<p><b>The "top k" pattern.</b> To keep the <b>k biggest</b> items you have seen, keep a min-heap of size k. When it grows to k + 1, pop the smallest. The k items left are the biggest ones, and <code>heap[0]</code> is the k-th biggest. Each step costs O(log k).</p>
+<pre><code class="language-python">def k_largest(nums, k):
+    heap = []
+    for x in nums:
+        heapq.heappush(heap, x)
+        # too many: drop the smallest
+        if len(heap) > k:
+            heapq.heappop(heap)
+    # heap[0] is the k-th largest
+    return heap
+</code></pre>
+
+<h3>Worked example</h3>
+<p>Push <b>0</b> into the heap <code>[1, 3, 2, 7, 4]</code>. It goes on the end, at index 5, then bubbles up:</p>
+<table>
+  <tr><th>0 is at</th><th>parent</th><th>action</th><th>list</th></tr>
+  <tr><td>5</td><td>index 2 (2)</td><td>0 &lt; 2, swap</td><td>1 3 0 7 4 2</td></tr>
+  <tr><td>2</td><td>index 0 (1)</td><td>0 &lt; 1, swap</td><td>0 3 1 7 4 2</td></tr>
+  <tr><td>0</td><td>none</td><td>at the top, stop</td><td>0 3 1 7 4 2</td></tr>
+</table>
+<p>Two swaps for six items. For a million items it would be about 20.</p>
+
+<h3>Your turn</h3>
+<p>Each time, ask: do I keep needing the smallest (or biggest) item? Then use a heap.</p>
+
+<leetcode slug="last-stone-weight" num="1046" title="Last Stone Weight" level="Easy" minutes="10">
+  <hint>You need the two heaviest stones again and again. Use a max-heap: push negative weights. Pop two, push back the difference if it is not zero.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def lastStoneWeight(
+        self, stones: List[int]
+    ) -> int:
+        # negate: heapq is a min-heap
+        heap = [-s for s in stones]
+        heapq.heapify(heap)
+        while len(heap) > 1:
+            a = -heapq.heappop(heap)
+            b = -heapq.heappop(heap)
+            # a >= b. Keep what is left.
+            if a != b:
+                heapq.heappush(
+                    heap, -(a - b))
+        if heap:
+            return -heap[0]
+        return 0
+# O(n log n) time, O(n) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="take-gifts-from-the-richest-pile" num="2558" title="Take Gifts From the Richest Pile" level="Easy" minutes="10">
+  <hint>Same trick as the stones: a max-heap with negative numbers. Each second, pop the biggest pile and push back its square root (rounded down). <code>math.isqrt(x)</code> does that.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def pickGifts(
+        self, gifts: List[int], k: int
+    ) -> int:
+        heap = [-g for g in gifts]
+        heapq.heapify(heap)
+        for _ in range(k):
+            # richest pile
+            g = -heapq.heappop(heap)
+            left = math.isqrt(g)
+            heapq.heappush(heap, -left)
+        # values are negative
+        return -sum(heap)
+# O(n + k log n) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="the-k-weakest-rows-in-a-matrix" num="1337" title="The K Weakest Rows in a Matrix" level="Easy" minutes="10">
+  <hint>A row's strength is <code>sum(row)</code> (soldiers are 1s). Push tuples <code>(soldiers, index)</code>: ties are broken by the index for free. Pop <code>k</code> times.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def kWeakestRows(
+        self, mat: List[List[int]],
+        k: int
+    ) -> List[int]:
+        # (soldiers, row index)
+        heap = []
+        for i, row in enumerate(mat):
+            heap.append((sum(row), i))
+        heapq.heapify(heap)
+        result = []
+        for _ in range(k):
+            _, i = heapq.heappop(heap)
+            result.append(i)
+        return result
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="kth-largest-element-in-a-stream" num="703" title="Kth Largest Element in a Stream" level="Easy" minutes="15">
+  <hint>This is the "top k" pattern. Keep a min-heap of the k biggest scores so far. After each <code>add</code>, if it has more than k items, pop. The answer is <code>heap[0]</code>.</hint>
+  <solution>
+<pre><code class="language-python">class KthLargest:
+
+    def __init__(
+        self, k: int, nums: List[int]
+    ):
+        self.k = k
+        self.heap = []
+        for x in nums:
+            self.add(x)
+
+    def add(self, val: int) -> int:
+        heapq.heappush(self.heap, val)
+        # keep only the k biggest
+        if len(self.heap) > self.k:
+            heapq.heappop(self.heap)
+        # smallest of the k biggest
+        return self.heap[0]
+# Each add: O(log k).
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="kth-largest-element-in-an-array" num="215" title="Kth Largest Element in an Array" level="Medium" minutes="15">
+  <hint>Stretch. Sorting works, but try the "top k" pattern: a min-heap that never holds more than k numbers. When you are done, its top is the answer.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def findKthLargest(
+        self, nums: List[int], k: int
+    ) -> int:
+        heap = []
+        for x in nums:
+            heapq.heappush(heap, x)
+            if len(heap) > k:
+                heapq.heappop(heap)
+        return heap[0]
+# O(n log k) time, O(k) space.
+# Better than sorting when k
+# is small.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Every Go timer lives in a heap">
+  <p>In Go, <code>time.Sleep</code>, <code>time.After</code> and <code>time.NewTimer</code> all create timers. A busy server can have thousands waiting at once. The Go runtime keeps them in a <b>min-heap ordered by the time each one should fire</b>, one heap per processor it schedules work on.</p>
+  <p>So "which timer is next?" is always just the top of the heap, with no scan over all the timers. One twist: it is a <b>4-ary</b> heap, where each node has four children instead of two. That makes the tree shallower, so there are fewer levels to sink through. You can see <code>const timerHeapN = 4</code> in the file <code>runtime/time.go</code> in Go's source.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>A min-heap gives the smallest item in O(1). Push and pop cost O(log n).</li>
+    <li><code>heapq</code> is a min-heap on a list. For a max-heap, push negative numbers.</li>
+    <li>Top k: keep a min-heap of size k. Its top is the k-th largest.</li>
+  </ul>
+</recap>
