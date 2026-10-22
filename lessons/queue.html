@@ -1,0 +1,135 @@
+<p class="lead">A queue is the fair line: whoever arrived first is served first. You'll use it to handle things in the order they came in, and later it powers breadth-first search on trees and graphs.</p>
+
+<h3>The idea</h3>
+<p>Think of the queue at a ticket barrier. New people join at the <b>back</b>. The person at the <b>front</b> goes through next. Nobody pushes in. That's "<b>first in, first out</b>", the opposite of a stack (where the newest item leaves first).</p>
+
+<pre class="mermaid" data-alt="A queue. New items join at the back with append. Items leave from the front with popleft. The queue holds 2 at the back, then 7, then 4 at the front, so 4 leaves next.">
+flowchart TD
+  J["append(2): join at the back"] --> B["2 (back)"] --> M["7"] --> F["4 (front)"] --> L["popleft() → 4 leaves first"]
+</pre>
+<p class="muted">Items move down the line: join at the back, leave from the front.</p>
+
+<h3>In Python: use deque</h3>
+<p>You <i>could</i> use a list with <code>pop(0)</code>, but that's slow. Removing the first item makes every other item shift one place left, which is <b>O(n)</b>. Use <code>collections.deque</code> ("deck", short for double-ended queue) instead. Adding or removing at <b>either end</b> is <b>O(1)</b>.</p>
+<pre><code class="language-python">from collections import deque
+
+q = deque()
+q.append(4)       # join at the back  -> deque([4])
+q.append(7)       #                   -> deque([4, 7])
+q.append(2)       #                   -> deque([4, 7, 2])
+q[0]              # peek at the front -> 4
+q.popleft()       # leave from front  -> 4, now deque([7, 2])
+len(q)            # 2
+if q:             # non-empty?
+    ...
+
+# Both ends work, so a deque can also act as a stack:
+q.appendleft(9)   # -> deque([9, 7, 2])
+q.pop()           # -> 2, from the back
+</code></pre>
+<p>On LeetCode, <code>deque</code> is already imported.</p>
+
+<h3>When to think "queue"</h3>
+<ul>
+  <li>Things must be handled <b>in arrival order</b>: requests, tasks, messages.</li>
+  <li>You keep only <b>recent</b> items: drop old ones from the front while they're too old.</li>
+  <li>You explore <b>level by level</b> (nearest first). That's breadth-first search, coming in the trees and graphs lessons.</li>
+</ul>
+
+<h3>Worked example: the last 3,000 milliseconds</h3>
+<p>Count how many requests arrived in the last 3,000 ms. Each new time joins at the back. Then, while the front is older than <code>t - 3000</code>, drop it. What's left is exactly the recent window.</p>
+<table>
+  <tr><th>new time t</th><th>drop while front &lt; t − 3000</th><th>queue after</th><th>answer</th></tr>
+  <tr><td>1</td><td>nothing</td><td>[1]</td><td>1</td></tr>
+  <tr><td>100</td><td>nothing</td><td>[1, 100]</td><td>2</td></tr>
+  <tr><td>3001</td><td>nothing (1 ≥ 1)</td><td>[1, 100, 3001]</td><td>3</td></tr>
+  <tr><td>3002</td><td>drop 1 (1 &lt; 2)</td><td>[100, 3001, 3002]</td><td>3</td></tr>
+</table>
+<p>Every time is added once and removed at most once, so the total work is O(n). It's the sliding window idea, with a queue holding the window.</p>
+
+<h3>Your turn</h3>
+
+<leetcode slug="number-of-recent-calls" num="933" title="Number of Recent Calls" level="Easy" minutes="10">
+  <hint>The worked example. Keep a <code>deque</code> in <code>self</code>, append <code>t</code>, pop old times from the left, return the length.</hint>
+  <solution>
+<pre><code class="language-python">class RecentCounter:
+    def __init__(self):
+        self.q = deque()
+
+    def ping(self, t: int) -> int:
+        self.q.append(t)
+        while self.q[0] &lt; t - 3000:     # too old: leave from the front
+            self.q.popleft()
+        return len(self.q)
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="implement-queue-using-stacks" num="232" title="Implement Queue using Stacks" level="Easy" minutes="15">
+  <hint>Use two stacks (lists): <code>inbox</code> for pushes, <code>outbox</code> for pops. When <code>outbox</code> is empty and you need the front, pour everything from <code>inbox</code> into <code>outbox</code>. Pouring reverses the order, so the oldest item ends up on top.</hint>
+  <solution>
+<pre><code class="language-python">class MyQueue:
+    def __init__(self):
+        self.inbox = []
+        self.outbox = []
+
+    def push(self, x: int) -> None:
+        self.inbox.append(x)
+
+    def _refill(self):
+        if not self.outbox:
+            while self.inbox:              # reversing puts the oldest on top
+                self.outbox.append(self.inbox.pop())
+
+    def pop(self) -> int:
+        self._refill()
+        return self.outbox.pop()
+
+    def peek(self) -> int:
+        self._refill()
+        return self.outbox[-1]
+
+    def empty(self) -> bool:
+        return not self.inbox and not self.outbox
+# Each item is moved at most once, so every operation is O(1) on average.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="implement-stack-using-queues" num="225" title="Implement Stack using Queues" level="Easy" minutes="15">
+  <hint>Use one queue. After you <code>append</code> a new item, rotate the queue: move every <i>older</i> item from the front to the back. Now the newest item is at the front, ready to leave first.</hint>
+  <solution>
+<pre><code class="language-python">class MyStack:
+    def __init__(self):
+        self.q = deque()
+
+    def push(self, x: int) -> None:
+        self.q.append(x)
+        for _ in range(len(self.q) - 1):   # rotate older items behind x
+            self.q.append(self.q.popleft())
+
+    def pop(self) -> int:
+        return self.q.popleft()
+
+    def top(self) -> int:
+        return self.q[0]
+
+    def empty(self) -> bool:
+        return not self.q
+# push is O(n), the others are O(1).
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="How Python's deque stays fast at both ends">
+  <p>A Python list is one long row of boxes, so removing from the front means shifting everything. A <code>deque</code> is built differently: a <b>chain of small blocks</b> of 64 slots each, linked together. Adding at either end just fills the next free slot in the first or last block, or links on a new block when that one is full. Nothing ever shifts.</p>
+  <p>Job queues and message brokers that pass work between computers (such as RabbitMQ) are built around the same first-in, first-out promise.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Queue = first in, first out. Join at the back, leave from the front.</li>
+    <li>Use <code>deque</code>: <code>append</code>, <code>popleft</code>, <code>q[0]</code>, all O(1). Never <code>list.pop(0)</code>.</li>
+    <li>Think queue for arrival order, "only the recent ones", and (soon) level-by-level search.</li>
+  </ul>
+</recap>
