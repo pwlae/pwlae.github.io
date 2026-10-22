@@ -1,0 +1,162 @@
+<p class="lead">Instead of one loop variable, use <b>two indexes</b> that move through the list together. This turns many "check every pair" problems into a single pass, and often needs no extra list at all.</p>
+
+<h3>The idea</h3>
+<p>There are two flavours. Learn both, because they come up everywhere.</p>
+<p><b>1. Opposite ends, walking inwards.</b> Picture two people starting at opposite ends of a train platform and walking towards each other, comparing what they see, until they meet in the middle. That's how you check whether a word reads the same backwards:</p>
+
+<pre class="mermaid" data-alt="Checking racecar with two pointers. Left at index 0 and right at index 6 both see r: match, move inwards. Then a and a: match. Then c and c: match. Then left and right meet at the middle: it is a palindrome.">
+flowchart TD
+  A["L=0 'r'  ·  R=6 'r'  →  match"] --> B["L=1 'a'  ·  R=5 'a'  →  match"]
+  B --> C["L=2 'c'  ·  R=4 'c'  →  match"]
+  C --> D["L=3, R=3: pointers met<br/>it's a palindrome"]
+</pre>
+
+<p><b>2. Slow and fast, same direction.</b> One pointer (<b>read</b>) visits every item. The other (<b>write</b>) only moves when you keep an item. Everything to the left of <b>write</b> is "the answer so far". It's like tidying a bookshelf in one pass: you look at every book, but only the keepers get pushed to the front.</p>
+
+<h3>In Python</h3>
+<pre><code class="language-python"># Flavour 1: opposite ends
+left, right = 0, len(nums) - 1
+while left &lt; right:
+    # look at nums[left] and nums[right], then move one or both
+    left += 1
+    right -= 1
+
+# Flavour 2: slow (write) and fast (read)
+write = 0
+for read in range(len(nums)):
+    if keep(nums[read]):
+        nums[write] = nums[read]
+        write += 1
+# nums[:write] now holds the kept items
+</code></pre>
+<p>Each pointer only moves forward (or only backward), so together they take at most n steps: <b>O(n) time</b>. They change the list where it is ("<b>in place</b>"), so <b>O(1) extra space</b>.</p>
+
+<h3>Worked example: Move Zeroes</h3>
+<p>Push all zeros in <code>[0, 1, 0, 3, 12]</code> to the end, keeping the other numbers in order. <b>read</b> walks every item. When it finds a non-zero, swap it into position <b>write</b> and move <b>write</b> on.</p>
+<table>
+  <tr><th>read</th><th>value</th><th>action</th><th>list after</th><th>write</th></tr>
+  <tr><td>0</td><td>0</td><td>skip</td><td>[0, 1, 0, 3, 12]</td><td>0</td></tr>
+  <tr><td>1</td><td>1</td><td>swap 0↔1</td><td>[1, 0, 0, 3, 12]</td><td>1</td></tr>
+  <tr><td>2</td><td>0</td><td>skip</td><td>[1, 0, 0, 3, 12]</td><td>1</td></tr>
+  <tr><td>3</td><td>3</td><td>swap 1↔3</td><td>[1, 3, 0, 0, 12]</td><td>2</td></tr>
+  <tr><td>4</td><td>12</td><td>swap 2↔4</td><td>[1, 3, 12, 0, 0]</td><td>3</td></tr>
+</table>
+
+<h3>Your turn</h3>
+<p>The first three use opposite ends, the next two use slow/fast, and the last one walks backwards.</p>
+
+<leetcode slug="reverse-string" num="344" title="Reverse String" level="Easy" minutes="5">
+  <hint>Opposite ends: swap <code>s[left]</code> and <code>s[right]</code>, then move both inwards. In Python, <code>a, b = b, a</code> swaps two values.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def reverseString(self, s: List[str]) -> None:
+        left, right = 0, len(s) - 1
+        while left &lt; right:
+            s[left], s[right] = s[right], s[left]
+            left += 1
+            right -= 1
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="valid-palindrome" num="125" title="Valid Palindrome" level="Easy" minutes="10">
+  <hint>Same as the racecar picture, but first skip anything that isn't a letter or digit (<code>ch.isalnum()</code>) and compare with <code>.lower()</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        left, right = 0, len(s) - 1
+        while left &lt; right:
+            if not s[left].isalnum():
+                left += 1
+            elif not s[right].isalnum():
+                right -= 1
+            elif s[left].lower() != s[right].lower():
+                return False
+            else:
+                left += 1
+                right -= 1
+        return True
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="squares-of-a-sorted-array" num="977" title="Squares of a Sorted Array" level="Easy" minutes="15">
+  <hint>Negative numbers make big squares too, so the biggest square is at one of the two <b>ends</b>. Compare the ends, put the bigger square at the back of the result, and move that pointer inwards.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        result = [0] * n
+        left, right = 0, n - 1
+        for pos in range(n - 1, -1, -1):      # fill from the back
+            if abs(nums[left]) > abs(nums[right]):
+                result[pos] = nums[left] ** 2
+                left += 1
+            else:
+                result[pos] = nums[right] ** 2
+                right -= 1
+        return result
+# O(n). The easy way, sorted(x * x for x in nums), is O(n log n): also accepted.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="move-zeroes" num="283" title="Move Zeroes" level="Easy" minutes="10">
+  <hint>Exactly the worked example: <b>read</b> visits everything, non-zeros get swapped to <b>write</b>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        write = 0
+        for read in range(len(nums)):
+            if nums[read] != 0:
+                nums[write], nums[read] = nums[read], nums[write]
+                write += 1
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="remove-duplicates-from-sorted-array" num="26" title="Remove Duplicates from Sorted Array" level="Easy" minutes="10">
+  <hint>The list is sorted, so duplicates sit next to each other. Keep a number only if it differs from the last <i>kept</i> number, <code>nums[write - 1]</code>. Return <code>write</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        write = 1                       # the first number is always kept
+        for read in range(1, len(nums)):
+            if nums[read] != nums[write - 1]:
+                nums[write] = nums[read]
+                write += 1
+        return write
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="merge-sorted-array" num="88" title="Merge Sorted Array" level="Easy" minutes="15">
+  <hint>Filling from the front would overwrite numbers you still need. Fill from the <b>back</b> instead: one pointer at the end of each list's real numbers, and a third at the very end of <code>nums1</code>. Put the bigger of the two there.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        i, j = m - 1, n - 1              # last real number in each list
+        for pos in range(m + n - 1, -1, -1):
+            # take from nums2 if nums1 is used up, or nums2's number is bigger
+            if i &lt; 0 or (j >= 0 and nums2[j] > nums1[i]):
+                nums1[pos] = nums2[j]
+                j -= 1
+            else:
+                nums1[pos] = nums1[i]
+                i -= 1
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Unix tools that walk two files at once">
+  <p>The command-line tools <code>comm</code> and <code>join</code> compare two files line by line. Both need the files to be <b>sorted</b> first, and that's the clue: they work like Merge Sorted Array. They keep one pointer in each file, compare the two current lines, and move the smaller one forward.</p>
+  <p>Because they only ever hold the current lines, they can compare files much bigger than the computer's memory. Databases use the same idea in a "merge join" to match up rows from two sorted tables.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Opposite ends (<code>left</code>, <code>right</code> moving inwards): reversing, palindromes, sorted-pair questions.</li>
+    <li>Slow/fast (<code>write</code> keeps, <code>read</code> scans): remove or move items in place.</li>
+    <li>Both are O(n) time, O(1) extra space. When filling a list in place, try filling from the back.</li>
+  </ul>
+</recap>
