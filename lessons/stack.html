@@ -1,0 +1,155 @@
+<p class="lead">A stack is a pile where you only touch the <b>top</b>. It's the right tool whenever the most recent unfinished thing is the one you need next: matching brackets, undo, "cancel the last one".</p>
+
+<h3>The idea</h3>
+<p>Think of a stack of plates in a canteen. You put a clean plate on <b>top</b>, and you take a plate from the <b>top</b>. You never pull one out of the middle. The last plate in is the first plate out ("<b>last in, first out</b>").</p>
+<p>Three operations, all instant:</p>
+<ul>
+  <li><b>push</b>: put something on top</li>
+  <li><b>pop</b>: take the top thing off</li>
+  <li><b>peek</b>: look at the top without taking it</li>
+</ul>
+
+<h3>In Python</h3>
+<p>A plain list is already a stack. The end of the list is the top.</p>
+<pre><code class="language-python">stack = []
+stack.append(3)     # push -> [3]
+stack.append(7)     # push -> [3, 7]
+stack[-1]           # peek -> 7
+stack.pop()         # pop  -> 7, stack is [3] again
+if stack:           # is it non-empty? (pop on an empty list is an error)
+    ...
+</code></pre>
+<p><code>append</code>, <code>pop()</code> and <code>[-1]</code> are all <b>O(1)</b>. Avoid <code>pop(0)</code>, which takes from the bottom and is slow (that's a queue, next lesson).</p>
+
+<h3>When to think "stack"</h3>
+<ul>
+  <li>Things come in <b>pairs that nest</b>, like <code>( [ ] )</code>: the most recent opener must close first.</li>
+  <li>A new item can <b>cancel the previous one</b>, like "undo" or deleting the last character.</li>
+  <li>You need "the most recent item that is still waiting for something".</li>
+</ul>
+
+<h3>Worked example: matching brackets</h3>
+<p>Is <code>"({[]})"</code> correctly matched? Push every opener. On a closer, the top of the stack must be its partner: pop it. At the end, the stack must be empty.</p>
+<pre class="mermaid" data-alt="Checking ({[]}) with a stack. Push open round bracket. Push open curly bracket. Push open square bracket. Close square bracket matches the top, pop. Close curly bracket matches, pop. Close round bracket matches, pop. Stack is empty, so the string is valid.">
+flowchart TD
+  A["read ( → push · stack: ("] --> B["read { → push · stack: ( {"]
+  B --> C["read [ → push · stack: ( { ["]
+  C --> D["read ] → top is [ ✓ pop · stack: ( {"]
+  D --> E["read } → top is { ✓ pop · stack: ("]
+  E --> F["read ) → top is ( ✓ pop · stack: empty"]
+  F --> G["empty at the end → valid"]
+</pre>
+<p>It fails if a closer arrives when the stack is empty, if the top is the wrong opener, or if anything is left at the end.</p>
+
+<h3>Your turn</h3>
+<p>The first three are Easy. The last two are Medium stretch problems: try them if you have time left on the train.</p>
+
+<leetcode slug="baseball-game" num="682" title="Baseball Game" level="Easy" minutes="10">
+  <hint>Keep the valid scores on a stack. <code>"C"</code> pops the last score, <code>"D"</code> pushes double the top, <code>"+"</code> pushes the sum of the top two, and anything else is a number to push.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def calPoints(self, operations: List[str]) -> int:
+        stack = []
+        for op in operations:
+            if op == "C":
+                stack.pop()                       # cancel the last score
+            elif op == "D":
+                stack.append(stack[-1] * 2)
+            elif op == "+":
+                stack.append(stack[-1] + stack[-2])
+            else:
+                stack.append(int(op))
+        return sum(stack)
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="valid-parentheses" num="20" title="Valid Parentheses" level="Easy" minutes="10">
+  <hint>The worked example. A dict from each closer to its opener helps: <code>{")": "(", "]": "[", "}": "{"}</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isValid(self, s: str) -> bool:
+        partner = {")": "(", "]": "[", "}": "{"}
+        stack = []
+        for ch in s:
+            if ch in partner:                      # a closer
+                if not stack or stack[-1] != partner[ch]:
+                    return False
+                stack.pop()
+            else:                                  # an opener
+                stack.append(ch)
+        return not stack                           # nothing left open
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="remove-all-adjacent-duplicates-in-string" num="1047" title="Remove All Adjacent Duplicates In String" level="Easy" minutes="10">
+  <hint>Push letters one by one. If the new letter equals the top of the stack, they cancel: pop instead of pushing. Join the stack at the end.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def removeDuplicates(self, s: str) -> str:
+        stack = []
+        for ch in s:
+            if stack and stack[-1] == ch:
+                stack.pop()            # the pair cancels out
+            else:
+                stack.append(ch)
+        return "".join(stack)
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="min-stack" num="155" title="Min Stack" level="Medium" minutes="15">
+  <hint>Store pairs on the stack: <code>(value, smallest value so far)</code>. When you push, the new "smallest so far" is <code>min(value, previous smallest)</code>. Then <code>getMin</code> just reads the top pair.</hint>
+  <solution>
+<pre><code class="language-python">class MinStack:
+    def __init__(self):
+        self.stack = []        # each item: (value, min of everything up to here)
+
+    def push(self, val: int) -> None:
+        smallest = min(val, self.stack[-1][1]) if self.stack else val
+        self.stack.append((val, smallest))
+
+    def pop(self) -> None:
+        self.stack.pop()
+
+    def top(self) -> int:
+        return self.stack[-1][0]
+
+    def getMin(self) -> int:
+        return self.stack[-1][1]
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="daily-temperatures" num="739" title="Daily Temperatures" level="Medium" minutes="20">
+  <hint>Keep a stack of <b>days still waiting</b> for a warmer day (store their indexes). For each new day, while it's warmer than the day on top of the stack, that waiting day has found its answer: pop it and record the distance. Then push today.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        answer = [0] * len(temperatures)
+        waiting = []                       # indexes of days with no warmer day yet
+        for i, t in enumerate(temperatures):
+            while waiting and temperatures[waiting[-1]] &lt; t:
+                day = waiting.pop()
+                answer[day] = i - day      # found its warmer day
+            waiting.append(i)
+        return answer
+# Each day is pushed once and popped at most once: O(n).
+# This is called a "monotonic stack": temperatures on it only go down.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Every program runs on a stack">
+  <p>When a function calls another function, the computer needs to remember where to come back to. It pushes a "frame" (the function's local variables and return point) onto the <b>call stack</b>. When the function returns, its frame is popped and the caller carries on.</p>
+  <p>If functions keep calling deeper and deeper without returning, the stack runs out. That's a <b>stack overflow</b>, the error the famous programming website is named after. Python stops you earlier, at about 1,000 nested calls by default (<code>sys.getrecursionlimit()</code>), and raises <code>RecursionError</code>. You'll meet that in the Recursion lesson.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Stack = last in, first out. In Python: <code>append</code>, <code>pop()</code>, <code>[-1]</code>, all O(1).</li>
+    <li>Use it for nesting pairs, cancelling the previous item, and "most recent item still waiting".</li>
+    <li>Always check <code>if stack:</code> before popping or peeking.</li>
+  </ul>
+</recap>
