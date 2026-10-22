@@ -1,0 +1,213 @@
+<p class="lead">A binary search tree keeps its values in order, so you can find any value by going left or right at each node, like <a href="#binary-search">binary search</a>. It is a normal <a href="#tree-dfs">binary tree</a> with one extra rule.</p>
+
+<h3>The idea</h3>
+<p>Think of a librarian sorting returned books. At each shelf there is a sign: "before M go left, after M go right". At the next shelf there is another sign. You never look at the whole library, you just follow the signs.</p>
+<p>A <b>binary search tree</b> (BST) works the same way. The rule, for every node:</p>
+<ul>
+  <li>everything in its <b>left</b> subtree is <b>smaller</b> than it;</li>
+  <li>everything in its <b>right</b> subtree is <b>bigger</b> than it.</li>
+</ul>
+<pre class="mermaid" data-alt="A binary search tree. The root is 8. Its left child is 3 and its right child is 10. Node 3 has children 1 and 6. Node 10 has only a right child, 14. To find 6: start at 8, 6 is smaller so go left to 3, 6 is bigger so go right to 6, found in three steps.">
+%%{init: {"flowchart": {"rankSpacing": 40, "nodeSpacing": 30, "padding": 14}}}%%
+flowchart TD
+  A["8"] -- "6 is smaller" --> B["3"]
+  A --> C["10"]
+  B --> D["1"]
+  B -- "6 is bigger" --> E["6 found"]
+  C --> F["14"]
+</pre>
+<p>To find <b>6</b>: start at the root 8. 6 is smaller, so go left to 3. 6 is bigger, so go right. Found it. Each step throws away a whole subtree, just like binary search throws away half of a list.</p>
+<p>Two more things follow from the rule:</p>
+<ul>
+  <li><b>In-order is sorted.</b> In-order (left, node, right, from the <a href="#tree-dfs">depth-first lesson</a>) visits all the smaller values, then the node, then the bigger ones. For the tree above: 1 3 6 8 10 14.</li>
+  <li><b>The shape matters.</b> A search takes one step per level, so it costs O(h), where h is the height of the tree. A nice bushy tree has about log n levels. But insert 1, 2, 3, 4 in that order and every new value goes to the right. The "tree" becomes a <a href="#linked-list">linked list</a>, and a search costs O(n).</li>
+</ul>
+<pre class="mermaid" data-alt="An unbalanced binary search tree built by inserting 1, 2, 3, 4 in sorted order. 1 has a right child 2, which has a right child 3, which has a right child 4. It is just a chain, like a linked list.">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 30, "padding": 14}}}%%
+flowchart TD
+  A["1"] -- right --> B["2"]
+  B -- right --> C["3"]
+  C -- right --> D["4"]
+</pre>
+<p>A <b>balanced</b> tree has about the same height on the left and right of every node. To build one from a sorted list, pick the <b>middle</b> value as the root, then do the same for the left half and the right half. You will do exactly this in problem 108 below.</p>
+
+<h3>In Python</h3>
+<p>Nodes are the same <code>TreeNode</code> class as before. Search is a simple loop, no recursion needed:</p>
+<pre><code class="language-python">def search(node, target):
+    while node:
+        if target == node.val:
+            return node
+        # smaller: go left
+        if target < node.val:
+            node = node.left
+        # bigger: go right
+        else:
+            node = node.right
+    # fell off the tree: not there
+    return None
+</code></pre>
+<p>Insert walks the same path and hangs the new node where the walk falls off the tree:</p>
+<pre><code class="language-python">def insert(node, val):
+    # empty spot: put the node here
+    if node is None:
+        return TreeNode(val)
+    if val < node.val:
+        node.left = insert(
+            node.left, val)
+    else:
+        node.right = insert(
+            node.right, val)
+    return node
+</code></pre>
+<p>Both take O(h) time: about O(log n) if the tree is balanced, O(n) if it is a chain.</p>
+
+<h3>Your turn</h3>
+<p>Each time, ask: can the rule tell me which side to skip?</p>
+
+<leetcode slug="search-in-a-binary-search-tree" num="700" title="Search in a Binary Search Tree" level="Easy" minutes="5">
+  <hint>This is the <code>search</code> function above. Return the node itself (the whole subtree), or <code>None</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def searchBST(
+        self, root: Optional[TreeNode],
+        val: int
+    ) -> Optional[TreeNode]:
+        node = root
+        while node:
+            if val == node.val:
+                return node
+            # go to val's side
+            if val < node.val:
+                node = node.left
+            else:
+                node = node.right
+        return None
+# O(h) time, O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="range-sum-of-bst" num="938" title="Range Sum of BST" level="Easy" minutes="10">
+  <hint>Plain depth-first sum works. To use the rule: if a node is smaller than <code>low</code>, nothing on its left can be in range, so only go right. If it is bigger than <code>high</code>, only go left.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def rangeSumBST(
+        self, root: Optional[TreeNode],
+        low: int, high: int
+    ) -> int:
+        if root is None:
+            return 0
+        # too small: the left side is
+        # even smaller, skip it
+        if root.val < low:
+            return self.rangeSumBST(
+                root.right, low, high)
+        # too big: skip the right side
+        if root.val > high:
+            return self.rangeSumBST(
+                root.left, low, high)
+        # in range: count it, try both
+        left = self.rangeSumBST(
+            root.left, low, high)
+        right = self.rangeSumBST(
+            root.right, low, high)
+        return root.val + left + right
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="minimum-absolute-difference-in-bst" num="530" title="Minimum Absolute Difference in BST" level="Easy" minutes="10">
+  <hint>In-order gives the values sorted. In a sorted list, the closest pair is always two neighbours. Walk in-order and remember the previous value.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def getMinimumDifference(
+        self, root: Optional[TreeNode]
+    ) -> int:
+        prev = None
+        best = float("inf")
+
+        def walk(node):
+            nonlocal prev, best
+            if node is None:
+                return
+            walk(node.left)
+            # values arrive sorted here
+            if prev is not None:
+                gap = node.val - prev
+                best = min(best, gap)
+            prev = node.val
+            walk(node.right)
+
+        walk(root)
+        return best
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="convert-sorted-array-to-binary-search-tree" num="108" title="Convert Sorted Array to Binary Search Tree" level="Easy" minutes="15">
+  <hint>The middle value is the root. Everything before it goes into the left subtree, everything after it into the right. Build those the same way. Pass indexes <code>lo, hi</code> instead of slicing.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def sortedArrayToBST(
+        self, nums: List[int]
+    ) -> Optional[TreeNode]:
+
+        def build(lo, hi):
+            # empty range: no node
+            if lo > hi:
+                return None
+            mid = (lo + hi) // 2
+            node = TreeNode(nums[mid])
+            node.left = build(
+                lo, mid - 1)
+            node.right = build(
+                mid + 1, hi)
+            return node
+
+        return build(0, len(nums) - 1)
+# O(n) time. Height is about log n.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="validate-binary-search-tree" num="98" title="Validate Binary Search Tree" level="Medium" minutes="20">
+  <hint>Stretch. Checking each node against its two children is not enough: a node deep on the left must be smaller than the root too. Pass down the allowed range <code>(low, high)</code>. Going left, the node's value becomes the new <code>high</code>; going right, the new <code>low</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isValidBST(
+        self, root: Optional[TreeNode]
+    ) -> bool:
+
+        def ok(node, low, high):
+            if node is None:
+                return True
+            # must be strictly inside
+            if not low < node.val < high:
+                return False
+            # left side: below node.val
+            # right side: above node.val
+            return (
+                ok(node.left, low, node.val)
+                and
+                ok(node.right, node.val, high))
+
+        inf = float("inf")
+        return ok(root, -inf, inf)
+# Another way: in-order must be
+# strictly increasing.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Database indexes are wide search trees">
+  <p>When you add an index to a database table, PostgreSQL, MySQL (InnoDB) and SQLite all store it as a <b>B-tree</b>. It is the default index type in PostgreSQL, and SQLite keeps both its tables and indexes in B-trees.</p>
+  <p>A B-tree is a search tree where each node is one disk page and holds hundreds of sorted keys instead of one. At each node you pick which of hundreds of children to follow, not just left or right. With 300 keys per node, four levels already cover 300 × 300 × 300 × 300 ≈ 8 billion rows. So finding one row reads only about four pages from disk, and the top levels are usually already in memory.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>BST rule: left subtree smaller, right subtree bigger, at every node. Search goes one way per level: O(h).</li>
+    <li>In-order walk of a BST gives the values sorted.</li>
+    <li>Sorted inserts make a chain (O(n)). Build from the middle to keep it balanced (O(log n) height).</li>
+  </ul>
+</recap>
