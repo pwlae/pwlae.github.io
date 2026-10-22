@@ -1,0 +1,195 @@
+<p class="lead">A greedy algorithm always takes the choice that looks best right now, and never goes back to change it. When it works, it is the simplest and fastest solution there is.</p>
+
+<h3>The idea</h3>
+<p>You work at a shop till and owe a customer 68p. You don't think hard. You grab the <b>biggest coin that still fits</b>, again and again: 50p, then 10p, then 5p, 2p, 1p. Five coins, and that is the fewest possible.</p>
+<p>That is a <b>greedy</b> algorithm. At each step it makes the best-looking <b>local</b> choice (the choice that is best for this one step). It never undoes a choice. It hopes the local choices add up to the best answer overall.</p>
+<p>Careful: they don't always. Imagine a country with only 1p, 3p and 4p coins, and you owe 6p.</p>
+<ul>
+  <li>Greedy takes 4p first, then 1p, then 1p: <b>three</b> coins.</li>
+  <li>The best answer is 3p + 3p: <b>two</b> coins.</li>
+</ul>
+<p>Taking the 4p looked good, but it was a trap. So greedy needs a <b>reason</b> to be right. Before you trust it, ask yourself one question:</p>
+<p><b>"Is there ever a reason NOT to take this choice now?"</b></p>
+<p>With British coins, the answer is no: a big coin never blocks a better answer. With 1p, 3p, 4p, the answer is yes. When the answer is yes, you need a different tool (<a href="#dp-1d">dynamic programming</a> solves the coin problem for any coins).</p>
+<p>Here is a greedy rule from the problem <b>Lemonade Change</b> below. Lemonade costs $5. A customer pays with $20, so you owe $15. Which notes do you give back?</p>
+<pre class="mermaid" data-alt="Giving $15 change for a $20 note. If you have a $10 and a $5, give those. Otherwise, if you have three $5 notes, give those. Otherwise you cannot give change.">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 20, "padding": 8}}}%%
+flowchart TD
+  A["Paid $20<br/>owe $15"] --> B{"Have a $10<br/>and a $5?"}
+  B -->|yes| C["Give $10 + $5"]
+  B -->|no| D{"Have three<br/>$5 notes?"}
+  D -->|yes| E["Give $5 + $5 + $5"]
+  D -->|no| F["Cannot give<br/>change"]
+</pre>
+<p>Why use the $10 first? A $5 can help with any later change. A $10 can only help with a $20. So keeping $5 notes is never worse. Nothing makes you want to hold on to the $10.</p>
+
+<h3>In Python</h3>
+<p>Most greedy solutions have the same shape. <b>Sort first</b> (see <a href="#sorting">Sorting</a>), so the best choice is always next in line. Then make <b>one pass</b>, taking each choice as it comes.</p>
+<pre><code class="language-python">def make_change(amount, coins):
+    # biggest coin first
+    coins = sorted(coins, reverse=True)
+    used = []
+    for c in coins:
+        # take this coin while it fits
+        while amount >= c:
+            amount -= c
+            used.append(c)
+    return used
+
+make_change(68, [1, 2, 5, 10, 20, 50])
+# [50, 10, 5, 2, 1]
+make_change(6, [1, 3, 4])
+# [4, 1, 1]: not the best!
+</code></pre>
+<p>Cost: the sort is O(n log n), and the pass after it is usually O(n). So most greedy solutions are <b>O(n log n)</b> overall, with almost no extra memory.</p>
+
+<h3>Worked example</h3>
+<p>Assign Cookies, the first problem below. Children have greed <code>[1, 2, 3]</code>: each child needs a cookie at least that big. Cookies have sizes <code>[1, 1]</code>. Both lists are sorted. Give the smallest cookie to the least greedy child who is still waiting:</p>
+<table>
+  <tr><th>cookie</th><th>child needs</th><th>fits?</th><th>happy</th></tr>
+  <tr><td>1</td><td>1</td><td>yes, next child</td><td>1</td></tr>
+  <tr><td>1</td><td>2</td><td>no, skip cookie</td><td>1</td></tr>
+  <tr><td>(none left)</td><td></td><td>stop</td><td>1</td></tr>
+</table>
+<p>Why is this safe? A small cookie that fits the least greedy child can't do better anywhere else. Bigger cookies stay free for greedier children.</p>
+
+<h3>Your turn</h3>
+<p>For each problem, find the greedy choice, then ask: "is there ever a reason not to take it?"</p>
+
+<leetcode slug="assign-cookies" num="455" title="Assign Cookies" level="Easy" minutes="10">
+  <hint>Sort both lists. Walk through the cookies with one pointer on the children. If the cookie is big enough for the current child, that child is happy: move to the next child.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def findContentChildren(
+        self, g: List[int], s: List[int]
+    ) -> int:
+        g.sort()
+        s.sort()
+        # child = next child to feed
+        child = 0
+        for cookie in s:
+            if child == len(g):
+                break
+            if cookie >= g[child]:
+                child += 1
+        # children fed = happy count
+        return child
+# O(n log n + m log m) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="minimum-cost-of-buying-candies-with-discount" num="2144" title="Minimum Cost of Buying Candies With Discount" level="Easy" minutes="10">
+  <hint>The free candy can be at most the cheaper of the two you pay for. To get the most for free, buy the most expensive ones first. Sort from high to low and skip every third candy.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def minimumCost(
+        self, cost: List[int]
+    ) -> int:
+        cost.sort(reverse=True)
+        total = 0
+        for i, c in enumerate(cost):
+            # every 3rd candy is free
+            if i % 3 != 2:
+                total += c
+        return total
+# O(n log n) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="maximum-units-on-a-truck" num="1710" title="Maximum Units on a Truck" level="Easy" minutes="10">
+  <hint>Every box takes the same space, so load the boxes with the most units first. Sort by units per box, high to low. Take as many as fit, then move on.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def maximumUnits(
+        self, boxTypes: List[List[int]],
+        truckSize: int
+    ) -> int:
+        # most units per box first
+        boxTypes.sort(
+            key=lambda b: b[1],
+            reverse=True)
+        total = 0
+        for count, units in boxTypes:
+            take = min(count, truckSize)
+            total += take * units
+            truckSize -= take
+            if truckSize == 0:
+                break
+        return total
+# O(n log n) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="lemonade-change" num="860" title="Lemonade Change" level="Easy" minutes="15">
+  <hint>Count your $5 and $10 notes ($20s are never given back). Use the diagram above for a $20: prefer a $10 + $5 over three $5s. Return <code>False</code> as soon as you can't give change.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def lemonadeChange(
+        self, bills: List[int]
+    ) -> bool:
+        fives = 0
+        tens = 0
+        for b in bills:
+            if b == 5:
+                fives += 1
+            elif b == 10:
+                # owe $5
+                if fives == 0:
+                    return False
+                fives -= 1
+                tens += 1
+            else:
+                # owe $15: use a $10
+                # first, keep the $5s
+                if tens and fives:
+                    tens -= 1
+                    fives -= 1
+                elif fives >= 3:
+                    fives -= 3
+                else:
+                    return False
+        return True
+# One pass: O(n) time, O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="best-time-to-buy-and-sell-stock-ii" num="122" title="Best Time to Buy and Sell Stock II" level="Medium" minutes="15">
+  <hint>Stretch. You may buy and sell as often as you like. Greedy: take every rise. Whenever tomorrow's price is higher than today's, add the difference.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def maxProfit(
+        self, prices: List[int]
+    ) -> int:
+        profit = 0
+        # a = today, b = tomorrow
+        for a, b in zip(prices,
+                        prices[1:]):
+            # take every rising day
+            if b > a:
+                profit += b - a
+        return profit
+# A long climb from 1 to 5 equals
+# the sum of its small daily
+# steps, so nothing is missed.
+# O(n) time, O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Greedy inside every ZIP file">
+  <p>In 1952, David Huffman, then a student at MIT, found a way to give each symbol (say, a letter) a code made of bits. Common symbols get short codes, rare ones get long codes, so the whole file gets smaller.</p>
+  <p>His method is greedy. Put every symbol in a pile with its count. Again and again, take the <b>two rarest</b> items and join them into one, until one item is left. That builds a tree, and each symbol's path in the tree is its code. Huffman proved this gives the shortest possible codes of this kind.</p>
+  <p><b>Huffman coding</b> is a core part of DEFLATE, the compression used by ZIP and gzip files and inside PNG images (its spec is RFC 1951). Baseline JPEG photos use Huffman coding too.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Greedy: take the best-looking choice now and never go back.</li>
+    <li>Usual shape: sort first, then one pass. Often O(n log n).</li>
+    <li>Only trust it if there is never a reason not to take the choice now (coins 1, 3, 4 for 6 break it).</li>
+  </ul>
+</recap>
