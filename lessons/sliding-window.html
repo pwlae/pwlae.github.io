@@ -1,0 +1,121 @@
+<p class="lead">When a problem asks about a <b>stretch of neighbouring items</b> ("the best 4 days in a row", "the longest piece of text without repeats"), don't re-add the whole stretch every time. Slide a window along and update it a little at each step.</p>
+
+<h3>The idea</h3>
+<p>Imagine you're on a train and the window shows exactly 4 houses at a time. When the train moves one house forward, one new house appears at the front and one old house disappears at the back. The other three are still there. You don't have to look at them again.</p>
+<p>A <b>sliding window</b> is a stretch of the list from index <code>left</code> to index <code>right</code>. It comes in two kinds:</p>
+<ul>
+  <li><b>Fixed size</b>: always k items. Each step: add the item coming in, remove the item going out.</li>
+  <li><b>Growing and shrinking</b>: the right edge moves forward every step. The left edge moves forward only when the window breaks a rule (for example, "no repeated letters").</li>
+</ul>
+
+<h3>Fixed-size window</h3>
+<p>Best sum of 4 neighbours in <code>[1, 12, -5, -6, 50, 3]</code>:</p>
+<pre class="mermaid" data-alt="A window of 4 sliding over 1, 12, -5, -6, 50, 3. First window 1, 12, -5, -6 has sum 2. Slide: remove 1, add 50, sum 51. Slide: remove 12, add 3, sum 42. Best sum is 51.">
+flowchart TD
+  A["[1, 12, -5, -6]  sum = 2"] -->|"− 1, + 50"| B["[12, -5, -6, 50]  sum = 51"]
+  B -->|"− 12, + 3"| C["[-5, -6, 50, 3]  sum = 42"]
+  C --> D["best sum = 51"]
+</pre>
+<p>Re-adding 4 numbers for every position would be O(n·k). Updating with one add and one subtract is <b>O(n)</b>.</p>
+<pre><code class="language-python">window = sum(nums[:k])             # the first window
+best = window
+for right in range(k, len(nums)):
+    window += nums[right]          # item coming in
+    window -= nums[right - k]      # item going out
+    best = max(best, window)
+</code></pre>
+
+<h3>Growing and shrinking window</h3>
+<p>Here the window has a <b>rule</b>, and you keep it as big as you can while the rule holds. A <code>set</code> or <code>dict</code> remembers what is inside the window.</p>
+<pre><code class="language-python">left = 0
+inside = set()
+best = 0
+for right, x in enumerate(items):
+    while x in inside:          # adding x would break the rule...
+        inside.remove(items[left])
+        left += 1               # ...so shrink from the left until it's OK
+    inside.add(x)
+    best = max(best, right - left + 1)   # window length
+</code></pre>
+<p>It looks like a loop inside a loop, but <code>left</code> only ever moves forward, so it moves at most n times in total. Overall it's still <b>O(n)</b>. That's the two-pointers idea again.</p>
+
+<h3>Worked example: longest stretch without repeats</h3>
+<p>Text <code>"abcabcbb"</code>, rule: no letter twice.</p>
+<table>
+  <tr><th>right</th><th>letter</th><th>window after</th><th>length</th></tr>
+  <tr><td>0</td><td>a</td><td>a</td><td>1</td></tr>
+  <tr><td>1</td><td>b</td><td>ab</td><td>2</td></tr>
+  <tr><td>2</td><td>c</td><td>abc</td><td>3</td></tr>
+  <tr><td>3</td><td>a</td><td>bca (dropped "a")</td><td>3</td></tr>
+  <tr><td>4</td><td>b</td><td>cab (dropped "b")</td><td>3</td></tr>
+  <tr><td>5</td><td>c</td><td>abc (dropped "c")</td><td>3</td></tr>
+  <tr><td>6</td><td>b</td><td>cb (dropped "a", "b")</td><td>2</td></tr>
+  <tr><td>7</td><td>b</td><td>b (dropped "c", "b")</td><td>1</td></tr>
+</table>
+<p>Best length: 3.</p>
+
+<h3>Your turn</h3>
+
+<leetcode slug="maximum-average-subarray-i" num="643" title="Maximum Average Subarray I" level="Easy" minutes="10">
+  <hint>Fixed window of size k. Find the best <b>sum</b> with the template, then divide by k once at the end.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def findMaxAverage(self, nums: List[int], k: int) -> float:
+        window = sum(nums[:k])
+        best = window
+        for right in range(k, len(nums)):
+            window += nums[right] - nums[right - k]
+            best = max(best, window)
+        return best / k
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="contains-duplicate-ii" num="219" title="Contains Duplicate II" level="Easy" minutes="15">
+  <hint>Keep a <code>set</code> of the last k numbers only. Before adding a number, check whether it's already in the set. After adding, if the set holds more than k numbers, remove the one that fell out of the window: <code>nums[i - k]</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
+        window = set()                  # the last k numbers
+        for i, x in enumerate(nums):
+            if x in window:
+                return True
+            window.add(x)
+            if len(window) > k:
+                window.remove(nums[i - k])   # too old, slide past it
+        return False
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="longest-substring-without-repeating-characters" num="3" title="Longest Substring Without Repeating Characters" level="Medium" minutes="20">
+  <hint>Stretch problem, but it's exactly the worked example: the growing/shrinking template with a <code>set</code> of letters inside the window.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        left = 0
+        inside = set()
+        best = 0
+        for right, ch in enumerate(s):
+            while ch in inside:          # repeat: shrink from the left
+                inside.remove(s[left])
+                left += 1
+            inside.add(ch)
+            best = max(best, right - left + 1)
+        return best
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="The internet runs on a sliding window">
+  <p><b>TCP</b>, the protocol that carries web pages, email and most app traffic, uses a sliding window to control speed. The sender may have only a "window" of data sent but not yet confirmed. When the receiver confirms the oldest bytes, the window slides forward and more data can go out.</p>
+  <p>If the receiver is slow, it shrinks the window, and the sender automatically slows down. That's how a fast server avoids flooding your phone on a weak connection.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Neighbouring stretch of items? Think sliding window: update the window, don't rebuild it.</li>
+    <li>Fixed size: add the new item, remove <code>nums[right - k]</code>. Growing/shrinking: move <code>right</code> every step, move <code>left</code> while the rule is broken.</li>
+    <li>Both are O(n), because each edge only moves forward.</li>
+  </ul>
+</recap>
