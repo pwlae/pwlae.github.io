@@ -1,0 +1,164 @@
+<p class="lead">Binary search finds something in a <b>sorted</b> list by looking at the middle and throwing away the half that can't hold the answer. A million items take about 20 looks instead of a million.</p>
+
+<h3>The idea</h3>
+<p>Play "guess my number" from 1 to 100. A friend only says "higher" or "lower". The smart first guess is 50. If they say "lower", every number from 50 to 100 is gone in one go. Next guess 25, then 12 or 37, and so on. Each guess cuts what's left in half, so you never need more than <b>7 guesses</b> (2 × 2 × 2 × 2 × 2 × 2 × 2 = 128, which covers 100).</p>
+<p>On a list it works the same way. Keep two markers: <code>lo</code> (the left end of the part still in play) and <code>hi</code> (the right end).</p>
+<ol>
+  <li>Look at the middle item, <code>mid</code>.</li>
+  <li>Is it the target? Done.</li>
+  <li>Too small? The answer is to the right: move <code>lo</code> to <code>mid + 1</code>.</li>
+  <li>Too big? The answer is to the left: move <code>hi</code> to <code>mid - 1</code>.</li>
+  <li>If <code>lo</code> passes <code>hi</code>, nothing is left: the target isn't there.</li>
+</ol>
+<p>Here is a search for 9 in <code>[1, 3, 5, 7, 9, 11, 13]</code> (indexes 0 to 6):</p>
+<pre class="mermaid" data-alt="Binary search for 9 in the list 1, 3, 5, 7, 9, 11, 13. Step 1: lo is 0, hi is 6, mid is 3, the value 7 is too small, so lo becomes 4. Step 2: lo is 4, hi is 6, mid is 5, the value 11 is too big, so hi becomes 4. Step 3: lo is 4, hi is 4, mid is 4, the value 9 is the target. Found at index 4 in three steps.">
+flowchart TD
+  A["Step 1: lo=0, hi=6, mid=3<br/>nums[3] = 7, too small"] -->|"lo = 4"| B["Step 2: lo=4, hi=6, mid=5<br/>nums[5] = 11, too big"]
+  B -->|"hi = 4"| C["Step 3: lo=4, hi=4, mid=4<br/>nums[4] = 9, found!"]
+</pre>
+<p>The catch: this only works when the list is <b>sorted</b>. "Too small, so go right" is only true if everything to the right is bigger. It also works on anything with a single <b>switch point</b>: a row of answers that go "no, no, no, yes, yes, yes". You can binary search for the first "yes".</p>
+
+<h3>In Python</h3>
+<p>One template. Learn it once and use it for every problem in this lesson.</p>
+<pre><code class="language-python">def binary_search(nums, target):
+    lo, hi = 0, len(nums) - 1
+    while lo &lt;= hi:   # still in play
+        mid = (lo + hi) // 2  # middle
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] &lt; target:
+            lo = mid + 1  # go right
+        else:
+            hi = mid - 1  # go left
+    return -1  # lo passed hi
+</code></pre>
+<p>Each loop throws away half of what's left, so the cost is O(log n) time (see <a href="#big-o">Big O</a>) and O(1) extra space.</p>
+
+<h3>Variant: find the first "yes"</h3>
+<p>Sometimes you don't want an exact match. You want the <b>first place</b> where something becomes true: the first bad version, the first number ≥ target. Two small changes: loop while <code>lo &lt; hi</code>, and when <code>mid</code> is a "yes", keep it with <code>hi = mid</code> (it might be the answer).</p>
+<pre><code class="language-python">def first_yes(lo, hi, is_yes):
+    while lo &lt; hi:
+        mid = (lo + hi) // 2
+        if is_yes(mid):
+            hi = mid      # keep mid
+        else:
+            lo = mid + 1  # skip mid
+    return lo  # lo == hi: first yes
+</code></pre>
+<p>Python has this built in. <code>bisect.bisect_left(nums, x)</code> returns the first index where <code>nums[i] &gt;= x</code>, which is where <code>x</code> would go to keep the list sorted.</p>
+<pre><code class="language-python">import bisect
+bisect.bisect_left([1, 3, 5, 7], 5)  # 2
+bisect.bisect_left([1, 3, 5, 7], 4)  # 2
+</code></pre>
+<p>Both give 2: 5 is at index 2, and 4 would also go at index 2, just before the 5.</p>
+
+<h3>Your turn</h3>
+<p>Write the loop yourself each time, without looking. That's the whole point of these five.</p>
+
+<leetcode slug="binary-search" num="704" title="Binary Search" level="Easy" minutes="5">
+  <hint>This is exactly the template. Type it from memory, then compare.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        lo, hi = 0, len(nums) - 1
+        while lo &lt;= hi:
+            mid = (lo + hi) // 2
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] &lt; target:
+                lo = mid + 1
+            else:
+                hi = mid - 1
+        return -1
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="guess-number-higher-or-lower" num="374" title="Guess Number Higher or Lower" level="Easy" minutes="10">
+  <hint>The number game from the top of the lesson. There's no list: <code>lo = 1</code>, <code>hi = n</code>. Read carefully what <code>guess(mid)</code> returns: <code>-1</code> means your guess is too <b>high</b>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def guessNumber(self, n: int) -> int:
+        lo, hi = 1, n
+        while lo &lt;= hi:
+            mid = (lo + hi) // 2
+            res = guess(mid)
+            if res == 0:
+                return mid
+            elif res == -1:  # too high
+                hi = mid - 1
+            else:  # res == 1: too low
+                lo = mid + 1
+        return -1  # never reached
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="search-insert-position" num="35" title="Search Insert Position" level="Easy" minutes="10">
+  <hint>Find the first index where <code>nums[i] &gt;= target</code>. Use the "first yes" variant with <code>lo = 0</code> and <code>hi = len(nums)</code> (not <code>len - 1</code>: the target may belong after the last item).</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        lo, hi = 0, len(nums)
+        while lo &lt; hi:
+            mid = (lo + hi) // 2
+            if nums[mid] >= target:
+                hi = mid  # could be it
+            else:
+                lo = mid + 1
+        return lo
+# Or in one line:
+# return bisect.bisect_left(nums, target)
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="first-bad-version" num="278" title="First Bad Version" level="Easy" minutes="10">
+  <hint>The versions go good, good, good, bad, bad. That's a switch point. Use the "first yes" variant with <code>lo = 1</code>, <code>hi = n</code>, and <code>isBadVersion(mid)</code> as the "yes" test.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def firstBadVersion(self, n: int) -> int:
+        lo, hi = 1, n
+        while lo &lt; hi:
+            mid = (lo + hi) // 2
+            if isBadVersion(mid):
+                hi = mid  # bad: maybe first
+            else:
+                lo = mid + 1  # good: skip
+        return lo
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="sqrtx" num="69" title="Sqrt(x)" level="Easy" minutes="15">
+  <hint>Search the answer, not a list. Try numbers <code>mid</code> from 0 to <code>x</code>. If <code>mid * mid &lt;= x</code>, it's a possible answer: remember it and try bigger. Otherwise try smaller.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def mySqrt(self, x: int) -> int:
+        lo, hi = 0, x
+        ans = 0
+        while lo &lt;= hi:
+            mid = (lo + hi) // 2
+            if mid * mid &lt;= x:
+                ans = mid  # fits; try bigger
+                lo = mid + 1
+            else:
+                hi = mid - 1  # too big
+        return ans
+# O(log x) time. Works for x = 0 and x = 1 too.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="git bisect: binary search for bugs">
+  <p>Git has a command called <code>git bisect</code>. Its manual describes it as "use binary search to find the commit that introduced a bug". You tell it one commit where the code worked ("good") and one where it's broken ("bad").</p>
+  <p>Git then checks out the commit in the middle. You test it and type <code>git bisect good</code> or <code>git bisect bad</code>, and Git throws away half the history. With 1,000 commits in between you test only about 10 of them, because 2 to the power 10 is 1,024. You can even hand it a test script with <code>git bisect run</code> and let it find the bad commit on its own.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Binary search halves what's left each step: O(log n). It needs sorted data or a single "no → yes" switch point.</li>
+    <li>Exact match: <code>while lo &lt;= hi</code>, then <code>lo = mid + 1</code> or <code>hi = mid - 1</code>.</li>
+    <li>First "yes": <code>while lo &lt; hi</code>, then <code>hi = mid</code> or <code>lo = mid + 1</code>. Python's <code>bisect_left</code> does it for you.</li>
+  </ul>
+</recap>
