@@ -1,0 +1,199 @@
+<p class="lead">Sorting puts things in order: smallest to biggest, A to Z. In Python it's one line, and "sort it first" turns many hard-looking problems into easy ones.</p>
+
+<h3>The idea</h3>
+<p>Imagine a pile of exam papers to put in order by name. A smart way: split the pile in half and give each half to a friend. They split theirs again, and so on, until everyone holds one paper (one paper is always "sorted"). Then everyone hands back up: two sorted piles become one sorted pile, by always taking the smaller top paper. That is <b>merge sort</b>.</p>
+<ol>
+  <li><b>Split</b> the list in half, again and again, until each piece has one item.</li>
+  <li><b>Merge</b> pairs of sorted pieces back into one sorted piece.</li>
+  <li>Keep merging until one piece is left: the whole list, sorted.</li>
+</ol>
+<p>Here is <code>[5, 2, 4, 1]</code>. Splits go down, merges come back together at the bottom:</p>
+<pre class="mermaid" data-alt="Merge sort of 5, 2, 4, 1. The list splits into 5, 2 and 4, 1, then into single items 5, 2, 4 and 1. Then 5 and 2 merge into 2, 5, and 4 and 1 merge into 1, 4. Finally 2, 5 and 1, 4 merge into 1, 2, 4, 5.">
+flowchart TD
+  A["5 2 4 1"] -->|split| B["5 2"]
+  A -->|split| C["4 1"]
+  B --> D["5"]
+  B --> E["2"]
+  C --> F["4"]
+  C --> G["1"]
+  D --> H["2 5"]
+  E --> H
+  F --> I["1 4"]
+  G --> I
+  H -->|merge| J["1 2 4 5"]
+  I -->|merge| J
+</pre>
+<p>The merge step is <a href="#two-pointers">two pointers</a>: one finger on each sorted piece. Compare the two items under your fingers, take the smaller one, move that finger. Merging <code>[2, 5]</code> and <code>[1, 4]</code>:</p>
+<table>
+  <tr><th>left</th><th>right</th><th>take</th><th>result</th></tr>
+  <tr><td><b>2</b>, 5</td><td><b>1</b>, 4</td><td>1</td><td>1</td></tr>
+  <tr><td><b>2</b>, 5</td><td><b>4</b></td><td>2</td><td>1 2</td></tr>
+  <tr><td><b>5</b></td><td><b>4</b></td><td>4</td><td>1 2 4</td></tr>
+  <tr><td><b>5</b></td><td>(empty)</td><td>5</td><td>1 2 4 5</td></tr>
+</table>
+<p>Halving takes about log n levels, and each level touches all n items once. So merge sort costs <b>O(n log n)</b>, much faster than O(n²) for big lists.</p>
+<p>You'll hear other names. <b>Bubble sort</b> and <b>insertion sort</b> are simple but O(n²). <b>Quicksort</b> picks a "pivot" and splits around it, usually O(n log n). You don't need to learn them now.</p>
+
+<h3>In Python</h3>
+<p>In real code and on LeetCode, don't write your own sort. Use the built-in one. It's O(n log n) and very well tested.</p>
+<pre><code class="language-python">nums = [5, 2, 4, 1]
+sorted(nums)  # new list [1, 2, 4, 5]
+nums.sort()   # sorts nums itself
+sorted(nums, reverse=True)  # 5 4 2 1
+
+# key=: sort by something you compute
+words = ["pear", "fig", "banana"]
+sorted(words, key=len)
+# fig, pear, banana
+
+# Tuples sort by the first item,
+# then the second on a tie
+pairs = [(2, "b"), (1, "z"), (2, "a")]
+sorted(pairs)  # (1,z) (2,a) (2,b)
+
+# lambda: a tiny one-line function
+people = [("Ann", 31), ("Bob", 25)]
+people.sort(key=lambda p: p[1])  # age
+</code></pre>
+<p>Python's sort is <b>stable</b>: items that tie keep their old order. Extra space is O(n) in the worst case.</p>
+
+<h3>"Sort first" as a move</h3>
+<p>When a problem feels messy, ask: would it be easy if the list were sorted? Sorting costs O(n log n), and afterwards:</p>
+<ul>
+  <li><b>Equal items become neighbours.</b> Duplicates are next to each other, so one scan finds them.</li>
+  <li><b>Two pointers work.</b> On two sorted lists you can walk both at once, like the merge above.</li>
+  <li><b>Intervals line up.</b> Sort meetings by start time and overlaps sit side by side.</li>
+  <li><b>Binary search works.</b> See <a href="#binary-search">Binary search</a>.</li>
+</ul>
+<p>One more trick. If the values are small whole numbers (say 1 to 100), you can sort by <b>counting</b>: count how many 1s, 2s, 3s… there are, then write them out in order. That's <b>counting sort</b>, O(n + k) where k is the range of values.</p>
+
+<h3>Your turn</h3>
+<p>The first three use the built-in sort. The last two are stretch Mediums: try one if the Easys felt quick.</p>
+
+<leetcode slug="sort-the-people" num="2418" title="Sort the People" level="Easy" minutes="5">
+  <hint>Pair each name with its height using <code>zip(names, heights)</code>. Sort the pairs by height, tallest first (<code>key=</code> and <code>reverse=True</code>). Then keep only the names.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def sortPeople(self, names: List[str],
+                   heights: List[int]) -> List[str]:
+        pairs = list(zip(names, heights))
+        pairs.sort(key=lambda p: p[1],
+                   reverse=True)  # tallest first
+        return [name for name, h in pairs]
+# O(n log n) time, O(n) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="height-checker" num="1051" title="Height Checker" level="Easy" minutes="10">
+  <hint>Make a sorted copy: that's the "expected" line. Count the places where the copy and the original differ. Bonus: heights are only 1 to 100, so try counting sort instead.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def heightChecker(self, heights: List[int]) -> int:
+        expected = sorted(heights)
+        wrong = 0
+        for a, b in zip(heights, expected):
+            if a != b:
+                wrong += 1
+        return wrong
+# O(n log n) time, O(n) space.
+
+# Counting sort version, O(n):
+#   count = [0] * 101
+#   for h in heights: count[h] += 1
+#   expected = []
+#   for v in range(101):
+#       expected += [v] * count[v]
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="intersection-of-two-arrays" num="349" title="Intersection of Two Arrays" level="Easy" minutes="15">
+  <hint>Sort both lists. Put pointer <code>i</code> on the first, <code>j</code> on the second. If the values are equal, you found a common number. Otherwise move the pointer with the smaller value. Skip numbers you already added. (A set solution works too: try both.)</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def intersection(self, nums1: List[int],
+                     nums2: List[int]) -> List[int]:
+        a, b = sorted(nums1), sorted(nums2)
+        i = j = 0
+        out = []
+        while i &lt; len(a) and j &lt; len(b):
+            if a[i] == b[j]:
+                if not out or out[-1] != a[i]:
+                    out.append(a[i])  # new one
+                i += 1
+                j += 1
+            elif a[i] &lt; b[j]:
+                i += 1  # smaller moves
+            else:
+                j += 1
+        return out
+# O(n log n + m log m) time.
+# Set version: list(set(nums1) &amp; set(nums2))
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="sort-an-array" num="912" title="Sort an Array" level="Medium" minutes="20">
+  <hint>Stretch. The problem forbids the built-in sort, so write merge sort. A helper <code>merge(left, right)</code> does the two-pointer merge from the table. Then <code>sort</code> calls itself on each half and merges. A list of 0 or 1 items is already sorted. (Calling a function from inside itself is <b>recursion</b>; it gets its own lesson later.)</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def sortArray(self, nums: List[int]) -> List[int]:
+        if len(nums) &lt;= 1:
+            return nums  # already sorted
+        mid = len(nums) // 2
+        left = self.sortArray(nums[:mid])
+        right = self.sortArray(nums[mid:])
+        return self.merge(left, right)
+
+    def merge(self, left, right):
+        out = []
+        i = j = 0
+        while i &lt; len(left) and j &lt; len(right):
+            if left[i] &lt;= right[j]:  # &lt;= keeps it stable
+                out.append(left[i])
+                i += 1
+            else:
+                out.append(right[j])
+                j += 1
+        out.extend(left[i:])   # leftovers
+        out.extend(right[j:])
+        return out
+# O(n log n) time, O(n) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="merge-intervals" num="56" title="Merge Intervals" level="Medium" minutes="20">
+  <hint>Stretch. Sort the intervals by start. Walk through them, keeping a result list. If the next interval starts before (or at) the end of the last one in the result, they overlap: stretch that end. Otherwise add it as a new interval.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def merge(self, intervals: List[List[int]]
+              ) -> List[List[int]]:
+        intervals.sort(key=lambda iv: iv[0])
+        out = []
+        for start, end in intervals:
+            if out and start &lt;= out[-1][1]:
+                # overlaps the last one
+                out[-1][1] = max(out[-1][1], end)
+            else:
+                out.append([start, end])
+        return out
+# Sort O(n log n), then one scan O(n).
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Timsort: the sort inside Python">
+  <p>When you call <code>sorted()</code>, Python runs <b>Timsort</b>. Tim Peters wrote it for Python in 2002. It's a mix of merge sort and insertion sort, built for real data, which is often partly sorted already.</p>
+  <p>Timsort first looks for <b>runs</b>: stretches of the list that are already in order (or in reverse order, which it flips). Then it merges the runs, like merge sort. On a list that is already sorted it just checks it in one pass, O(n).</p>
+  <p>It worked so well that others copied it. Java uses Timsort to sort lists of objects (since Java 7), Android uses it, and Chrome's V8 JavaScript engine switched <code>Array.prototype.sort</code> to Timsort in 2018.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Use <code>sorted()</code> or <code>.sort()</code>: O(n log n). Add <code>key=</code> (often a <code>lambda</code>) and <code>reverse=True</code> as needed.</li>
+    <li>Merge sort: split in half until single items, then merge sorted halves with two pointers.</li>
+    <li>"Sort first" makes duplicates neighbours, lines up intervals, and unlocks two pointers and binary search.</li>
+  </ul>
+</recap>
