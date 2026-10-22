@@ -1,0 +1,138 @@
+<p class="lead">This is the most useful trick in easy LeetCode: spend a little memory to remember what you've seen, so you never have to search for it again. In Python that means a <code>set</code> or a <code>dict</code>.</p>
+
+<h3>The idea</h3>
+<p>Think of a theatre cloakroom. You hand over your coat and get ticket number 37. When you come back, the attendant doesn't search through every coat. They go straight to hook 37. Finding your coat takes the same time whether there are 10 coats or 1,000.</p>
+<p>A <b>hash table</b> works the same way. A <b>hash function</b> turns any key (a word, a number) into a hook number, and the value is stored on that hook. To look something up, Python recomputes the hook number and goes straight there.</p>
+
+<pre class="mermaid" data-alt="The key apple goes into a hash function, which gives hook number 3. The value 5 is stored on hook 3. Looking up apple later goes straight to hook 3.">
+flowchart TD
+  K["key: 'apple'"] --> H["hash function"]
+  H --> S["hook 3"]
+  S --> V["value: 5"]
+</pre>
+<p>Sometimes two keys get the same hook (a <b>collision</b>). Python handles that for you, and on average a lookup still takes <b>O(1)</b>.</p>
+<p>Python gives you two hash tables:</p>
+<ul>
+  <li><code>set</code> answers <b>"have I seen this?"</b></li>
+  <li><code>dict</code> answers <b>"what do I know about this?"</b> (where I saw it, how many times…)</li>
+</ul>
+
+<h3>In Python</h3>
+<pre><code class="language-python">seen = set()
+seen.add(4)
+4 in seen               # True, O(1)
+
+where = {}              # value -> index
+where[10] = 0
+10 in where             # True, O(1): checks keys
+where[10]               # 0
+where.get(99)           # None instead of an error
+</code></pre>
+<p>Keys must be things that can't change: numbers, strings and tuples work. Lists can't be keys (use <code>tuple(my_list)</code> if you need to).</p>
+
+<h3>The big trick: one pass instead of two loops</h3>
+<p>Many problems ask "is there a pair that…?". The obvious answer checks every pair with two loops: O(n²). The hash-table answer walks the list <b>once</b>, and for each number asks the set or dict "have I already seen the partner I need?". That's O(n) time, paid for with O(n) memory.</p>
+<pre><code class="language-python">seen = set()
+for x in nums:
+    if partner_of(x) in seen:   # O(1) lookup instead of a second loop
+        ...found it...
+    seen.add(x)
+</code></pre>
+
+<h3>Worked example: Two Sum</h3>
+<p>Find the indexes of two numbers that add up to <code>target</code>. Take <code>nums = [2, 7, 11, 15]</code>, <code>target = 9</code>. For each number <code>x</code>, the partner we need is <code>9 - x</code>.</p>
+<pre class="mermaid" data-alt="Two Sum loop: take the next number x. Is target minus x already in the dict? If yes, return both indexes. If no, store x with its index and move on.">
+flowchart TD
+  A["take next x at index i"] --> B{"target - x<br/>in seen?"}
+  B -->|yes| C["return [seen[target - x], i]"]
+  B -->|no| D["seen[x] = i"]
+  D --> A
+</pre>
+<table>
+  <tr><th>i</th><th>x</th><th>need</th><th>seen before</th><th>action</th></tr>
+  <tr><td>0</td><td>2</td><td>7</td><td>{}</td><td>store 2 → 0</td></tr>
+  <tr><td>1</td><td>7</td><td>2</td><td>{2: 0}</td><td>found! return [0, 1]</td></tr>
+</table>
+
+<h3>Your turn</h3>
+
+<leetcode slug="contains-duplicate" num="217" title="Contains Duplicate" level="Easy" minutes="5">
+  <hint>Walk through the list with a <code>set</code>. If the number is already in the set, you found a duplicate.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        seen = set()
+        for x in nums:
+            if x in seen:
+                return True
+            seen.add(x)
+        return False
+# O(n) time, O(n) space. One-liner: return len(set(nums)) != len(nums)
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="two-sum" num="1" title="Two Sum" level="Easy" minutes="10">
+  <hint>Exactly the worked example. A <code>dict</code> from number to index, and check for <code>target - x</code> <i>before</i> you store <code>x</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        seen = {}                    # number -> its index
+        for i, x in enumerate(nums):
+            need = target - x
+            if need in seen:
+                return [seen[need], i]
+            seen[x] = i
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="valid-anagram" num="242" title="Valid Anagram" level="Easy" minutes="10">
+  <hint>Two words are anagrams if every letter appears the same number of times in both. Count letters in a <code>dict</code> for each word and compare the two dicts.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+        count = {}
+        for ch in s:
+            count[ch] = count.get(ch, 0) + 1
+        for ch in t:
+            count[ch] = count.get(ch, 0) - 1
+            if count[ch] &lt; 0:        # t has more of this letter than s
+                return False
+        return True
+# O(n). Also fine: return sorted(s) == sorted(t), which is O(n log n).
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="ransom-note" num="383" title="Ransom Note" level="Easy" minutes="10">
+  <hint>Count the letters available in the magazine. Then "spend" them one by one for the note. If a count would go below zero, you can't make the note.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def canConstruct(self, ransomNote: str, magazine: str) -> bool:
+        available = {}
+        for ch in magazine:
+            available[ch] = available.get(ch, 0) + 1
+        for ch in ransomNote:
+            if available.get(ch, 0) == 0:
+                return False
+            available[ch] -= 1
+        return True
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Git is a giant hash table">
+  <p>Git doesn't name your files by their path. It stores each file's content under its <b>hash</b>, a 40-character code like <code>e69de29b…</code> computed from the content itself. A commit is stored the same way.</p>
+  <p>Same content always gives the same hash, so a file that appears in a thousand commits is stored only once. And because any change, even one letter, gives a completely different hash, Git can tell instantly whether anything changed.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li><code>set</code> = "have I seen it?", <code>dict</code> = "what do I know about it?". Both look up in O(1).</li>
+    <li>Turn "check every pair" (O(n²)) into one pass (O(n)): ask the set/dict for the partner, then store the current item.</li>
+    <li>Keys must be unchangeable: numbers, strings, tuples. Not lists.</li>
+  </ul>
+</recap>

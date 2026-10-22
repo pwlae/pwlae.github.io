@@ -52,6 +52,9 @@ class BuildError(Exception):
     pass
 
 
+CARD_IDS = set()  # a problem can appear in more than one lesson; only the first card gets the id
+
+
 def attrs(s):
     return {k: html.unescape(v) for k, v in re.findall(r'([\w-]+)="([^"]*)"', s)}
 
@@ -204,6 +207,8 @@ def expand_leetcode(text, lesson_id, problems):
             raise BuildError(f"<leetcode {a['slug']}> level must be one of {LEVELS}")
         url = LEETCODE_URL.format(a["slug"])
         problems.append(a["slug"])
+        card_id = "" if a["slug"] in CARD_IDS else f' id="p-{esc(a["slug"])}"'
+        CARD_IDS.add(a["slug"])
         n = len(answers) + 1
         hint = re.search(r"<hint>(.*?)</hint>", inner, re.S)
         sol = re.search(r"<solution>(.*?)</solution>", inner, re.S)
@@ -212,7 +217,7 @@ def expand_leetcode(text, lesson_id, problems):
         if minutes:
             meta += f' <span class="mins">~{esc(minutes)} min</span>'
         parts = [
-            f'<div class="lc" id="p-{esc(a["slug"])}">',
+            f'<div class="lc"{card_id}>',
             f'<a class="lc-link" href="{url}" rel="noopener" target="_blank">'
             f'{LEETCODE_SVG}<span class="lc-name">LeetCode</span>'
             f'<span class="lc-title">{esc(a["num"])}. {esc(a["title"])}</span></a>',
