@@ -1,0 +1,182 @@
+<p class="lead">Dynamic programming (DP) is <b>recursion that remembers</b> the answers it has already worked out. It turns problems that take forever into one quick pass over a list.</p>
+
+<h3>The idea</h3>
+<p>Imagine someone asks you "what is 1 + 1 + 1 + 1 + 1?" You count: 5. Now they add "+ 1" at the end. You don't count again from the start: you remember 5 and say 6. That is DP: <b>build big answers from small answers you saved</b>.</p>
+<p>You met the problem in the <a href="#recursion">Recursion</a> lesson: plain <code>fib(n)</code> computes the same small values again and again. Here is the same thing with a staircase. You climb 1 or 2 steps at a time. How many ways are there to reach step n?</p>
+<p>To stand on step 4, your last move came either from step 3 (a 1-step) or from step 2 (a 2-step). So:</p>
+<p><code>ways(4) = ways(3) + ways(2)</code></p>
+<p>Draw the calls and you see the waste:</p>
+<pre class="mermaid" data-alt="Call tree for ways(4). ways(4) calls ways(3) and ways(2). ways(3) calls ways(2) and ways(1). ways(2) appears twice; the second time its answer is already saved, so it is not worked out again.">
+%%{init: {"flowchart": {"rankSpacing": 26, "nodeSpacing": 14, "padding": 6}}}%%
+flowchart TD
+  A["ways(4)"] --> B["ways(3)"]
+  A --> C["ways(2)<br/>saved: reuse"]
+  B --> D["ways(2)"]
+  B --> E["ways(1)"]
+  D --> F["ways(1)"]
+  D --> G["ways(0)"]
+</pre>
+<p>With a memory, <code>ways(2)</code> is worked out once. The second time, we just look it up. Each step is computed only once, so the cost drops from exponential to O(n).</p>
+<p>There's an even simpler way to see it. Instead of starting at the top and going down, start at the bottom and go up. Fill a list called <code>dp</code>, left to right. Each box is the sum of the two boxes before it:</p>
+<pre class="mermaid" data-alt="The dp list for the stairs, filled left to right: dp[0]=1, dp[1]=1, dp[2]=2, dp[3]=3, dp[4]=5, dp[5]=8. Each box is the sum of the two before it.">
+%%{init: {"flowchart": {"rankSpacing": 14, "nodeSpacing": 10, "padding": 6}}}%%
+flowchart LR
+  A["1"] --> B["1"] --> C["2"] --> D["3"] --> E["5"] --> F["8"]
+</pre>
+<p>Box i is <code>dp[i]</code>: the number of ways to reach step i. <code>dp[5]</code> is 8.</p>
+
+<h3>The 3 questions</h3>
+<p>Every DP problem in this lesson is solved by answering three questions <b>in words</b> before writing code:</p>
+<ol>
+  <li><b>What does <code>dp[i]</code> mean?</b> Stairs: "the number of ways to reach step i".</li>
+  <li><b>How does it come from smaller answers?</b> Stairs: <code>dp[i] = dp[i-1] + dp[i-2]</code>, because the last move was 1 step or 2 steps.</li>
+  <li><b>What are the first values?</b> Stairs: <code>dp[0] = 1</code> (stay where you are: one way) and <code>dp[1] = 1</code>.</li>
+</ol>
+<p>Once the three answers are clear, the code almost writes itself.</p>
+
+<h3>In Python</h3>
+<p>Two ways, same idea. <b>Top-down</b>: write the recursion and add <code>@cache</code>, which saves every answer (a <a href="#hash-maps">hash map</a> from input to answer, built for you).</p>
+<pre><code class="language-python">from functools import cache
+
+@cache
+def ways(i):
+    # first values
+    if i &lt;= 1:
+        return 1
+    # last move: 1 step or 2 steps
+    return ways(i - 1) + ways(i - 2)
+</code></pre>
+<p><b>Bottom-up</b>: fill the list from small to big. No recursion, so no depth limit.</p>
+<pre><code class="language-python">def ways(n):
+    dp = [0] * (n + 1)
+    # first values
+    dp[0] = 1
+    if n &gt;= 1:
+        dp[1] = 1
+    for i in range(2, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]
+</code></pre>
+<p>Look: <code>dp[i]</code> only needs the last two boxes. So keep just two numbers:</p>
+<pre><code class="language-python">def ways(n):
+    # a = dp[i-2], b = dp[i-1]
+    a, b = 1, 1
+    for _ in range(n - 1):
+        a, b = b, a + b
+    return b
+</code></pre>
+<p><b>Cost.</b> All three versions do one pass over the steps: O(n) time. The first two keep n saved answers: O(n) space. The last one keeps two numbers: O(1) space.</p>
+
+<h3>Worked example</h3>
+<p>Bottom-up for n = 5:</p>
+<table>
+  <tr><th>i</th><th>dp[i-2] + dp[i-1]</th><th>dp[i]</th></tr>
+  <tr><td>0</td><td>first value</td><td>1</td></tr>
+  <tr><td>1</td><td>first value</td><td>1</td></tr>
+  <tr><td>2</td><td>1 + 1</td><td>2</td></tr>
+  <tr><td>3</td><td>1 + 2</td><td>3</td></tr>
+  <tr><td>4</td><td>2 + 3</td><td>5</td></tr>
+  <tr><td>5</td><td>3 + 5</td><td>8</td></tr>
+</table>
+<p>Four additions instead of a tree of calls that doubles at every level.</p>
+
+<h3>Your turn</h3>
+<p>For each problem, answer the 3 questions on paper (or in your head) first. Then code.</p>
+
+<leetcode slug="climbing-stairs" num="70" title="Climbing Stairs" level="Easy" minutes="5">
+  <hint>This is the worked example. Write the two-variable version from memory: start with <code>a, b = 1, 1</code> and slide forward.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def climbStairs(
+        self, n: int
+    ) -> int:
+        # a = ways to step i-2
+        # b = ways to step i-1
+        a, b = 1, 1
+        for _ in range(n - 1):
+            a, b = b, a + b
+        return b
+# One pass: O(n) time, O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="n-th-tribonacci-number" num="1137" title="N-th Tribonacci Number" level="Easy" minutes="10">
+  <hint>Like Fibonacci, but each number is the sum of the <b>three</b> before it. First values: 0, 1, 1. Keep three variables and slide them forward.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def tribonacci(
+        self, n: int
+    ) -> int:
+        # first values
+        if n == 0:
+            return 0
+        if n &lt;= 2:
+            return 1
+        # last three numbers
+        a, b, c = 0, 1, 1
+        for _ in range(n - 2):
+            a, b, c = b, c, a+b+c
+        return c
+# O(n) time, O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="min-cost-climbing-stairs" num="746" title="Min Cost Climbing Stairs" level="Easy" minutes="15">
+  <hint>Question 1: <code>dp[i]</code> = the cheapest cost to <b>reach</b> step i. The top is step <code>len(cost)</code>. Question 2: you came from step i-1 (and paid <code>cost[i-1]</code>) or from step i-2 (and paid <code>cost[i-2]</code>). Take the <code>min</code>. Question 3: you may start on step 0 or 1 for free.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def minCostClimbingStairs(
+        self, cost: List[int]
+    ) -> int:
+        n = len(cost)
+        # dp[i]: cheapest way to reach i
+        dp = [0] * (n + 1)
+        # dp[0] = dp[1] = 0: free start
+        for i in range(2, n + 1):
+            one = dp[i-1] + cost[i-1]
+            two = dp[i-2] + cost[i-2]
+            dp[i] = min(one, two)
+        # the top is step n
+        return dp[n]
+# O(n) time. Keep only two numbers
+# to get O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="house-robber" num="198" title="House Robber" level="Medium" minutes="20">
+  <hint>Stretch. Question 1: <code>dp[i]</code> = the most money from the first i houses. Question 2: for house i you either <b>skip</b> it (keep <code>dp[i-1]</code>) or <b>rob</b> it (its money plus <code>dp[i-2]</code>, since the house next to it is off limits). Take the <code>max</code>. Question 3: no houses, no money.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def rob(
+        self, nums: List[int]
+    ) -> int:
+        # best from houses before the
+        # last one, and up to the last
+        prev2, prev1 = 0, 0
+        for money in nums:
+            rob = prev2 + money
+            skip = prev1
+            prev2, prev1 = (
+                prev1, max(rob, skip))
+        return prev1
+# One pass: O(n) time, O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="How TeX breaks a paragraph into lines">
+  <p>TeX is the typesetting program behind LaTeX, which many scientists use to write papers. Its source code calls line breaking "probably the most interesting algorithm of TeX".</p>
+  <p>A simple program fills each line with as many words as fit, then moves on (that's <a href="#greedy">greedy</a>). Sometimes this leaves one line full of ugly wide gaps. TeX instead looks at the <b>whole paragraph</b> and picks the set of breaks that looks best overall. It was designed by Donald Knuth and Michael Plass, and described in their 1981 paper "Breaking Paragraphs into Lines".</p>
+  <p>It works the DP way: for each possible break point, TeX keeps the best way to lay out the text up to there, built from the best answers for earlier break points. The paper shows this is the same as finding a shortest path through a network of break points, which is also how it avoids trying every combination.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>DP = recursion that remembers: add <code>@cache</code>, or fill a <code>dp</code> list from small to big.</li>
+    <li>3 questions: what does <code>dp[i]</code> mean, how does it come from smaller answers, what are the first values?</li>
+    <li>If <code>dp[i]</code> only needs the last two values, keep two variables: O(1) space.</li>
+  </ul>
+</recap>
