@@ -1,0 +1,205 @@
+<p class="lead">Some problems are about numbers themselves: their digits, their remainders, their sums. A few small tricks turn them from puzzles into a few lines of code.</p>
+
+<h3>The idea</h3>
+<p>Think of a car's mileage counter. The right-most wheel shows the <b>last digit</b>. In Python you get it with <code>n % 10</code>: the <b>remainder</b> after dividing by 10. To throw that digit away, use <code>n // 10</code>: divide by 10 and drop the part after the point.</p>
+<p>Do both again and again until the number is 0, and you visit every digit, from the right:</p>
+<pre class="mermaid" data-alt="Taking 472 apart. 472 % 10 is 2, and 472 // 10 is 47. 47 % 10 is 7, and 47 // 10 is 4. 4 % 10 is 4, and 4 // 10 is 0, so stop. The digits came out as 2, 7, 4.">
+%%{init: {"flowchart": {"rankSpacing": 26, "nodeSpacing": 20, "padding": 6}}}%%
+flowchart TD
+  A["n = 472<br/>digit 472 % 10 = 2"] --> B["n = 47<br/>digit 47 % 10 = 7"]
+  B --> C["n = 4<br/>digit 4 % 10 = 4"]
+  C --> D["n = 0<br/>stop"]
+</pre>
+
+<p><b>Modulo means wrap around.</b> <code>%</code> is called <b>modulo</b>. Think of a clock: 3 hours after 11 o'clock is 2 o'clock, not 14. That is <code>(11 + 3) % 12 == 2</code>. The answer always stays between 0 and 11. Two handy uses:</p>
+<ul>
+  <li><code>n % 2 == 0</code>: n is even.</li>
+  <li><code>n % 3 == 0</code>: n divides by 3 with nothing left over.</li>
+</ul>
+
+<p><b>Spot a loop with a set.</b> Some problems repeat a step on a number: "replace n by the sum of the squares of its digits". Either you reach the goal, or you come back to a number you have seen before. Then you are stuck in a <b>cycle</b> (a loop that never ends). Keep every number you see in a set (see <a href="#hash-maps">Hash maps and sets</a>). If a number shows up twice, stop.</p>
+<pre class="mermaid" data-alt="Start at 19. Squares of digits: 1 + 81 = 82. Then 64 + 4 = 68. Then 36 + 64 = 100. Then 1. We reached 1, so 19 is happy.">
+%%{init: {"flowchart": {"rankSpacing": 22, "nodeSpacing": 20, "padding": 6}}}%%
+flowchart LR
+  A["19"] --> B["82"] --> C["68"] --> D["100"] --> E["1<br/>done"]
+</pre>
+<pre class="mermaid" data-alt="Start at 4. 4 goes to 16, then 37, 58, 89, 145, 42, 20, and back to 4. The numbers repeat for ever, so 4 never reaches 1.">
+%%{init: {"flowchart": {"rankSpacing": 22, "nodeSpacing": 20, "padding": 6}}}%%
+flowchart TD
+  A["4"] --> B["16"] --> C["37"] --> D["58"]
+  E["89"] --> F["145"] --> G["42"] --> H["20"]
+  D --> E
+  H -->|"seen!"| A
+</pre>
+<p>The set costs memory. The <b>fast and slow pointers</b> trick from <a href="#linked-list">Linked lists</a> finds the same loop with O(1) memory: one number takes one step at a time, the other takes two, and if there is a loop they meet.</p>
+
+<p><b>Look for a formula first.</b> Before you write a loop, ask if maths already has the answer. The sum 1 + 2 + … + n is <code>n * (n + 1) // 2</code>. For n = 4: 4 × 5 / 2 = 10, and indeed 1 + 2 + 3 + 4 = 10. One line instead of a loop.</p>
+
+<h3>In Python</h3>
+<pre><code class="language-python">def digits(n):
+    # digits of n, right to left
+    out = []
+    while n &gt; 0:
+        # last digit
+        out.append(n % 10)
+        # drop it
+        n //= 10
+    return out
+
+def has_loop(n, step):
+    # repeat step until we see
+    # a number again (or reach 1)
+    seen = set()
+    while n != 1 and n not in seen:
+        seen.add(n)
+        n = step(n)
+    return n != 1
+
+def sum_to(n):
+    # 1 + 2 + ... + n
+    return n * (n + 1) // 2
+
+digits(472)    # [2, 7, 4]
+(11 + 3) % 12  # 2
+sum_to(4)      # 10
+</code></pre>
+<p>Cost: a number n has about log<sub>10</sub>(n) digits, so <code>digits</code> is O(log n), which is tiny: even a billion has only 10 digits. <code>sum_to</code> is O(1): one sum, no loop.</p>
+
+<h3>Worked example</h3>
+<p>Is 19 "happy"? Square each digit and add, until you reach 1 or a repeat.</p>
+<table>
+  <tr><th>n</th><th>digits</th><th>sum of squares</th><th>seen</th></tr>
+  <tr><td>19</td><td>1, 9</td><td>1 + 81 = 82</td><td>{19}</td></tr>
+  <tr><td>82</td><td>8, 2</td><td>64 + 4 = 68</td><td>{19, 82}</td></tr>
+  <tr><td>68</td><td>6, 8</td><td>36 + 64 = 100</td><td>{…, 68}</td></tr>
+  <tr><td>100</td><td>1, 0, 0</td><td>1 + 0 + 0 = 1</td><td>{…, 100}</td></tr>
+</table>
+<p>We hit 1, so 19 is happy. For 4 we would come back to 4 and stop: not happy.</p>
+
+<h3>Your turn</h3>
+<p>For each problem, ask: "digits, wrap-around, loop, or formula?"</p>
+
+<leetcode slug="fizz-buzz" num="412" title="Fizz Buzz" level="Easy" minutes="5">
+  <hint>Use <code>i % 3 == 0</code> and <code>i % 5 == 0</code>. Check "divides by both" first, or it never gets a turn.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def fizzBuzz(
+        self, n: int
+    ) -> List[str]:
+        ans = []
+        for i in range(1, n + 1):
+            # 15 = both 3 and 5
+            if i % 15 == 0:
+                ans.append("FizzBuzz")
+            elif i % 3 == 0:
+                ans.append("Fizz")
+            elif i % 5 == 0:
+                ans.append("Buzz")
+            else:
+                ans.append(str(i))
+        return ans
+# O(n) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="subtract-the-product-and-sum-of-digits-of-an-integer" num="1281" title="Subtract the Product and Sum of Digits of an Integer" level="Easy" minutes="5">
+  <hint>Take the digits out with <code>% 10</code> and <code>// 10</code>. Keep a running product (start at 1) and a running sum (start at 0).</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def subtractProductAndSum(
+        self, n: int
+    ) -> int:
+        prod, total = 1, 0
+        while n &gt; 0:
+            d = n % 10
+            prod *= d
+            total += d
+            n //= 10
+        return prod - total
+# O(number of digits).
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="add-digits" num="258" title="Add Digits" level="Easy" minutes="10">
+  <hint>First solve it with a loop: add up the digits until one digit is left. Then the stretch: write out the answers for 1 to 20. Do you see them repeat every 9?</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def addDigits(
+        self, num: int
+    ) -> int:
+        if num == 0:
+            return 0
+        # answers go 1..9, then
+        # 1..9 again: wrap around 9
+        return 1 + (num - 1) % 9
+# O(1). This is the "digital
+# root". The loop version
+# is also fine.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="arranging-coins" num="441" title="Arranging Coins" level="Easy" minutes="10">
+  <hint>k full rows use 1 + 2 + … + k = <code>k * (k + 1) // 2</code> coins. Find the biggest k where that is not more than n. A simple loop that adds rows works.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def arrangeCoins(
+        self, n: int
+    ) -> int:
+        k = 0
+        # row k + 1 needs k + 1 coins
+        while n &gt;= k + 1:
+            k += 1
+            n -= k
+        return k
+# O(sqrt n) rows. With the
+# formula and a square root
+# it is O(1):
+# (math.isqrt(8*n + 1) - 1) // 2
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="happy-number" num="202" title="Happy Number" level="Easy" minutes="15">
+  <hint>Write a helper that turns n into the sum of the squares of its digits. Repeat it, and keep a set of numbers you have seen. A repeat means a loop: return False.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isHappy(self, n: int) -> bool:
+        def step(x):
+            total = 0
+            while x &gt; 0:
+                d = x % 10
+                total += d * d
+                x //= 10
+            return total
+
+        seen = set()
+        while n != 1:
+            if n in seen:
+                # a loop: never 1
+                return False
+            seen.add(n)
+            n = step(n)
+        return True
+# Numbers shrink fast, so this
+# is quick. Fast/slow pointers
+# would need no set.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="The digit check on your bank card">
+  <p>The last digit of a credit or debit card number is a <b>check digit</b>. It is chosen so that a small digit sum, the <b>Luhn algorithm</b>, comes out right. Shops and websites run it before sending the number anywhere, so a typo is caught at once.</p>
+  <p>How it works: from the right, double every second digit. If a doubled digit is over 9, take 9 away. Add up all the digits. The number is valid if the total ends in 0, that is <code>total % 10 == 0</code>.</p>
+  <p>It catches every single mistyped digit, and almost every swap of two neighbouring digits (only 09 ↔ 90 slips through). It is named after Hans Peter Luhn of IBM, who filed the patent "Computer for verifying numbers" in 1954 (US patent 2,950,048). Today it is part of the ISO/IEC 7812 standard for card numbers.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li><code>n % 10</code> is the last digit, <code>n // 10</code> drops it. Loop until 0.</li>
+    <li><code>%</code> wraps around like a clock. A set (or fast/slow pointers) spots a loop.</li>
+    <li>Look for a formula first: 1 + … + n = <code>n * (n + 1) // 2</code>.</li>
+  </ul>
+</recap>

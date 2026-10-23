@@ -99,7 +99,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <header class="site-head" id="top">
   <h1>Commute Algorithms</h1>
   <p class="lead">Algorithms from zero, one commute at a time. Read the idea, then solve easy LeetCode problems fast.</p>
-  <p class="progress-line no-print">Solved: <span id="solved-count">0</span> / 91 problems <span id="resume"></span></p>
+  <p class="progress-line no-print">Solved: <span id="solved-count">0</span> / 96 problems <span id="resume"></span></p>
   <button type="button" class="print-btn" data-print="all">Print the whole guide</button>
 </header>
 
@@ -107,7 +107,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
   <h2>The map</h2>
   <p class="muted">Go from top to bottom. Each stage builds on the one above it. Dashed boxes are stages still being written.</p>
   <figure class="diagram"><a href="diagrams/61035b511483.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/61035b511483.svg" alt="Map of all lessons. Arrows point from a lesson to the lessons that build on it." width="275" height="1594" loading="lazy" decoding="async"></a></figure>
-  <ol class="toc"><li><b>Start here</b><ul><li><a href="#how-to-use">0. How to use this guide</a> <span class="toc-progress" data-lesson="how-to-use"></span></li></ul></li><li><b>Warm-up</b><ul><li><a href="#python-toolkit">1. Python toolkit for LeetCode</a> <span class="toc-progress" data-lesson="python-toolkit"></span></li><li><a href="#big-o">2. Big O in plain words</a> <span class="toc-progress" data-lesson="big-o"></span></li></ul></li><li><b>Arrays and strings</b><ul><li><a href="#array-scan">3. Arrays: one loop does a lot</a> <span class="toc-progress" data-lesson="array-scan"></span></li><li><a href="#strings">4. Strings</a> <span class="toc-progress" data-lesson="strings"></span></li><li><a href="#hash-maps">5. Hash maps and sets</a> <span class="toc-progress" data-lesson="hash-maps"></span></li><li><a href="#counting">6. Counting things</a> <span class="toc-progress" data-lesson="counting"></span></li></ul></li><li><b>First patterns</b><ul><li><a href="#two-pointers">7. Two pointers</a> <span class="toc-progress" data-lesson="two-pointers"></span></li><li><a href="#sliding-window">8. Sliding window</a> <span class="toc-progress" data-lesson="sliding-window"></span></li><li><a href="#prefix-sums">9. Prefix sums</a> <span class="toc-progress" data-lesson="prefix-sums"></span></li></ul></li><li><b>Stacks, queues, lists</b><ul><li><a href="#stack">10. Stack</a> <span class="toc-progress" data-lesson="stack"></span></li><li><a href="#queue">11. Queue and deque</a> <span class="toc-progress" data-lesson="queue"></span></li><li><a href="#linked-list">12. Linked lists</a> <span class="toc-progress" data-lesson="linked-list"></span></li></ul></li><li><b>Searching and sorting</b><ul><li><a href="#binary-search">13. Binary search</a> <span class="toc-progress" data-lesson="binary-search"></span></li><li><a href="#sorting">14. Sorting</a> <span class="toc-progress" data-lesson="sorting"></span></li></ul></li><li><b>Recursion and trees</b><ul><li><a href="#recursion">15. Recursion</a> <span class="toc-progress" data-lesson="recursion"></span></li><li><a href="#tree-dfs">16. Binary trees: depth-first</a> <span class="toc-progress" data-lesson="tree-dfs"></span></li><li><a href="#tree-bfs">17. Binary trees: level by level</a> <span class="toc-progress" data-lesson="tree-bfs"></span></li><li><a href="#bst">18. Binary search trees</a> <span class="toc-progress" data-lesson="bst"></span></li></ul></li><li><b>More tools</b><ul><li><a href="#heap">19. Heaps</a> <span class="toc-progress" data-lesson="heap"></span></li><li><a href="#greedy">20. Greedy choices</a> <span class="toc-progress" data-lesson="greedy"></span></li><li><a href="#bits">21. Bit tricks</a> <span class="toc-progress" data-lesson="bits"></span></li><li class="soon">22. Math tricks <small>(coming soon)</small></li></ul></li><li><b>Graphs and backtracking</b><ul><li class="soon">23. Graphs: BFS and DFS <small>(coming soon)</small></li><li class="soon">24. Backtracking <small>(coming soon)</small></li></ul></li><li><b>Dynamic programming</b><ul><li class="soon">25. Dynamic programming: 1D <small>(coming soon)</small></li><li class="soon">26. Dynamic programming: 2D <small>(coming soon)</small></li></ul></li><li><b>Next level</b><ul><li class="soon">27. Topological sort <small>(coming soon)</small></li><li class="soon">28. Union-Find <small>(coming soon)</small></li><li class="soon">29. Shortest paths (Dijkstra) <small>(coming soon)</small></li><li class="soon">30. Trie (prefix tree) <small>(coming soon)</small></li></ul></li></ol>
+  <ol class="toc"><li><b>Start here</b><ul><li><a href="#how-to-use">0. How to use this guide</a> <span class="toc-progress" data-lesson="how-to-use"></span></li></ul></li><li><b>Warm-up</b><ul><li><a href="#python-toolkit">1. Python toolkit for LeetCode</a> <span class="toc-progress" data-lesson="python-toolkit"></span></li><li><a href="#big-o">2. Big O in plain words</a> <span class="toc-progress" data-lesson="big-o"></span></li></ul></li><li><b>Arrays and strings</b><ul><li><a href="#array-scan">3. Arrays: one loop does a lot</a> <span class="toc-progress" data-lesson="array-scan"></span></li><li><a href="#strings">4. Strings</a> <span class="toc-progress" data-lesson="strings"></span></li><li><a href="#hash-maps">5. Hash maps and sets</a> <span class="toc-progress" data-lesson="hash-maps"></span></li><li><a href="#counting">6. Counting things</a> <span class="toc-progress" data-lesson="counting"></span></li></ul></li><li><b>First patterns</b><ul><li><a href="#two-pointers">7. Two pointers</a> <span class="toc-progress" data-lesson="two-pointers"></span></li><li><a href="#sliding-window">8. Sliding window</a> <span class="toc-progress" data-lesson="sliding-window"></span></li><li><a href="#prefix-sums">9. Prefix sums</a> <span class="toc-progress" data-lesson="prefix-sums"></span></li></ul></li><li><b>Stacks, queues, lists</b><ul><li><a href="#stack">10. Stack</a> <span class="toc-progress" data-lesson="stack"></span></li><li><a href="#queue">11. Queue and deque</a> <span class="toc-progress" data-lesson="queue"></span></li><li><a href="#linked-list">12. Linked lists</a> <span class="toc-progress" data-lesson="linked-list"></span></li></ul></li><li><b>Searching and sorting</b><ul><li><a href="#binary-search">13. Binary search</a> <span class="toc-progress" data-lesson="binary-search"></span></li><li><a href="#sorting">14. Sorting</a> <span class="toc-progress" data-lesson="sorting"></span></li></ul></li><li><b>Recursion and trees</b><ul><li><a href="#recursion">15. Recursion</a> <span class="toc-progress" data-lesson="recursion"></span></li><li><a href="#tree-dfs">16. Binary trees: depth-first</a> <span class="toc-progress" data-lesson="tree-dfs"></span></li><li><a href="#tree-bfs">17. Binary trees: level by level</a> <span class="toc-progress" data-lesson="tree-bfs"></span></li><li><a href="#bst">18. Binary search trees</a> <span class="toc-progress" data-lesson="bst"></span></li></ul></li><li><b>More tools</b><ul><li><a href="#heap">19. Heaps</a> <span class="toc-progress" data-lesson="heap"></span></li><li><a href="#greedy">20. Greedy choices</a> <span class="toc-progress" data-lesson="greedy"></span></li><li><a href="#bits">21. Bit tricks</a> <span class="toc-progress" data-lesson="bits"></span></li><li><a href="#math">22. Math tricks</a> <span class="toc-progress" data-lesson="math"></span></li></ul></li><li><b>Graphs and backtracking</b><ul><li class="soon">23. Graphs: BFS and DFS <small>(coming soon)</small></li><li class="soon">24. Backtracking <small>(coming soon)</small></li></ul></li><li><b>Dynamic programming</b><ul><li class="soon">25. Dynamic programming: 1D <small>(coming soon)</small></li><li class="soon">26. Dynamic programming: 2D <small>(coming soon)</small></li></ul></li><li><b>Next level</b><ul><li class="soon">27. Topological sort <small>(coming soon)</small></li><li class="soon">28. Union-Find <small>(coming soon)</small></li><li class="soon">29. Shortest paths (Dijkstra) <small>(coming soon)</small></li><li class="soon">30. Trie (prefix tree) <small>(coming soon)</small></li></ul></li></ol>
 </section>
 
 <article id="how-to-use" data-problems="two-sum"><header class="lesson-head"><p class="kicker">Lesson 0 &middot; Start here &middot; <span class="lesson-progress" data-lesson="how-to-use">1 problem</span></p><h2>How to use this guide</h2><button type="button" class="print-btn" data-print="how-to-use">Print this lesson / Save as PDF</button></header><p class="lead">This guide is for people who learn on the way to work. One lesson fits one commute: about 10 minutes of reading, then a few small LeetCode problems.</p>
@@ -3746,7 +3746,232 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">prev</span> <span class="o">=</span> <span class="n">i</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">ans</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span><span class="p">[</span><span class="n">prev</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">ans</span>
-<span class="c1"># One pass: O(n) time.</span></code></pre></li></ol></section><p class="lesson-foot no-print"><a href="#map">&uarr; Map</a></p></article>
+<span class="c1"># One pass: O(n) time.</span></code></pre></li></ol></section><p class="lesson-foot no-print"><a href="#map">&uarr; Map</a> &middot; Next: <a href="#math">Math tricks</a></p></article>
+<article id="math" data-problems="fizz-buzz subtract-the-product-and-sum-of-digits-of-an-integer add-digits arranging-coins happy-number"><header class="lesson-head"><p class="kicker">Lesson 22 &middot; More tools &middot; <span class="lesson-progress" data-lesson="math">5 problems</span></p><h2>Math tricks</h2><p class="requires">Read first: <a href="#counting">Counting things</a></p><button type="button" class="print-btn" data-print="math">Print this lesson / Save as PDF</button></header><p class="lead">Some problems are about numbers themselves: their digits, their remainders, their sums. A few small tricks turn them from puzzles into a few lines of code.</p>
+
+<h3>The idea</h3>
+<p>Think of a car's mileage counter. The right-most wheel shows the <b>last digit</b>. In Python you get it with <code>n % 10</code>: the <b>remainder</b> after dividing by 10. To throw that digit away, use <code>n // 10</code>: divide by 10 and drop the part after the point.</p>
+<p>Do both again and again until the number is 0, and you visit every digit, from the right:</p>
+<figure class="diagram"><a href="diagrams/82eb280dadb2.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/82eb280dadb2.svg" alt="Taking 472 apart. 472 % 10 is 2, and 472 // 10 is 47. 47 % 10 is 7, and 47 // 10 is 4. 4 % 10 is 4, and 4 // 10 is 0, so stop. The digits came out as 2, 7, 4." width="161" height="276" loading="lazy" decoding="async"></a></figure>
+
+<p><b>Modulo means wrap around.</b> <code>%</code> is called <b>modulo</b>. Think of a clock: 3 hours after 11 o'clock is 2 o'clock, not 14. That is <code>(11 + 3) % 12 == 2</code>. The answer always stays between 0 and 11. Two handy uses:</p>
+<ul>
+  <li><code>n % 2 == 0</code>: n is even.</li>
+  <li><code>n % 3 == 0</code>: n divides by 3 with nothing left over.</li>
+</ul>
+
+<p><b>Spot a loop with a set.</b> Some problems repeat a step on a number: "replace n by the sum of the squares of its digits". Either you reach the goal, or you come back to a number you have seen before. Then you are stuck in a <b>cycle</b> (a loop that never ends). Keep every number you see in a set (see <a href="#hash-maps">Hash maps and sets</a>). If a number shows up twice, stop.</p>
+<figure class="diagram"><a href="diagrams/7daa366c5720.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/7daa366c5720.svg" alt="Start at 19. Squares of digits: 1 + 81 = 82. Then 64 + 4 = 68. Then 36 + 64 = 100. Then 1. We reached 1, so 19 is happy." width="332" height="62" loading="lazy" decoding="async"></a></figure>
+<figure class="diagram"><a href="diagrams/fd2cfc1102c2.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/fd2cfc1102c2.svg" alt="Start at 4. 4 goes to 16, then 37, 58, 89, 145, 42, 20, and back to 4. The numbers repeat for ever, so 4 never reaches 1." width="105" height="423" loading="lazy" decoding="async"></a></figure>
+<p>The set costs memory. The <b>fast and slow pointers</b> trick from <a href="#linked-list">Linked lists</a> finds the same loop with O(1) memory: one number takes one step at a time, the other takes two, and if there is a loop they meet.</p>
+
+<p><b>Look for a formula first.</b> Before you write a loop, ask if maths already has the answer. The sum 1 + 2 + … + n is <code>n * (n + 1) // 2</code>. For n = 4: 4 × 5 / 2 = 10, and indeed 1 + 2 + 3 + 4 = 10. One line instead of a loop.</p>
+
+<h3>In Python</h3>
+<pre class="code" data-lang="python"><code><span class="k">def</span><span class="w"> </span><span class="nf">digits</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="c1"># digits of n, right to left</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># last digit</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="c1"># drop it</span>
+        <span class="n">n</span> <span class="o">//=</span> <span class="mi">10</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">has_loop</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="c1"># repeat step until we see</span>
+    <span class="c1"># a number again (or reach 1)</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+        <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">!=</span> <span class="mi">1</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sum_to</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="c1"># 1 + 2 + ... + n</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+<span class="n">digits</span><span class="p">(</span><span class="mi">472</span><span class="p">)</span>    <span class="c1"># [2, 7, 4]</span>
+<span class="p">(</span><span class="mi">11</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">%</span> <span class="mi">12</span>  <span class="c1"># 2</span>
+<span class="n">sum_to</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>      <span class="c1"># 10</span></code></pre>
+<p>Cost: a number n has about log<sub>10</sub>(n) digits, so <code>digits</code> is O(log n), which is tiny: even a billion has only 10 digits. <code>sum_to</code> is O(1): one sum, no loop.</p>
+
+<h3>Worked example</h3>
+<p>Is 19 "happy"? Square each digit and add, until you reach 1 or a repeat.</p>
+<table>
+  <tr><th>n</th><th>digits</th><th>sum of squares</th><th>seen</th></tr>
+  <tr><td>19</td><td>1, 9</td><td>1 + 81 = 82</td><td>{19}</td></tr>
+  <tr><td>82</td><td>8, 2</td><td>64 + 4 = 68</td><td>{19, 82}</td></tr>
+  <tr><td>68</td><td>6, 8</td><td>36 + 64 = 100</td><td>{…, 68}</td></tr>
+  <tr><td>100</td><td>1, 0, 0</td><td>1 + 0 + 0 = 1</td><td>{…, 100}</td></tr>
+</table>
+<p>We hit 1, so 19 is happy. For 4 we would come back to 4 and stop: not happy.</p>
+
+<h3>Your turn</h3>
+<p>For each problem, ask: "digits, wrap-around, loop, or formula?"</p>
+
+<div class="lc" id="p-fizz-buzz"><a class="lc-link" href="https://leetcode.com/problems/fizz-buzz/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">412. Fizz Buzz</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="fizz-buzz"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/fizz-buzz/</span></div><details class="hint"><summary>Hint</summary><div>Use <code>i % 3 == 0</code> and <code>i % 5 == 0</code>. Check "divides by both" first, or it never gets a turn.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fizzBuzz</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># 15 = both 3 and 5</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">15</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;FizzBuzz&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Fizz&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Buzz&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ans</span>
+<span class="c1"># O(n) time.</span></code></pre></div></details></div>
+
+<div class="lc" id="p-subtract-the-product-and-sum-of-digits-of-an-integer"><a class="lc-link" href="https://leetcode.com/problems/subtract-the-product-and-sum-of-digits-of-an-integer/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">1281. Subtract the Product and Sum of Digits of an Integer</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="subtract-the-product-and-sum-of-digits-of-an-integer"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/subtract-the-product-and-sum-of-digits-of-an-integer/</span></div><details class="hint"><summary>Hint</summary><div>Take the digits out with <code>% 10</code> and <code>// 10</code>. Keep a running product (start at 1) and a running sum (start at 0).</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">subtractProductAndSum</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">prod</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span>
+            <span class="n">prod</span> <span class="o">*=</span> <span class="n">d</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">d</span>
+            <span class="n">n</span> <span class="o">//=</span> <span class="mi">10</span>
+        <span class="k">return</span> <span class="n">prod</span> <span class="o">-</span> <span class="n">total</span>
+<span class="c1"># O(number of digits).</span></code></pre></div></details></div>
+
+<div class="lc" id="p-add-digits"><a class="lc-link" href="https://leetcode.com/problems/add-digits/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">258. Add Digits</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~10 min</span><label class="solved"><input type="checkbox" data-slug="add-digits"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/add-digits/</span></div><details class="hint"><summary>Hint</summary><div>First solve it with a loop: add up the digits until one digit is left. Then the stretch: write out the answers for 1 to 20. Do you see them repeat every 9?</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addDigits</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="c1"># answers go 1..9, then</span>
+        <span class="c1"># 1..9 again: wrap around 9</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">9</span>
+<span class="c1"># O(1). This is the &quot;digital</span>
+<span class="c1"># root&quot;. The loop version</span>
+<span class="c1"># is also fine.</span></code></pre></div></details></div>
+
+<div class="lc" id="p-arranging-coins"><a class="lc-link" href="https://leetcode.com/problems/arranging-coins/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">441. Arranging Coins</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~10 min</span><label class="solved"><input type="checkbox" data-slug="arranging-coins"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/arranging-coins/</span></div><details class="hint"><summary>Hint</summary><div>k full rows use 1 + 2 + … + k = <code>k * (k + 1) // 2</code> coins. Find the biggest k where that is not more than n. A simple loop that adds rows works.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">arrangeCoins</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># row k + 1 needs k + 1 coins</span>
+        <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">n</span> <span class="o">-=</span> <span class="n">k</span>
+        <span class="k">return</span> <span class="n">k</span>
+<span class="c1"># O(sqrt n) rows. With the</span>
+<span class="c1"># formula and a square root</span>
+<span class="c1"># it is O(1):</span>
+<span class="c1"># (math.isqrt(8*n + 1) - 1) // 2</span></code></pre></div></details></div>
+
+<div class="lc" id="p-happy-number"><a class="lc-link" href="https://leetcode.com/problems/happy-number/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">202. Happy Number</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~15 min</span><label class="solved"><input type="checkbox" data-slug="happy-number"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/happy-number/</span></div><details class="hint"><summary>Hint</summary><div>Write a helper that turns n into the sum of the squares of its digits. Repeat it, and keep a set of numbers you have seen. A repeat means a loop: return False.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isHappy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">10</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">d</span>
+                <span class="n">x</span> <span class="o">//=</span> <span class="mi">10</span>
+            <span class="k">return</span> <span class="n">total</span>
+
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">n</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="c1"># a loop: never 1</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+<span class="c1"># Numbers shrink fast, so this</span>
+<span class="c1"># is quick. Fast/slow pointers</span>
+<span class="c1"># would need no set.</span></code></pre></div></details></div>
+
+<details class="fact"><summary>Interesting fact: The digit check on your bank card</summary><div><p>The last digit of a credit or debit card number is a <b>check digit</b>. It is chosen so that a small digit sum, the <b>Luhn algorithm</b>, comes out right. Shops and websites run it before sending the number anywhere, so a typo is caught at once.</p>
+  <p>How it works: from the right, double every second digit. If a doubled digit is over 9, take 9 away. Add up all the digits. The number is valid if the total ends in 0, that is <code>total % 10 == 0</code>.</p>
+  <p>It catches every single mistyped digit, and almost every swap of two neighbouring digits (only 09 ↔ 90 slips through). It is named after Hans Peter Luhn of IBM, who filed the patent "Computer for verifying numbers" in 1954 (US patent 2,950,048). Today it is part of the ISO/IEC 7812 standard for card numbers.</p></div></details>
+
+<aside class="recap"><h3>Remember</h3><ul>
+    <li><code>n % 10</code> is the last digit, <code>n // 10</code> drops it. Loop until 0.</li>
+    <li><code>%</code> wraps around like a clock. A set (or fast/slow pointers) spots a loop.</li>
+    <li>Look for a formula first: 1 + … + n = <code>n * (n + 1) // 2</code>.</li>
+  </ul></aside>
+<section class="answers"><h3>Answers</h3><ol><li><b>412. Fizz Buzz</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fizzBuzz</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># 15 = both 3 and 5</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">15</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;FizzBuzz&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Fizz&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Buzz&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ans</span>
+<span class="c1"># O(n) time.</span></code></pre></li><li><b>1281. Subtract the Product and Sum of Digits of an Integer</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">subtractProductAndSum</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">prod</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span>
+            <span class="n">prod</span> <span class="o">*=</span> <span class="n">d</span>
+            <span class="n">total</span> <span class="o">+=</span> <span class="n">d</span>
+            <span class="n">n</span> <span class="o">//=</span> <span class="mi">10</span>
+        <span class="k">return</span> <span class="n">prod</span> <span class="o">-</span> <span class="n">total</span>
+<span class="c1"># O(number of digits).</span></code></pre></li><li><b>258. Add Digits</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addDigits</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="c1"># answers go 1..9, then</span>
+        <span class="c1"># 1..9 again: wrap around 9</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">9</span>
+<span class="c1"># O(1). This is the &quot;digital</span>
+<span class="c1"># root&quot;. The loop version</span>
+<span class="c1"># is also fine.</span></code></pre></li><li><b>441. Arranging Coins</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">arrangeCoins</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># row k + 1 needs k + 1 coins</span>
+        <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">n</span> <span class="o">-=</span> <span class="n">k</span>
+        <span class="k">return</span> <span class="n">k</span>
+<span class="c1"># O(sqrt n) rows. With the</span>
+<span class="c1"># formula and a square root</span>
+<span class="c1"># it is O(1):</span>
+<span class="c1"># (math.isqrt(8*n + 1) - 1) // 2</span></code></pre></li><li><b>202. Happy Number</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isHappy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">10</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">d</span>
+                <span class="n">x</span> <span class="o">//=</span> <span class="mi">10</span>
+            <span class="k">return</span> <span class="n">total</span>
+
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">n</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="c1"># a loop: never 1</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">step</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+<span class="c1"># Numbers shrink fast, so this</span>
+<span class="c1"># is quick. Fast/slow pointers</span>
+<span class="c1"># would need no set.</span></code></pre></li></ol></section><p class="lesson-foot no-print"><a href="#map">&uarr; Map</a></p></article>
 
 <footer class="site-foot">
   <p>Problems open on <a href="https://leetcode.com" rel="noopener">leetcode.com</a>, or in the LeetCode app if your phone has it. LeetCode is a trademark of its owner. This guide is an independent study aid. Solved marks are saved only in this browser.</p>
@@ -3755,7 +3980,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 </main>
 <script>
 (function(){
-  var KEY='ca-solved', LAST='ca-last', DIAGRAMS=["diagrams/02e3cf66d624.svg", "diagrams/14e505ffb520.svg", "diagrams/232261dcef52.svg", "diagrams/2eb680d2baad.svg", "diagrams/2f6cc23c2cd8.svg", "diagrams/4e77e96544ef.svg", "diagrams/539e61f59961.svg", "diagrams/6018d224f93a.svg", "diagrams/61035b511483.svg", "diagrams/6395e885270e.svg", "diagrams/671c9e8b34e8.svg", "diagrams/69cf61e84d27.svg", "diagrams/7a7da33bf012.svg", "diagrams/7b4e858a3aaf.svg", "diagrams/8209418b2312.svg", "diagrams/824cd0923c6e.svg", "diagrams/825536b4a14c.svg", "diagrams/a1eaf2c5d9fc.svg", "diagrams/aa2ea6204f1e.svg", "diagrams/ad2813528ebc.svg", "diagrams/b6bff1415f4c.svg", "diagrams/c18f9c81d1ed.svg", "diagrams/c33091ed046c.svg", "diagrams/c5ea8ad51100.svg", "diagrams/c74066918490.svg", "diagrams/ce07d6f3ce29.svg", "diagrams/d94ae9548f73.svg", "diagrams/dab0bc21b55f.svg", "diagrams/f0943c1dac3b.svg", "diagrams/f947d17c6c44.svg", "diagrams/fe37cbf3920c.svg"];
+  var KEY='ca-solved', LAST='ca-last', DIAGRAMS=["diagrams/02e3cf66d624.svg", "diagrams/14e505ffb520.svg", "diagrams/232261dcef52.svg", "diagrams/2eb680d2baad.svg", "diagrams/2f6cc23c2cd8.svg", "diagrams/4e77e96544ef.svg", "diagrams/539e61f59961.svg", "diagrams/6018d224f93a.svg", "diagrams/61035b511483.svg", "diagrams/6395e885270e.svg", "diagrams/671c9e8b34e8.svg", "diagrams/69cf61e84d27.svg", "diagrams/7a7da33bf012.svg", "diagrams/7b4e858a3aaf.svg", "diagrams/7daa366c5720.svg", "diagrams/8209418b2312.svg", "diagrams/824cd0923c6e.svg", "diagrams/825536b4a14c.svg", "diagrams/82eb280dadb2.svg", "diagrams/a1eaf2c5d9fc.svg", "diagrams/aa2ea6204f1e.svg", "diagrams/ad2813528ebc.svg", "diagrams/b6bff1415f4c.svg", "diagrams/c18f9c81d1ed.svg", "diagrams/c33091ed046c.svg", "diagrams/c5ea8ad51100.svg", "diagrams/c74066918490.svg", "diagrams/ce07d6f3ce29.svg", "diagrams/d94ae9548f73.svg", "diagrams/dab0bc21b55f.svg", "diagrams/f0943c1dac3b.svg", "diagrams/f947d17c6c44.svg", "diagrams/fd2cfc1102c2.svg", "diagrams/fe37cbf3920c.svg"];
   function load(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
   function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
   var solved=load(KEY,{});
