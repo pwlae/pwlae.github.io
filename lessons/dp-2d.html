@@ -1,0 +1,234 @@
+<p class="lead">Some DP problems need <b>two</b> numbers to describe a small problem: a row and a column on a grid, or a position in each of two words. Then the saved answers go in a <b>table</b> instead of a list.</p>
+
+<h3>The idea</h3>
+<p>Picture a city laid out in blocks, like a grid. You start at the top-left corner. You may only walk <b>right</b> or <b>down</b>. How many different routes reach the bottom-right corner?</p>
+<p>Think about the last move. To stand on a corner, you came either from the corner <b>above</b> it or from the corner to its <b>left</b>. So:</p>
+<pre><code class="language-python">ways(r, c) = ways(r-1, c)
+           + ways(r, c-1)
+</code></pre>
+<p>Here <code>r</code> is the row and <code>c</code> is the column, both counted from 0. On the top row you can only arrive from the left, and on the left column only from above: just 1 way each. Every other corner adds up the two corners that lead into it:</p>
+<pre class="mermaid" data-alt="A 3 by 3 grid drawn as boxes, with arrows going right and down. Each box shows its (row, column) and the number of routes that reach it. Top row and left column: 1 each. (1,1) is 2, (1,2) and (2,1) are 3, and the bottom-right corner (2,2) is 6.">
+%%{init: {"flowchart": {"rankSpacing": 22, "nodeSpacing": 16, "padding": 6}}}%%
+flowchart TD
+  A["(0,0)<br/>1"] --> B["(0,1)<br/>1"]
+  A --> D["(1,0)<br/>1"]
+  B --> C["(0,2)<br/>1"]
+  B --> E["(1,1)<br/>2"]
+  D --> E
+  D --> G["(2,0)<br/>1"]
+  C --> F["(1,2)<br/>3"]
+  E --> F
+  E --> H["(2,1)<br/>3"]
+  G --> H
+  F --> I["(2,2)<br/>6"]
+  H --> I
+</pre>
+<p>The grid is drawn tilted: corners at the same distance from the start sit on the same level. There are 6 routes to the far corner. Does the shape look familiar? It is Pascal's triangle, and you'll build it in the first problem below.</p>
+
+<h3>The same 3 questions</h3>
+<p>The recipe from <a href="#dp-1d">DP 1D</a> still works. Only question 1 changes: the answer now has two numbers in it.</p>
+<ol>
+  <li><b>What does <code>dp[r][c]</code> mean?</b> "The number of routes from the start to row r, column c".</li>
+  <li><b>How does it come from smaller answers?</b> <code>dp[r][c] = dp[r-1][c] + dp[r][c-1]</code>: from above plus from the left.</li>
+  <li><b>What are the first values?</b> The whole top row and the whole left column are 1.</li>
+</ol>
+<p>Fill the table <b>row by row, left to right</b>. Then when you reach a cell, the cell above and the cell to the left are already done.</p>
+
+<h3>In Python</h3>
+<p>A table is a list of rows, and each row is a list. Build it like this:</p>
+<pre><code class="language-python"># 2 rows, 3 columns, all 0
+dp = [[0] * 3 for _ in range(2)]
+dp[0][0] = 9
+# [[9, 0, 0], [0, 0, 0]]
+</code></pre>
+<p><b>The trap.</b> This shorter line looks the same, but it is wrong:</p>
+<pre><code class="language-python">bad = [[0] * 3] * 2
+bad[0][0] = 9
+# [[9, 0, 0], [9, 0, 0]]
+</code></pre>
+<p><code>* 2</code> does not copy the row. It puts the <b>same</b> row list in the table twice, so changing one row changes "both". The <code>for _ in range(...)</code> version makes a new row each time. Always use it.</p>
+<p>Here is the grid template:</p>
+<pre><code class="language-python">def grid_paths(rows, cols):
+    dp = [[0] * cols
+          for _ in range(rows)]
+    for r in range(rows):
+        for c in range(cols):
+            if r == 0 or c == 0:
+                # top row, left column
+                dp[r][c] = 1
+            else:
+                up = dp[r - 1][c]
+                left = dp[r][c - 1]
+                dp[r][c] = up + left
+    # bottom-right corner
+    return dp[rows - 1][cols - 1]
+</code></pre>
+<p><b>Cost.</b> Each cell is filled once with one addition. A grid of rows × cols cells takes O(rows × cols) time, and the table takes the same space.</p>
+
+<h3>Two words: the second kind of table</h3>
+<p>A <b>subsequence</b> of a word is what is left after you cross out some letters, keeping the rest in order. "ct" is a subsequence of "cat" (cross out "a"). The <b>longest common subsequence</b> (LCS) of two words is the longest one they share. For "cat" and "cut" it is "ct", length 2.</p>
+<p>Question 1: <code>dp[i][j]</code> = the LCS length of the <b>first i letters</b> of word a and the <b>first j letters</b> of word b. Row 0 and column 0 mean "no letters", so they are 0.</p>
+<p>Question 2: look at the last letter of each part, <code>a[i-1]</code> and <code>b[j-1]</code>:</p>
+<pre class="mermaid" data-alt="The LCS rule. Are the last letters a[i-1] and b[j-1] the same? Yes: dp[i][j] is dp[i-1][j-1] plus 1, keep that letter. No: dp[i][j] is the bigger of dp[i-1][j] and dp[i][j-1], drop a letter from one word.">
+%%{init: {"flowchart": {"rankSpacing": 26, "nodeSpacing": 16, "padding": 6}}}%%
+flowchart TD
+  Q["Same last letter?"] -->|yes| Y["keep it:<br/>dp[i-1][j-1] + 1"]
+  Q -->|no| N["drop one:<br/>max(dp[i-1][j],<br/>dp[i][j-1])"]
+</pre>
+<p>In the table, "yes" means: the cell up-left, plus 1. "No" means: the bigger of the cell above and the cell to the left.</p>
+<pre><code class="language-python">def lcs(a, b):
+    n, m = len(a), len(b)
+    dp = [[0] * (m + 1)
+          for _ in range(n + 1)]
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            if a[i - 1] == b[j - 1]:
+                # same: keep it
+                d = dp[i - 1][j - 1]
+                dp[i][j] = d + 1
+            else:
+                # drop a letter
+                up = dp[i - 1][j]
+                left = dp[i][j - 1]
+                dp[i][j] = max(up, left)
+    return dp[n][m]
+</code></pre>
+<p><b>Cost.</b> One cell per pair of prefixes: O(n × m) time and space.</p>
+
+<h3>Worked example</h3>
+<p><b>Grid paths, 3 × 3.</b> Fill row by row. Each cell = above + left.</p>
+<table>
+  <tr><th></th><th>c=0</th><th>c=1</th><th>c=2</th></tr>
+  <tr><th>r=0</th><td>1</td><td>1</td><td>1</td></tr>
+  <tr><th>r=1</th><td>1</td><td>1+1 = 2</td><td>1+2 = 3</td></tr>
+  <tr><th>r=2</th><td>1</td><td>2+1 = 3</td><td>3+3 = 6</td></tr>
+</table>
+<p>The answer is in the bottom-right cell: 6 routes.</p>
+<p><b>LCS of "cat" and "cut".</b> Rows are letters of "cat", columns are letters of "cut". "-" means "no letters yet".</p>
+<table>
+  <tr><th></th><th>-</th><th>c</th><th>u</th><th>t</th></tr>
+  <tr><th>-</th><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th>c</th><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+  <tr><th>a</th><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+  <tr><th>t</th><td>0</td><td>1</td><td>1</td><td>2</td></tr>
+</table>
+<ul>
+  <li>Row c, column c: same letter, so up-left (0) + 1 = <b>1</b>.</li>
+  <li>Row a, every column: "a" is not in "cut", so we copy the bigger of above and left: 1.</li>
+  <li>Row t, column t: same letter, so up-left (1) + 1 = <b>2</b>. The answer is the bottom-right cell: 2.</li>
+</ul>
+
+<h3>Your turn</h3>
+<p>For each problem, answer the 3 questions first. Draw a tiny table on paper if it helps.</p>
+
+<leetcode slug="pascals-triangle" num="118" title="Pascal's Triangle" level="Easy" minutes="10">
+  <hint>Row r has r + 1 numbers. The first and last are 1. Every number in between is the number above-left plus the number above: <code>prev[c-1] + prev[c]</code>, where <code>prev</code> is the row before.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def generate(
+        self, numRows: int
+    ) -> List[List[int]]:
+        rows = []
+        for r in range(numRows):
+            # start with all 1s
+            row = [1] * (r + 1)
+            for c in range(1, r):
+                prev = rows[r - 1]
+                # above-left + above
+                row[c] = (prev[c - 1]
+                          + prev[c])
+            rows.append(row)
+        return rows
+# About n*n/2 numbers: O(n^2) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="pascals-triangle-ii" num="119" title="Pascal's Triangle II" level="Easy" minutes="10">
+  <hint>You only need one row back, so you don't need the whole table. Keep just the previous row, and build each new row from it (the same trick as keeping two numbers in DP 1D).</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def getRow(
+        self, rowIndex: int
+    ) -> List[int]:
+        row = [1]
+        for _ in range(rowIndex):
+            new = [1]
+            # sum each neighbour pair
+            for c in range(1, len(row)):
+                new.append(row[c - 1]
+                           + row[c])
+            new.append(1)
+            row = new
+        return row
+# O(k^2) time, O(k) space
+# (k = rowIndex).
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="is-subsequence" num="392" title="Is Subsequence" level="Easy" minutes="15">
+  <hint>Two words, so a two-words table. <code>dp[i][j]</code> = True if the first i letters of s fit inside the first j letters of t. Row 0 is all True (no letters always fit). For a cell: you can always <b>skip</b> t's letter (look left). If the two last letters are the same, you can also <b>match</b> them (look up-left). (The <a href="#two-pointers">two-pointer</a> way is shorter too: try both.)</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isSubsequence(
+        self, s: str, t: str
+    ) -> bool:
+        n, m = len(s), len(t)
+        dp = [[False] * (m + 1)
+              for _ in range(n + 1)]
+        # empty s fits in anything
+        for j in range(m + 1):
+            dp[0][j] = True
+        for i in range(1, n + 1):
+            for j in range(1, m + 1):
+                # skip t's letter
+                ok = dp[i][j - 1]
+                # or match the letters
+                same = s[i-1] == t[j-1]
+                d = dp[i-1][j-1]
+                if same and d:
+                    ok = True
+                dp[i][j] = ok
+        return dp[n][m]
+# O(n*m) time and space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="unique-paths" num="62" title="Unique Paths" level="Medium" minutes="15">
+  <hint>Stretch. This is the city grid from the top of the lesson: m rows and n columns. Use the grid template, then return the bottom-right cell. Check: m = 3, n = 3 gives 6.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def uniquePaths(
+        self, m: int, n: int
+    ) -> int:
+        # top row and left column: 1
+        dp = [[1] * n
+              for _ in range(m)]
+        for r in range(1, m):
+            for c in range(1, n):
+                up = dp[r - 1][c]
+                left = dp[r][c - 1]
+                dp[r][c] = up + left
+        return dp[m - 1][n - 1]
+# O(m*n) time and space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<p>When these feel quick, two more classic grid and two-word tables are waiting on LeetCode: 64 Minimum Path Sum and 1143 Longest Common Subsequence. Both are Medium. You already have the templates for them.</p>
+
+<fact title="How diff and git diff compare two files">
+  <p>When you run <code>git diff</code>, Git shows which lines were removed and which were added. To do that it must find what the old and new files have <b>in common</b>: that's a longest common subsequence, with whole lines as the "letters".</p>
+  <p>The plain LCS table would need one cell for every pair of lines. Two files of 10,000 lines would need 100 million cells. So GNU <code>diff</code> and Git use a smarter method by Eugene Myers, from his 1986 paper "An O(ND) Difference Algorithm and Its Variations". The paper shows that the LCS and the shortest list of edits are two sides of the same problem. Myers' method is fast when the two files differ only a little, which is the usual case.</p>
+  <p>The Git manual lists <code>myers</code> as the default diff algorithm, and the GNU diff manual names Myers' paper as its basic algorithm.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Two numbers describe a small problem (row and column, or i letters and j letters)? Use a table <code>dp[i][j]</code>.</li>
+    <li>Build it with <code>[[0] * cols for _ in range(rows)]</code>, never <code>[[0] * cols] * rows</code>.</li>
+    <li>Fill row by row, so above, left and up-left are ready. Grid: above + left. LCS: same letter → up-left + 1, else max(above, left).</li>
+  </ul>
+</recap>

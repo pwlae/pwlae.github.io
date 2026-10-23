@@ -1,6 +1,6 @@
 # Commute Algorithms (pwlae.github.io)
 
-A single, long web page that teaches algorithms step by step, from zero, for people
+A small multi-page site that teaches algorithms step by step, from zero, for people
 who study on their phone during a 30–60 minute commute (the owner rides the London
 Underground: Northern line, then Jubilee line). Hosted on GitHub Pages from `master`.
 
@@ -22,7 +22,7 @@ Underground: Northern line, then Jubilee line). Hosted on GitHub Pages from `mas
 ## Hard requirements
 
 - **Light and fast.** Poor signal underground. Minimal CSS, inline CSS/JS, no frameworks,
-  no web fonts, no runtime JS libraries. Current page ≈ 50 KB, so keep it lean.
+  no web fonts, no runtime JS libraries. Home page ≈ 25 KB and each lesson page ≈ 20–65 KB, so keep them lean.
 - **Phone first.** 16px side gutter, big tap targets, no horizontal page scroll.
 - **Printable.** White background, no coloured backgrounds, black text. Every lesson has an
   explicit "Print this lesson / Save as PDF" button. On print: hints/facts expand, LeetCode
@@ -31,6 +31,8 @@ Underground: Northern line, then Jubilee line). Hosted on GitHub Pages from `mas
   Python assumptions: the code pipeline takes any Pygments language, so other languages can come later.
 - **Diagrams: Mermaid only.** Nothing else (no hand-drawn SVG, no images, no ASCII art).
   They are rendered to SVG at build time (`diagrams/<hash>.svg`), so readers don't download Mermaid.
+  One exception: the home page photo `images/tube.webp` (public domain, Wikimedia Commons,
+  ~38 KB, hidden in print). Don't add more photos.
 - **LeetCode links are explicit**: the card shows the LeetCode logo, a "LeetCode" label,
   number, title, difficulty and time box. Link is `https://leetcode.com/problems/<slug>/`
   (phones with the LeetCode app may open it there).
@@ -47,7 +49,9 @@ curriculum.json      stages + ordered lessons (id, title, stage, requires) ← s
 lessons/<id>.html    one HTML fragment per lesson (no <html>/<body>)
 template.html        page shell: all CSS + JS inline
 tools/code.css       highlight colours   tools/mermaid.json   diagram theme
-build.py             → index.html (GENERATED, committed) + diagrams/*.svg
+build.py             → GENERATED, committed: index.html (home: photo, progress, stage list),
+                       l/<id>.html (one page per lesson), all.html (whole guide, for printing),
+                       diagrams/*.svg
 sw.js                offline cache
 ```
 
@@ -58,8 +62,9 @@ sw.js                offline cache
 - Lessons not yet written still show in the map as "coming soon". Lessons may be written in any
   order, but the map and numbering follow `curriculum.json`.
 - Preview: `python3 -m http.server 8765`, then
-  `/snap/bin/chromium --headless --no-sandbox --hide-scrollbars --window-size=390,6000 --screenshot=$PWD/preview/m.png http://localhost:8765/#<id>`
-  and `--print-to-pdf=$PWD/preview/<id>.pdf "http://localhost:8765/?print=<id>"`. Use `preview/`
+  `/snap/bin/chromium --headless --no-sandbox --hide-scrollbars --window-size=390,6000 --screenshot=$PWD/preview/m.png http://localhost:8765/l/<id>.html`
+  and `--print-to-pdf=$PWD/preview/<id>.pdf http://localhost:8765/l/<id>.html`. Old links
+  (`/#<id>`, `/#p-<slug>`, `/?print=<id>`) still work: the home page redirects them. Use `preview/`
   (gitignored), because snap Chromium cannot write to /tmp. Look at both before finishing a lesson.
 
 ## Writing a lesson (the format every lesson follows)
