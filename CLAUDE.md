@@ -31,6 +31,8 @@ Underground: Northern line, then Jubilee line). Hosted on GitHub Pages from `mas
   Python assumptions: the code pipeline takes any Pygments language, so other languages can come later.
 - **Diagrams: Mermaid only.** Nothing else (no hand-drawn SVG, no images, no ASCII art).
   They are rendered to SVG at build time (`diagrams/<hash>.svg`), so readers don't download Mermaid.
+  One exception: the home page photo `images/tube.webp` (public domain, Wikimedia Commons,
+  ~38 KB, hidden in print). Don't add more photos.
 - **LeetCode links are explicit**: the card shows the LeetCode logo, a "LeetCode" label,
   number, title, difficulty and time box. Link is `https://leetcode.com/problems/<slug>/`
   (phones with the LeetCode app may open it there).
@@ -47,7 +49,7 @@ curriculum.json      stages + ordered lessons (id, title, stage, requires) ← s
 lessons/<id>.html    one HTML fragment per lesson (no <html>/<body>)
 template.html        page shell: all CSS + JS inline
 tools/code.css       highlight colours   tools/mermaid.json   diagram theme
-build.py             → GENERATED, committed: index.html (home: progress + stage list + map),
+build.py             → GENERATED, committed: index.html (home: photo, progress, stage list),
                        l/<id>.html (one page per lesson), all.html (whole guide, for printing),
                        diagrams/*.svg
 sw.js                offline cache

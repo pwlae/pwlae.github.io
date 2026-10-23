@@ -45,7 +45,9 @@ button:active{background:var(--soft)}
 .toc li.is-done a::after{content:" \2713";color:var(--easy)}
 .resume a{display:block;border:2px solid var(--text);border-radius:8px;padding:.75rem;text-decoration:none;color:var(--text);font-weight:600}
 .resume small{display:block;font-weight:400;color:var(--muted)}
-.roadmap>summary{font-weight:400;color:var(--link)}
+.hero{margin:.75rem 0}
+.hero img{display:block;width:100%;height:auto;border-radius:8px}
+.hero figcaption{font-size:.75rem;color:var(--muted);margin-top:.25rem}
 .topbar{display:flex;justify-content:space-between;align-items:center;min-height:44px;border-bottom:1px solid var(--line);margin-bottom:.5rem;font-size:.95rem}
 .topbar a{padding:.6rem 0}
 .pager{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:2.5rem}
@@ -186,13 +188,13 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     Promise.race([Promise.all(imgs),new Promise(function(r){setTimeout(r,4000)})]).then(function(){window.print()});
   });
 
-  // Offline: after the first visit, quietly fetch every lesson page and
-  // diagram so the whole guide works in a tunnel.
+  // Offline: after the first visit, quietly fetch every lesson page,
+  // diagram and the photo so the whole guide works in a tunnel.
   if('serviceWorker' in navigator&&location.protocol==='https:'){
     navigator.serviceWorker.register(ROOT+'sw.js').then(function(){
       if(!window.caches)return;
       setTimeout(function(){caches.open('ca-v2').then(function(c){
-        [''].concat(D.pages,D.diagrams).forEach(function(u){u=ROOT+u||'./';c.match(u).then(function(hit){if(!hit)c.add(u).catch(function(){})})});
+        [''].concat(D.pages,D.assets).forEach(function(u){u=ROOT+u||'./';c.match(u).then(function(hit){if(!hit)c.add(u).catch(function(){})})});
       })},3000);
     }).catch(function(){});
   }

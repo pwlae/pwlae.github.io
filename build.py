@@ -247,30 +247,6 @@ def expand_leetcode(text, lesson_id, problems):
 
 # ---------- page ----------
 
-def roadmap_source(cur, written):
-    """A top-down chain of stages (narrow enough for a phone). Each box lists
-    its lessons; a stage with nothing written yet is drawn dashed."""
-    lines = ["flowchart TD"]
-    soon = []
-    for si, s in enumerate(cur["stages"]):
-        rows = [s["title"].upper()]
-        ids = []
-        for i, l in enumerate(cur["lessons"]):
-            if l["stage"] == s["id"]:
-                rows.append(f"{i}. {l['title']}")
-                ids.append(l["id"])
-        label = "<br/>".join(rows).replace('"', "'")
-        lines.append(f'  S{si}["{label}"]')
-        if si:
-            lines.append(f"  S{si - 1} --> S{si}")
-        if not any(i in written for i in ids):
-            soon.append(f"S{si}")
-    if soon:
-        lines.append("  classDef soon stroke-dasharray: 5 4,color:#666")
-        lines.append(f"  class {','.join(soon)} soon")
-    return "\n".join(lines)
-
-
 def validate(cur):
     stages = {s["id"] for s in cur["stages"]}
     seen = set()
@@ -284,6 +260,16 @@ def validate(cur):
 
 
 PAGES = ROOT / "l"  # one generated page per lesson
+
+# The one photo on the site (home page only, hidden in print). Public domain,
+# from Wikimedia Commons; crediting the photographer anyway.
+HERO = (
+    '<figure class="hero no-print"><img src="images/tube.webp" width="780" height="438" decoding="async" '
+    'alt="A red Northern line train coming out of a round tunnel onto the tracks.">'
+    '<figcaption>Northern line train leaving the tunnel near Hendon Central. Photo: SPSmiler, '
+    '<a href="https://commons.wikimedia.org/wiki/File:Why_London_Underground_is_nicknamed_The_Tube.jpg" '
+    'rel="noopener">public domain</a>.</figcaption></figure>'
+)
 
 
 def link_rewriter(home_of_problem, here):
@@ -376,7 +362,7 @@ def build():
         return (f'<nav class="pager no-print">{cell(prev, "prev", "&larr; Previous")}'
                 f'{cell(nxt, "next", "Next &rarr;")}</nav>')
 
-    # Home page: progress, roadmap, stage list (each stage is a <details>).
+    # Home page: photo, progress, stage list (each stage is a <details>).
     toc = []
     for s in cur["stages"]:
         items, n_written = [], 0
@@ -392,7 +378,6 @@ def build():
         status = f'{n_written} lesson{"s" if n_written != 1 else ""}' if n_written else "coming soon"
         toc.append(f'<details class="stage" open data-stage="{s["id"]}"><summary>{esc(s["title"])}'
                    f' <small class="stage-status">{status}</small></summary><ul>{"".join(items)}</ul></details>')
-    roadmap = diagrams.render(roadmap_source(cur, written), "Map of all lessons. Arrows point from a lesson to the lessons that build on it.")
     diagrams.prune()
 
     shell = (ROOT / "template.html").read_text()
@@ -405,7 +390,7 @@ def build():
             "lessons": {k: lesson_problems[k] for k in lesson_problems},
             "titles": {l["id"]: l["title"] for l in done},
             "pages": [f"l/{l['id']}.html" for l in done],
-            "diagrams": sorted(f"diagrams/{n}" for n in diagrams.used),
+            "assets": sorted(f"diagrams/{n}" for n in diagrams.used) + ["images/tube.webp"],
         }, separators=(",", ":")),
     }
 
@@ -421,13 +406,12 @@ def build():
 
     total = len(set(all_problems))
     home = (
-        f'<header class="site-head"><h1>{esc(cur["title"])}</h1><p class="lead">{esc(cur["tagline"])}</p>'
+        f'<header class="site-head"><h1>{esc(cur["title"])}</h1>{HERO}<p class="lead">{esc(cur["tagline"])}</p>'
         f'<p class="progress-line no-print">Solved: <span id="solved-count">0</span> / {total} problems</p>'
         f'<p id="resume" class="resume no-print" hidden></p></header>'
         f'<section id="map"><h2>Lessons</h2>'
         f'<p class="muted">Go from top to bottom. Each stage builds on the one above it. Tap a stage to open it.</p>'
         f'<div class="toc">{"".join(toc)}</div>'
-        f'<details class="roadmap"><summary>Show the map as a picture</summary>{roadmap}</details>'
         f'<p class="no-print"><a href="all.html">Print the whole guide</a> (one big page, for printing only)</p>'
         f"</section>"
     )
