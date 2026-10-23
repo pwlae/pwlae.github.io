@@ -1,0 +1,203 @@
+<p class="lead">Some jobs must happen before others: socks before shoes, a library before the app that uses it. Topological sort finds an order that keeps every "before" rule, or tells you that no such order exists.</p>
+
+<h3>The idea</h3>
+<p>Think about getting dressed in the morning. You can't put shoes on before socks, or a tie on before a shirt. Some things don't care: socks and shirt can go in either order. You want <b>one</b> order that breaks no rule.</p>
+<p>Draw each item as a node (see <a href="#graph-basics">Graphs</a>). Draw an arrow from A to B when A must come before B. Arrows go one way only, so this is a <b>directed graph</b>.</p>
+<pre class="mermaid" data-alt="A getting-dressed graph. Pants point to Trousers. Trousers and Socks both point to Shoes. Shirt points to Tie. Below it, one valid order: Pants, Socks, Shirt, Trousers, Tie, Shoes.">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 16, "padding": 6}}}%%
+flowchart LR
+  P["Pants"] --> T["Trousers"]
+  T --> SH["Shoes"]
+  S["Socks"] --> SH
+  SI["Shirt"] --> TI["Tie"]
+</pre>
+<p>One valid order: <b>Pants, Socks, Shirt, Trousers, Tie, Shoes</b>. There are others. Any order is fine, as long as every arrow points forward.</p>
+
+<p><b>In-degree.</b> A node's in-degree is the number of arrows pointing <i>into</i> it: how many things must happen first. Shoes has in-degree 2 (Trousers and Socks). Pants, Socks and Shirt have in-degree 0: nothing has to come before them, so you can start with any of them.</p>
+
+<p><b>Kahn's algorithm</b> turns this into steps:</p>
+<ol>
+  <li>Count the in-degree of every node.</li>
+  <li>Put every node with in-degree 0 in a <a href="#queue">queue</a>. These are ready.</li>
+  <li>Take a node from the queue and add it to the order. "Done" with it.</li>
+  <li>For each arrow out of it, lower the neighbour's in-degree by 1. If it drops to 0, the neighbour is now ready: add it to the queue.</li>
+  <li>Repeat until the queue is empty.</li>
+</ol>
+
+<p><b>The impossible case.</b> What if the rules go round in a circle? A before B, B before C, C before A. That is a <b>cycle</b>.</p>
+<pre class="mermaid" data-alt="A cycle of three nodes: A points to B, B points to C, C points back to A. Every node has in-degree 1, so none can go first.">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 20, "padding": 6}}}%%
+flowchart LR
+  A["A"] --> B["B"]
+  B --> C["C"]
+  C --> A
+</pre>
+<p>Every node in the circle waits for another one, so none ever reaches in-degree 0. Kahn's algorithm stops early. So the check is simple: <b>if the order has fewer nodes than the graph, there is a cycle</b>, and no valid order exists.</p>
+
+<h3>In Python</h3>
+<pre><code class="language-python">from collections import defaultdict
+from collections import deque
+
+def topo_sort(n, edges):
+    # edges: [a, b] means a before b
+    graph = defaultdict(list)
+    indeg = [0] * n
+    for a, b in edges:
+        graph[a].append(b)
+        indeg[b] += 1
+
+    # everything with nothing before it
+    queue = deque(
+        i for i in range(n)
+        if indeg[i] == 0
+    )
+    order = []
+    while queue:
+        node = queue.popleft()
+        order.append(node)
+        for nxt in graph[node]:
+            indeg[nxt] -= 1
+            if indeg[nxt] == 0:
+                # all its "befores" are done
+                queue.append(nxt)
+
+    if len(order) &lt; n:
+        return []  # cycle: impossible
+    return order
+</code></pre>
+<p>Cost: each node goes into the queue once and each arrow is looked at once. With V nodes and E edges that is <b>O(V + E)</b> time, the same as BFS, and O(V + E) memory for the graph.</p>
+
+<h3>Worked example</h3>
+<p>Getting dressed. Start: in-degree 0 for Pants, Socks, Shirt. Trousers 1, Tie 1, Shoes 2.</p>
+<table>
+  <tr><th>Take</th><th>Lower</th><th>Queue after</th></tr>
+  <tr><td>Pants</td><td>Trousers → 0</td><td>Socks, Shirt, Trousers</td></tr>
+  <tr><td>Socks</td><td>Shoes → 1</td><td>Shirt, Trousers</td></tr>
+  <tr><td>Shirt</td><td>Tie → 0</td><td>Trousers, Tie</td></tr>
+  <tr><td>Trousers</td><td>Shoes → 0</td><td>Tie, Shoes</td></tr>
+  <tr><td>Tie</td><td>none</td><td>Shoes</td></tr>
+  <tr><td>Shoes</td><td>none</td><td>empty</td></tr>
+</table>
+<p>All 6 items placed: Pants, Socks, Shirt, Trousers, Tie, Shoes. No cycle.</p>
+
+<h3>Your turn</h3>
+<p>The first two only need in-degree and out-degree counting. Then the full algorithm twice. Topological sort problems on LeetCode are mostly Medium, but they all use the template above.</p>
+
+<leetcode slug="destination-city" num="1436" title="Destination City" level="Easy" minutes="10">
+  <hint>Each path is an arrow from one city to another. The destination is the city with no arrow going <i>out</i> of it. Put every starting city in a set, then find the end city that is not in it.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def destCity(
+        self, paths: List[List[str]]
+    ) -> str:
+        # cities with an arrow going out
+        starts = {a for a, b in paths}
+        for a, b in paths:
+            if b not in starts:
+                return b
+# O(n) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="minimum-number-of-vertices-to-reach-all-nodes" num="1557" title="Minimum Number of Vertices to Reach All Nodes" level="Medium" minutes="10">
+  <hint>Looks scary, is short. A node with an arrow pointing into it can be reached from somewhere else. A node with in-degree 0 can't, so you must start there. Return every node with in-degree 0.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def findSmallestSetOfVertices(
+        self, n: int,
+        edges: List[List[int]]
+    ) -> List[int]:
+        indeg = [0] * n
+        for a, b in edges:
+            indeg[b] += 1
+        # nothing points to these
+        return [
+            i for i in range(n)
+            if indeg[i] == 0
+        ]
+# O(n + len(edges)) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="course-schedule" num="207" title="Course Schedule" level="Medium" minutes="20">
+  <hint>Courses are nodes. <code>[a, b]</code> means "take b before a", so the arrow goes <b>b → a</b>. Run Kahn's algorithm and count how many courses you place. Can you finish? Only if you placed all of them.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def canFinish(
+        self, numCourses: int,
+        prerequisites: List[List[int]]
+    ) -> bool:
+        graph = defaultdict(list)
+        indeg = [0] * numCourses
+        for a, b in prerequisites:
+            # b must come before a
+            graph[b].append(a)
+            indeg[a] += 1
+
+        queue = deque(
+            i for i in range(numCourses)
+            if indeg[i] == 0
+        )
+        taken = 0
+        while queue:
+            node = queue.popleft()
+            taken += 1
+            for nxt in graph[node]:
+                indeg[nxt] -= 1
+                if indeg[nxt] == 0:
+                    queue.append(nxt)
+        # fewer means a cycle
+        return taken == numCourses
+# O(V + E) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="course-schedule-ii" num="210" title="Course Schedule II" level="Medium" minutes="20">
+  <hint>Stretch. Same as Course Schedule, but keep the order list instead of just counting. Return it if it has every course, or <code>[]</code> if there was a cycle.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def findOrder(
+        self, numCourses: int,
+        prerequisites: List[List[int]]
+    ) -> List[int]:
+        graph = defaultdict(list)
+        indeg = [0] * numCourses
+        for a, b in prerequisites:
+            graph[b].append(a)
+            indeg[a] += 1
+
+        queue = deque(
+            i for i in range(numCourses)
+            if indeg[i] == 0
+        )
+        order = []
+        while queue:
+            node = queue.popleft()
+            order.append(node)
+            for nxt in graph[node]:
+                indeg[nxt] -= 1
+                if indeg[nxt] == 0:
+                    queue.append(nxt)
+        if len(order) &lt; numCourses:
+            return []  # cycle
+        return order
+# O(V + E) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Build tools sort your code">
+  <p>A build tool like <b>Make</b> reads rules such as "<code>app</code> needs <code>main.o</code> and <code>util.o</code>". Each rule is an arrow in a dependency graph. Make builds every prerequisite before the thing that needs it, which is a topological order. If the rules loop, GNU Make tells you so with a message like <code>Circular app &lt;- main.o dependency dropped</code>. That is the cycle case from Kahn's algorithm.</p>
+  <p>Package managers such as pip and npm face the same problem when they install a library and everything it depends on. Python even ships the algorithm: the standard <code>graphlib.TopologicalSorter</code> (since Python 3.9) gives you nodes in a valid order and raises a <code>CycleError</code> if there is a loop.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Topological sort = an order where every arrow "A before B" points forward.</li>
+    <li>Kahn's algorithm: queue all in-degree 0 nodes, take one, lower its neighbours' in-degree, queue any that reach 0. O(V + E).</li>
+    <li>If fewer nodes come out than went in, there is a cycle and no valid order exists.</li>
+  </ul>
+</recap>
