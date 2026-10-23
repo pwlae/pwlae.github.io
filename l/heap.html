@@ -88,8 +88,11 @@ details.hint,details.solution{border-style:dashed}
 .star-btn{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;padding:0 .9rem;border-radius:6px;background:#111;color:#fff;text-decoration:none;font-weight:600}
 .star-btn svg{width:20px;height:20px;fill:#fff}
 .star-ask button{min-height:44px;border-color:var(--line)}
-.share{margin-top:2rem}
-.share-btn{min-height:44px}
+.tools{display:flex;align-items:center;gap:.25rem}
+.tools a{margin-left:.5rem}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:0;background:none;color:var(--text);border-radius:8px}
+.icon-btn:active{background:var(--soft)}
+.icon-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .lc-name{font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--text);border-radius:4px;padding:0 .3rem}
 .lc-title{font-weight:600;text-decoration:underline;color:var(--link);flex-basis:100%}
 .lc-meta{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;font-size:.92rem;margin-top:.35rem}
@@ -139,7 +142,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 </head>
 <body class="kind-lesson">
 <main>
-<nav class="topbar no-print"><a href="../">&larr; All lessons</a><a href="greedy.html">Next &rarr;</a></nav><article id="heap" data-problems="last-stone-weight take-gifts-from-the-richest-pile the-k-weakest-rows-in-a-matrix kth-largest-element-in-a-stream kth-largest-element-in-an-array"><header class="lesson-head"><p class="kicker">Lesson 19 &middot; More tools &middot; <span class="lesson-progress" data-lesson="heap">5 problems</span></p><h2>Heaps</h2><p class="requires">Read first: <a href="sorting.html">Sorting</a></p><button type="button" class="print-btn" data-print="page">Print this lesson / Save as PDF</button></header><p class="lead">A heap is a pile that always hands you its smallest item first. You can add and remove items quickly, and you never have to <a href="sorting.html">sort</a> the whole thing.</p>
+<nav class="topbar no-print"><a href="../">&larr; All lessons</a><span class="tools"><button type="button" class="icon-btn" data-print="page" aria-label="Print this lesson or save it as a PDF" title="Print / Save as PDF"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg></button><button type="button" class="icon-btn share-btn" hidden aria-label="Send this lesson to a friend" title="Send to a friend"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg></button><a href="greedy.html">Next &rarr;</a></span></nav><article id="heap" data-problems="last-stone-weight take-gifts-from-the-richest-pile the-k-weakest-rows-in-a-matrix kth-largest-element-in-a-stream kth-largest-element-in-an-array"><header class="lesson-head"><p class="kicker">Lesson 19 &middot; More tools &middot; <span class="lesson-progress" data-lesson="heap">5 problems</span></p><h2>Heaps</h2><p class="requires">Read first: <a href="sorting.html">Sorting</a></p></header><p class="lead">A heap is a pile that always hands you its smallest item first. You can add and remove items quickly, and you never have to <a href="sorting.html">sort</a> the whole thing.</p>
 
 <h3>The idea</h3>
 <p>Think of A&amp;E at a hospital. Patients do not wait in arrival order. The nurse always calls the <b>most urgent</b> patient next, even if they came in five minutes ago. New patients arrive all the time, and each one slots in by urgency.</p>
@@ -372,7 +375,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="k">return</span> <span class="n">heap</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="c1"># O(n log k) time, O(k) space.</span>
 <span class="c1"># Better than sorting when k</span>
-<span class="c1"># is small.</span></code></pre></li></ol></section></article><p class="share no-print" hidden><button type="button" class="share-btn">Send this lesson to a friend</button></p><nav class="pager no-print"><a class="prev" href="bst.html"><small>&larr; Previous</small>Binary search trees</a><a class="next" href="greedy.html"><small>Next &rarr;</small>Greedy choices</a></nav>
+<span class="c1"># is small.</span></code></pre></li></ol></section></article><nav class="pager no-print"><a class="prev" href="bst.html"><small>&larr; Previous</small>Binary search trees</a><a class="next" href="greedy.html"><small>Next &rarr;</small>Greedy choices</a></nav>
 <footer class="site-foot">
   <p>Problems open on <a href="https://leetcode.com" rel="noopener">leetcode.com</a>, or in the LeetCode app if your phone has it. LeetCode is a trademark of its owner. This guide is an independent study aid. Solved marks are saved only in this browser.</p>
   <p>Updated 2026-10-24. Found a mistake? <a href="https://github.com/pwlae/pwlae.github.io/issues" rel="noopener">Open an issue</a>.</p>
@@ -456,14 +459,17 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
   }
   document.addEventListener('change',function(e){if(e.target.matches('.solved input')&&e.target.checked)askForStar(e.target.closest('.lc'))});
 
-  // "Send this lesson to a friend": the phone's share menu, or copy the link.
-  var sh=document.querySelector('.share');
-  if(sh&&(navigator.share||navigator.clipboard)){
-    sh.hidden=false;
-    sh.querySelector('button').addEventListener('click',function(){
-      var b=this, url=document.querySelector('link[rel=canonical]').href;
+  // Share icon: the phone's share menu, or copy the link (tick for 2 s).
+  var sb=document.querySelector('.share-btn');
+  if(sb&&(navigator.share||navigator.clipboard)){
+    sb.hidden=false;
+    sb.addEventListener('click',function(){
+      var url=document.querySelector('link[rel=canonical]').href, icon=sb.innerHTML;
       if(navigator.share)navigator.share({title:document.title,url:url}).catch(function(){});
-      else navigator.clipboard.writeText(url).then(function(){b.textContent='Link copied'});
+      else navigator.clipboard.writeText(url).then(function(){
+        sb.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+        sb.title='Link copied'; setTimeout(function(){sb.innerHTML=icon;sb.title='Send to a friend'},2000);
+      });
     });
   }
 

@@ -291,6 +291,12 @@ def link_rewriter(home_of_problem, here):
 
 LESSON_IDS = set()
 
+# Toolbar icons from Lucide (ISC licence, https://lucide.dev). Styled by .icon-btn svg in the template.
+ICON_PRINT = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>'
+              '<path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>')
+ICON_SHARE = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>'
+              '<polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>')
+
 
 def first_text(html_text, limit=200):
     """Plain text of the lesson's lead paragraph, for meta descriptions."""
@@ -388,8 +394,6 @@ def build():
             f'<h2>{esc(l["title"])}</h2>'
             + (f'<p class="requires">Read first: {reqs}</p>' if reqs else "")
         )
-        if mode == "page":
-            head += '<button type="button" class="print-btn" data-print="page">Print this lesson / Save as PDF</button>'
         head += "</header>"
         return (f'<article id="{l["id"]}" data-problems="{" ".join(problems)}">'
                 f"{head}{body}{answers}</article>")
@@ -471,13 +475,15 @@ def build():
     for l in done:
         k = done.index(l)
         nxt = f'<a href="{done[k + 1]["id"]}.html">Next &rarr;</a>' if k + 1 < len(done) else ""
-        top = f'<nav class="topbar no-print"><a href="../">&larr; All lessons</a>{nxt}</nav>'
-        share = ('<p class="share no-print" hidden><button type="button" class="share-btn">'
-                 'Send this lesson to a friend</button></p>')
+        tools = ('<span class="tools">'
+                 f'<button type="button" class="icon-btn" data-print="page" aria-label="Print this lesson or save it as a PDF" title="Print / Save as PDF">{ICON_PRINT}</button>'
+                 f'<button type="button" class="icon-btn share-btn" hidden aria-label="Send this lesson to a friend" title="Send to a friend">{ICON_SHARE}</button>'
+                 f'{nxt}</span>')
+        top = f'<nav class="topbar no-print"><a href="../">&larr; All lessons</a>{tools}</nav>'
         desc = first_text((LESSONS / f"{l['id']}.html").read_text()) or cur["tagline"]
         sizes[f"l/{l['id']}.html"] = page(
             f"l/{l['id']}.html", "lesson", f'{esc(l["title"])} &middot; {esc(cur["title"])}', "../",
-            top + article(l, "page") + share + pager(l), desc, f'{l["title"]}: {cur["title"]}')
+            top + article(l, "page") + pager(l), desc, f'{l["title"]}: {cur["title"]}')
 
     every = "".join(article(l, "all") for l in done)
     intro = (f'<header class="site-head no-print"><p><a href="./">&larr; Back to lessons</a></p>'

@@ -24,8 +24,8 @@ Underground: Northern line, then Jubilee line). Hosted on GitHub Pages from `mas
 - **Light and fast.** Poor signal underground. Minimal CSS, inline CSS/JS, no frameworks,
   no web fonts, no runtime JS libraries. Home page ≈ 25 KB and each lesson page ≈ 20–65 KB, so keep them lean.
 - **Phone first.** 16px side gutter, big tap targets, no horizontal page scroll.
-- **Printable.** White background, no coloured backgrounds, black text. Every lesson has an
-  explicit "Print this lesson / Save as PDF" button. On print: hints/facts expand, LeetCode
+- **Printable.** White background, no coloured backgrounds, black text. Every lesson page has a print
+  icon (labelled "Print / Save as PDF") in its top bar, next to the share icon. On print: hints/facts expand, LeetCode
   URLs are printed, solutions move to an "Answers" page at the end of the lesson.
 - **Python only** for now, with syntax highlighting (Pygments at build time). Don't hard-code
   Python assumptions: the code pipeline takes any Pygments language, so other languages can come later.

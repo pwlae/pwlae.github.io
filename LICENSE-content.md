@@ -19,5 +19,6 @@ Not covered by this licence:
 - The photo in `images/` (`tube.webp`, `og.jpg`) is a public-domain photo by
   SPSmiler from Wikimedia Commons:
   https://commons.wikimedia.org/wiki/File:Why_London_Underground_is_nicknamed_The_Tube.jpg
+- The print and share icons are from Lucide (https://lucide.dev), ISC licence.
 - LeetCode and GitHub names and logos are trademarks of their owners. LeetCode
   problems are only linked to, not copied.

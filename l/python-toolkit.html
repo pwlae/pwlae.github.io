@@ -88,8 +88,11 @@ details.hint,details.solution{border-style:dashed}
 .star-btn{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;padding:0 .9rem;border-radius:6px;background:#111;color:#fff;text-decoration:none;font-weight:600}
 .star-btn svg{width:20px;height:20px;fill:#fff}
 .star-ask button{min-height:44px;border-color:var(--line)}
-.share{margin-top:2rem}
-.share-btn{min-height:44px}
+.tools{display:flex;align-items:center;gap:.25rem}
+.tools a{margin-left:.5rem}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:0;background:none;color:var(--text);border-radius:8px}
+.icon-btn:active{background:var(--soft)}
+.icon-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .lc-name{font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--text);border-radius:4px;padding:0 .3rem}
 .lc-title{font-weight:600;text-decoration:underline;color:var(--link);flex-basis:100%}
 .lc-meta{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;font-size:.92rem;margin-top:.35rem}
@@ -139,7 +142,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 </head>
 <body class="kind-lesson">
 <main>
-<nav class="topbar no-print"><a href="../">&larr; All lessons</a><a href="big-o.html">Next &rarr;</a></nav><article id="python-toolkit" data-problems="concatenation-of-array running-sum-of-1d-array shuffle-the-array richest-customer-wealth number-of-good-pairs"><header class="lesson-head"><p class="kicker">Lesson 1 &middot; Warm-up &middot; <span class="lesson-progress" data-lesson="python-toolkit">5 problems</span></p><h2>Python toolkit for LeetCode</h2><p class="requires">Read first: <a href="how-to-use.html">How to use this guide</a></p><button type="button" class="print-btn" data-print="page">Print this lesson / Save as PDF</button></header><p class="lead">Before any algorithm, you need a few Python tools you will use in almost every problem: lists, loops, dictionaries and sets. This lesson is the toolbox.</p>
+<nav class="topbar no-print"><a href="../">&larr; All lessons</a><span class="tools"><button type="button" class="icon-btn" data-print="page" aria-label="Print this lesson or save it as a PDF" title="Print / Save as PDF"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg></button><button type="button" class="icon-btn share-btn" hidden aria-label="Send this lesson to a friend" title="Send to a friend"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg></button><a href="big-o.html">Next &rarr;</a></span></nav><article id="python-toolkit" data-problems="concatenation-of-array running-sum-of-1d-array shuffle-the-array richest-customer-wealth number-of-good-pairs"><header class="lesson-head"><p class="kicker">Lesson 1 &middot; Warm-up &middot; <span class="lesson-progress" data-lesson="python-toolkit">5 problems</span></p><h2>Python toolkit for LeetCode</h2><p class="requires">Read first: <a href="how-to-use.html">How to use this guide</a></p></header><p class="lead">Before any algorithm, you need a few Python tools you will use in almost every problem: lists, loops, dictionaries and sets. This lesson is the toolbox.</p>
 
 <h3>What a LeetCode answer looks like</h3>
 <p>LeetCode gives you a class with one method. You fill in the method and <code>return</code> the answer. You never read input or print output yourself.</p>
@@ -264,7 +267,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="c1"># x makes a good pair with every equal number seen before it</span>
             <span class="n">pairs</span> <span class="o">+=</span> <span class="n">count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">count</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">pairs</span></code></pre></li></ol></section></article><p class="share no-print" hidden><button type="button" class="share-btn">Send this lesson to a friend</button></p><nav class="pager no-print"><a class="prev" href="how-to-use.html"><small>&larr; Previous</small>How to use this guide</a><a class="next" href="big-o.html"><small>Next &rarr;</small>Big O in plain words</a></nav>
+        <span class="k">return</span> <span class="n">pairs</span></code></pre></li></ol></section></article><nav class="pager no-print"><a class="prev" href="how-to-use.html"><small>&larr; Previous</small>How to use this guide</a><a class="next" href="big-o.html"><small>Next &rarr;</small>Big O in plain words</a></nav>
 <footer class="site-foot">
   <p>Problems open on <a href="https://leetcode.com" rel="noopener">leetcode.com</a>, or in the LeetCode app if your phone has it. LeetCode is a trademark of its owner. This guide is an independent study aid. Solved marks are saved only in this browser.</p>
   <p>Updated 2026-10-24. Found a mistake? <a href="https://github.com/pwlae/pwlae.github.io/issues" rel="noopener">Open an issue</a>.</p>
@@ -348,14 +351,17 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
   }
   document.addEventListener('change',function(e){if(e.target.matches('.solved input')&&e.target.checked)askForStar(e.target.closest('.lc'))});
 
-  // "Send this lesson to a friend": the phone's share menu, or copy the link.
-  var sh=document.querySelector('.share');
-  if(sh&&(navigator.share||navigator.clipboard)){
-    sh.hidden=false;
-    sh.querySelector('button').addEventListener('click',function(){
-      var b=this, url=document.querySelector('link[rel=canonical]').href;
+  // Share icon: the phone's share menu, or copy the link (tick for 2 s).
+  var sb=document.querySelector('.share-btn');
+  if(sb&&(navigator.share||navigator.clipboard)){
+    sb.hidden=false;
+    sb.addEventListener('click',function(){
+      var url=document.querySelector('link[rel=canonical]').href, icon=sb.innerHTML;
       if(navigator.share)navigator.share({title:document.title,url:url}).catch(function(){});
-      else navigator.clipboard.writeText(url).then(function(){b.textContent='Link copied'});
+      else navigator.clipboard.writeText(url).then(function(){
+        sb.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+        sb.title='Link copied'; setTimeout(function(){sb.innerHTML=icon;sb.title='Send to a friend'},2000);
+      });
     });
   }
 
