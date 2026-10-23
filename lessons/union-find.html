@@ -1,0 +1,187 @@
+<p class="lead">Union-Find keeps track of groups that keep merging. It answers "are these two in the same group?" almost instantly, even while new connections keep arriving.</p>
+
+<h3>The idea</h3>
+<p>Picture a party. At first, everyone stands alone. Then people get introduced, and small friend groups form and merge. Each group picks one <b>leader</b>.</p>
+<p>Want to know if Ann and Bob are in the same group? Don't walk around the whole room. Ask each of them "who is your leader?" Same leader means same group.</p>
+<p>Two groups meet? The two leaders shake hands, and one of them becomes the leader of everyone. That is all Union-Find does. It has two moves:</p>
+<ol>
+  <li><b>find(x)</b>: who is x's leader?</li>
+  <li><b>union(a, b)</b>: merge a's group and b's group.</li>
+</ol>
+<p><b>How it is stored.</b> One list, <code>parent</code>. Each person points to someone in their group: <code>parent[x]</code>. A leader points to itself. To find x's leader, follow the pointers up until someone points to themselves. Each group is a small <a href="#tree-dfs">tree</a> with the leader at the top.</p>
+<p>Here are two groups. Arrows point to the parent. 1 and 4 are the leaders.</p>
+<pre class="mermaid" data-alt="Before union(2, 5). Two separate groups. Group one: 2 and 3 point to their leader 1. Group two: 5 points to its leader 4.">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 24}}}%%
+flowchart BT
+  N2["2"] --> N1["1 (leader)"]
+  N3["3"] --> N1
+  N5["5"] --> N4["4 (leader)"]
+</pre>
+<p>Now <code>union(2, 5)</code>. find(2) is 1. find(5) is 4. Different leaders, so we merge: point leader 4 at leader 1. Only <b>one</b> pointer changes.</p>
+<pre class="mermaid" data-alt="After union(2, 5). One group. 2, 3 and 4 point to the leader 1. 5 still points to 4, so 5 reaches the leader 1 in two steps.">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 24}}}%%
+flowchart BT
+  N2["2"] --> N1["1 (leader)"]
+  N3["3"] --> N1
+  N4["4"] --> N1
+  N5["5"] --> N4
+</pre>
+<p>Now find(5) goes 5 → 4 → 1. Same leader as 2, so 2 and 5 are connected.</p>
+
+<p><b>Two small tricks keep it fast.</b></p>
+<ul>
+  <li><b>Path compression.</b> While find walks up, it points everyone it passes straight at the leader. Next time, it's one step. In code it's one line: <code>parent[x] = find(parent[x])</code>.</li>
+  <li><b>Union by size.</b> When two groups merge, put the smaller group under the bigger one. Then the trees stay short.</li>
+</ul>
+<p>With both tricks, each find or union takes almost constant time. You can treat it as O(1).</p>
+
+<h3>In Python</h3>
+<pre><code class="language-python">class UnionFind:
+    def __init__(self, n):
+        # everyone is their own leader
+        self.parent = list(range(n))
+        self.size = [1] * n
+
+    def find(self, x):
+        p = self.parent
+        if p[x] != x:
+            # path compression:
+            # point x at the leader
+            p[x] = self.find(p[x])
+        return p[x]
+
+    def union(self, a, b):
+        ra = self.find(a)
+        rb = self.find(b)
+        if ra == rb:
+            # already together
+            return False
+        # union by size:
+        # small group under big
+        s = self.size
+        if s[ra] &lt; s[rb]:
+            ra, rb = rb, ra
+        self.parent[rb] = ra
+        s[ra] += s[rb]
+        # two groups merged
+        return True
+</code></pre>
+<p>Cost: O(n) to set up, then each <code>find</code> or <code>union</code> is close to O(1). Memory is O(n) for the two lists.</p>
+<p>A handy habit: <code>union</code> returns <code>True</code> only if it really merged two groups. Count the <code>True</code>s, and you know how many groups are left: start with <code>n</code>, subtract one per merge.</p>
+
+<h3>When to use it instead of BFS or DFS</h3>
+<p>A <a href="#graph-basics">BFS or DFS</a> answers "is there a path?" too. But it walks the whole graph each time. Reach for Union-Find when:</p>
+<ul>
+  <li>Connections arrive <b>one at a time</b>, and after each one you ask "are these connected yet?"</li>
+  <li>You need the <b>number of groups</b>.</li>
+  <li>You need to spot the edge that <b>closes a loop</b> (both ends already have the same leader).</li>
+</ul>
+<p>You don't even need to build an adjacency list. Just feed it the edges.</p>
+
+<h3>Worked example</h3>
+<p>5 people (0 to 4), edges arrive one by one. Groups start at 5.</p>
+<table>
+  <tr><th>Edge</th><th>Leaders</th><th>Result</th><th>Groups</th></tr>
+  <tr><td>0–1</td><td>0, 1</td><td>merge</td><td>4</td></tr>
+  <tr><td>2–3</td><td>2, 3</td><td>merge</td><td>3</td></tr>
+  <tr><td>1–2</td><td>0, 2</td><td>merge</td><td>2</td></tr>
+  <tr><td>0–3</td><td>0, 0</td><td>same group: a loop!</td><td>2</td></tr>
+</table>
+<p>At the end, {0, 1, 2, 3} is one group and 4 is alone. The edge 0–3 was not needed: 0 and 3 were already connected.</p>
+
+<h3>Your turn</h3>
+<p><b>Warm-up, no new card:</b> go back to <a href="#p-find-if-path-exists-in-graph">Find if Path Exists in Graph</a> and solve it again with Union-Find. Union every edge, then return <code>find(source) == find(destination)</code>. Compare it with your BFS version.</p>
+<p>Union-Find problems on LeetCode are all marked Medium, but with the template above they are short. Paste the <code>UnionFind</code> class above your <code>Solution</code> class.</p>
+
+<leetcode slug="number-of-provinces" num="547" title="Number of Provinces" level="Medium" minutes="15">
+  <hint>A province is a group. Start with <code>n</code> groups. For every pair <code>i &lt; j</code> with <code>isConnected[i][j] == 1</code>, call <code>union(i, j)</code>, and take one off the count each time it returns <code>True</code>.</hint>
+  <solution>
+<pre><code class="language-python"># paste the UnionFind class here
+class Solution:
+    def findCircleNum(
+        self,
+        isConnected: List[List[int]]
+    ) -> int:
+        n = len(isConnected)
+        uf = UnionFind(n)
+        groups = n
+        for i in range(n):
+            # the matrix is symmetric:
+            # j > i is enough
+            for j in range(i + 1, n):
+                if isConnected[i][j]:
+                    if uf.union(i, j):
+                        groups -= 1
+        return groups
+# O(n^2) time to read the matrix.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="redundant-connection" num="684" title="Redundant Connection" level="Medium" minutes="15">
+  <hint>Add the edges in order. The extra edge is the first one whose two ends <b>already</b> share a leader: that edge closes a loop. Nodes are numbered from 1, so make the Union-Find one bigger.</hint>
+  <solution>
+<pre><code class="language-python"># paste the UnionFind class here
+class Solution:
+    def findRedundantConnection(
+        self, edges: List[List[int]]
+    ) -> List[int]:
+        # nodes are 1..n: size n + 1
+        uf = UnionFind(len(edges) + 1)
+        for a, b in edges:
+            # False: already joined,
+            # this edge makes a loop
+            if not uf.union(a, b):
+                return [a, b]
+        return []
+# O(n) unions, each close to O(1).
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="satisfiability-of-equality-equations" num="990" title="Satisfiability of Equality Equations" level="Medium" minutes="20">
+  <hint>Stretch. Letters are the people: 26 of them, <code>ord(ch) - ord("a")</code> turns a letter into 0..25. First pass: union every <code>a==b</code>. Second pass: for every <code>a!=b</code>, if a and b share a leader, it's impossible.</hint>
+  <solution>
+<pre><code class="language-python"># paste the UnionFind class here
+class Solution:
+    def equationsPossible(
+        self, equations: List[str]
+    ) -> bool:
+        uf = UnionFind(26)
+
+        def num(ch):
+            return ord(ch) - ord("a")
+
+        # e is "a==b" or "a!=b"
+        # e[0], e[3]: letters
+        # e[1]: "=" or "!"
+        for e in equations:
+            if e[1] == "=":
+                a = num(e[0])
+                b = num(e[3])
+                uf.union(a, b)
+        for e in equations:
+            if e[1] == "!":
+                a = uf.find(num(e[0]))
+                b = uf.find(num(e[3]))
+                if a == b:
+                    return False
+        return True
+# Two passes over the equations: O(n).
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Kruskal: the cheapest network">
+  <p>You want to connect every town with cables (or roads, or pipes), and each possible link has a price. What is the cheapest set of links that still connects everyone? This is called a <b>minimum spanning tree</b>.</p>
+  <p><b>Kruskal's algorithm</b> (Joseph Kruskal, 1956) solves it simply: sort the links from cheapest to dearest, then take each one unless it would make a loop. "Would this link make a loop?" is exactly the Redundant Connection check above: are both towns already in the same group? Union-Find is the standard way to answer it, and textbooks such as <i>Introduction to Algorithms</i> teach Kruskal with it.</p>
+  <p>How fast is it really? In 1975 Robert Tarjan proved that, with both tricks, a find costs on average a tiny number of steps. That number does grow with n, but so slowly that it stays below 5 for any input that could fit in our universe.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li><code>parent</code> list: follow pointers up to the leader. Same leader = same group.</li>
+    <li><code>find</code> with <code>parent[x] = find(parent[x])</code>, <code>union</code> joins two leaders (small group under big).</li>
+    <li>Use it when edges arrive one by one: count groups, or spot the edge that closes a loop.</li>
+  </ul>
+</recap>
