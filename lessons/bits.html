@@ -1,0 +1,190 @@
+<p class="lead">Inside the computer, every number is a row of 0s and 1s called <b>bits</b>. A few small tricks with bits solve some problems in one line, with no extra memory.</p>
+
+<h3>The idea</h3>
+<p>Picture a row of light switches. Each switch is worth a number: from the right, 1, 2, 4, 8, and each next one is worth double. A switch that is <b>on</b> is a 1. A switch that is <b>off</b> is a 0. Add up the switches that are on, and you get the number.</p>
+<pre class="mermaid" data-alt="The number 13 as four switches. The switch worth 8 is on, 4 is on, 2 is off, 1 is on. 8 + 4 + 1 = 13, so 13 in binary is 1101.">
+%%{init: {"flowchart": {"rankSpacing": 22, "nodeSpacing": 20, "padding": 6}}}%%
+flowchart LR
+  A["8<br/>on: 1"] --- B["4<br/>on: 1"] --- C["2<br/>off: 0"] --- D["1<br/>on: 1"]
+</pre>
+<p>So 13 is <code>1101</code> in <b>binary</b> (numbers written with only 0 and 1). Python shows it with <code>bin</code>:</p>
+<pre><code class="language-python">bin(13)    # '0b1101'
+bin(5)     # '0b101'
+int("101", 2)  # 5, back again
+</code></pre>
+<p>The <code>0b</code> at the front only means "this is binary".</p>
+
+<h3>The operators</h3>
+<p>Bit operators look at two numbers <b>switch by switch</b>, lined up from the right:</p>
+<ul>
+  <li><code>a &amp; b</code> (AND): 1 where <b>both</b> are 1.</li>
+  <li><code>a | b</code> (OR): 1 where <b>either</b> is 1.</li>
+  <li><code>a ^ b</code> (XOR): 1 where they are <b>different</b>.</li>
+  <li><code>a &lt;&lt; 1</code>: slide every bit one place left. That doubles the number.</li>
+  <li><code>a &gt;&gt; 1</code>: slide every bit one place right. That halves it (rounding down).</li>
+</ul>
+<table>
+  <tr><th>a</th><th>b</th><th>a &amp; b</th><th>a | b</th><th>a ^ b</th></tr>
+  <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+  <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+  <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+</table>
+
+<h3>Three tricks</h3>
+<p>You only need three tricks for the problems below.</p>
+<p><b>1. Pairs cancel: <code>x ^ x == 0</code>.</b> A number XOR itself has no different bits, so it is 0. And <code>x ^ 0 == x</code>. Order does not matter. So if you XOR a list where every number appears twice except one, the pairs vanish and the lonely number is left:</p>
+<pre class="mermaid" data-alt="5 XOR 3 XOR 5 step by step. Start with 5, which is 101. XOR with 3, which is 011, gives 110, which is 6. XOR with 5, which is 101, gives 011, which is 3. The two 5s cancelled and 3 is left.">
+%%{init: {"flowchart": {"rankSpacing": 26, "nodeSpacing": 20, "padding": 6}}}%%
+flowchart TD
+  A["start: 5 = 101"] --> B["^ 3 = 011<br/>result 110 = 6"]
+  B --> C["^ 5 = 101<br/>result 011 = 3"]
+  C --> D["the 5s cancel:<br/>3 is left"]
+</pre>
+<p><b>2. Drop the lowest 1: <code>x &amp; (x - 1)</code>.</b> Taking 1 away flips the lowest 1-bit to 0 and every 0 to its right to 1. AND keeps only what both share, so the lowest 1 disappears:</p>
+<pre><code class="language-python">x = 12       # 1100
+x - 1        # 1011
+x &amp; (x - 1)  # 1000 = 8
+</code></pre>
+<p><b>3. Odd or even: <code>x &amp; 1</code>.</b> The switch worth 1 is the only odd one. So <code>x &amp; 1</code> is 1 for odd numbers and 0 for even ones.</p>
+
+<h3>In Python</h3>
+<p>Here are the tricks as a small toolbox you can copy:</p>
+<pre><code class="language-python">def lonely(nums):
+    # every number twice but one
+    ans = 0
+    for x in nums:
+        # pairs cancel out
+        ans ^= x
+    return ans
+
+def count_ones(x):
+    count = 0
+    while x:
+        # drop the lowest 1-bit
+        x &amp;= x - 1
+        count += 1
+    return count
+
+def is_odd(x):
+    return x &amp; 1 == 1
+
+lonely([5, 3, 5])   # 3
+count_ones(13)      # 3 (1101)
+is_odd(13)          # True
+</code></pre>
+<p>Cost: <code>lonely</code> is one pass, O(n) time and O(1) space. <code>count_ones</code> loops once per 1-bit. A LeetCode number has at most 32 bits, so that is O(1).</p>
+
+<h3>Your turn</h3>
+<p>For each problem, ask: "which of the three tricks fits?"</p>
+
+<leetcode slug="single-number" num="136" title="Single Number" level="Easy" minutes="5">
+  <hint>Every number appears twice except one. Trick 1: XOR them all together.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def singleNumber(
+        self, nums: List[int]
+    ) -> int:
+        ans = 0
+        for x in nums:
+            # pairs cancel: x ^ x == 0
+            ans ^= x
+        return ans
+# O(n) time, O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="number-of-1-bits" num="191" title="Number of 1 Bits" level="Easy" minutes="5">
+  <hint>Trick 2: while <code>n</code> is not 0, drop its lowest 1-bit and count how many times you did it.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def hammingWeight(
+        self, n: int
+    ) -> int:
+        count = 0
+        while n:
+            # remove the lowest 1-bit
+            n &amp;= n - 1
+            count += 1
+        return count
+# One step per 1-bit: O(1).
+# Also fine: bin(n).count("1")
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="hamming-distance" num="461" title="Hamming Distance" level="Easy" minutes="10">
+  <hint>You need the places where <code>x</code> and <code>y</code> are different. XOR puts a 1 exactly there. Then count the 1s, like the problem above.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def hammingDistance(
+        self, x: int, y: int
+    ) -> int:
+        # 1 where the bits differ
+        diff = x ^ y
+        count = 0
+        while diff:
+            diff &amp;= diff - 1
+            count += 1
+        return count
+# O(1): at most 32 bits.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="missing-number" num="268" title="Missing Number" level="Easy" minutes="10">
+  <hint>XOR every index 0..n and every number in the list. Each number that is there meets its partner and cancels. Only the missing one is left. (Adding up and subtracting also works.)</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def missingNumber(
+        self, nums: List[int]
+    ) -> int:
+        # start with n itself
+        ans = len(nums)
+        for i, x in enumerate(nums):
+            # i and x cancel if paired
+            ans ^= i ^ x
+        return ans
+# O(n) time, O(1) space.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="counting-bits" num="338" title="Counting Bits" level="Easy" minutes="15">
+  <hint>Build the answer list from 0 upwards. <code>i &amp; (i - 1)</code> is a smaller number with one 1-bit less, and you already know its count. Add 1.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def countBits(
+        self, n: int
+    ) -> List[int]:
+        ans = [0] * (n + 1)
+        for i in range(1, n + 1):
+            # i without its lowest 1
+            # is smaller: already done
+            prev = i &amp; (i - 1)
+            ans[i] = ans[prev] + 1
+        return ans
+# One pass: O(n) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="chmod 755 is three rows of switches">
+  <p>On Linux and macOS, every file has 9 permission bits: <b>read</b>, <b>write</b> and <b>execute</b> (run it as a program), for three groups of people: the <b>owner</b>, the file's <b>group</b>, and <b>everyone else</b>.</p>
+  <p>The <code>chmod</code> command lets you set them with digits. Each digit is three switches: read is worth 4, write 2, execute 1. So <code>chmod 755 file</code> means:</p>
+  <ul>
+    <li>owner 7 = 4 + 2 + 1: read, write, execute.</li>
+    <li>group 5 = 4 + 1: read and execute.</li>
+    <li>others 5 = 4 + 1: read and execute.</li>
+  </ul>
+  <p>And <code>chmod 644</code> is the usual one for a plain file: the owner reads and writes, everyone else only reads. These values are fixed by the POSIX standard's <code>chmod</code> page, so they work the same on every Unix-like system.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Binary is a row of switches worth 1, 2, 4, 8… <code>&amp;</code> both, <code>|</code> either, <code>^</code> different.</li>
+    <li><code>x ^ x == 0</code>: XOR a list and the pairs cancel.</li>
+    <li><code>x &amp; (x - 1)</code> drops the lowest 1-bit. <code>x &amp; 1</code> tells odd from even.</li>
+  </ul>
+</recap>

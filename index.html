@@ -99,7 +99,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <header class="site-head" id="top">
   <h1>Commute Algorithms</h1>
   <p class="lead">Algorithms from zero, one commute at a time. Read the idea, then solve easy LeetCode problems fast.</p>
-  <p class="progress-line no-print">Solved: <span id="solved-count">0</span> / 86 problems <span id="resume"></span></p>
+  <p class="progress-line no-print">Solved: <span id="solved-count">0</span> / 91 problems <span id="resume"></span></p>
   <button type="button" class="print-btn" data-print="all">Print the whole guide</button>
 </header>
 
@@ -107,7 +107,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
   <h2>The map</h2>
   <p class="muted">Go from top to bottom. Each stage builds on the one above it. Dashed boxes are stages still being written.</p>
   <figure class="diagram"><a href="diagrams/61035b511483.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/61035b511483.svg" alt="Map of all lessons. Arrows point from a lesson to the lessons that build on it." width="275" height="1594" loading="lazy" decoding="async"></a></figure>
-  <ol class="toc"><li><b>Start here</b><ul><li><a href="#how-to-use">0. How to use this guide</a> <span class="toc-progress" data-lesson="how-to-use"></span></li></ul></li><li><b>Warm-up</b><ul><li><a href="#python-toolkit">1. Python toolkit for LeetCode</a> <span class="toc-progress" data-lesson="python-toolkit"></span></li><li><a href="#big-o">2. Big O in plain words</a> <span class="toc-progress" data-lesson="big-o"></span></li></ul></li><li><b>Arrays and strings</b><ul><li><a href="#array-scan">3. Arrays: one loop does a lot</a> <span class="toc-progress" data-lesson="array-scan"></span></li><li><a href="#strings">4. Strings</a> <span class="toc-progress" data-lesson="strings"></span></li><li><a href="#hash-maps">5. Hash maps and sets</a> <span class="toc-progress" data-lesson="hash-maps"></span></li><li><a href="#counting">6. Counting things</a> <span class="toc-progress" data-lesson="counting"></span></li></ul></li><li><b>First patterns</b><ul><li><a href="#two-pointers">7. Two pointers</a> <span class="toc-progress" data-lesson="two-pointers"></span></li><li><a href="#sliding-window">8. Sliding window</a> <span class="toc-progress" data-lesson="sliding-window"></span></li><li><a href="#prefix-sums">9. Prefix sums</a> <span class="toc-progress" data-lesson="prefix-sums"></span></li></ul></li><li><b>Stacks, queues, lists</b><ul><li><a href="#stack">10. Stack</a> <span class="toc-progress" data-lesson="stack"></span></li><li><a href="#queue">11. Queue and deque</a> <span class="toc-progress" data-lesson="queue"></span></li><li><a href="#linked-list">12. Linked lists</a> <span class="toc-progress" data-lesson="linked-list"></span></li></ul></li><li><b>Searching and sorting</b><ul><li><a href="#binary-search">13. Binary search</a> <span class="toc-progress" data-lesson="binary-search"></span></li><li><a href="#sorting">14. Sorting</a> <span class="toc-progress" data-lesson="sorting"></span></li></ul></li><li><b>Recursion and trees</b><ul><li><a href="#recursion">15. Recursion</a> <span class="toc-progress" data-lesson="recursion"></span></li><li><a href="#tree-dfs">16. Binary trees: depth-first</a> <span class="toc-progress" data-lesson="tree-dfs"></span></li><li><a href="#tree-bfs">17. Binary trees: level by level</a> <span class="toc-progress" data-lesson="tree-bfs"></span></li><li><a href="#bst">18. Binary search trees</a> <span class="toc-progress" data-lesson="bst"></span></li></ul></li><li><b>More tools</b><ul><li><a href="#heap">19. Heaps</a> <span class="toc-progress" data-lesson="heap"></span></li><li><a href="#greedy">20. Greedy choices</a> <span class="toc-progress" data-lesson="greedy"></span></li><li class="soon">21. Bit tricks <small>(coming soon)</small></li><li class="soon">22. Math tricks <small>(coming soon)</small></li></ul></li><li><b>Graphs and backtracking</b><ul><li class="soon">23. Graphs: BFS and DFS <small>(coming soon)</small></li><li class="soon">24. Backtracking <small>(coming soon)</small></li></ul></li><li><b>Dynamic programming</b><ul><li class="soon">25. Dynamic programming: 1D <small>(coming soon)</small></li><li class="soon">26. Dynamic programming: 2D <small>(coming soon)</small></li></ul></li><li><b>Next level</b><ul><li class="soon">27. Topological sort <small>(coming soon)</small></li><li class="soon">28. Union-Find <small>(coming soon)</small></li><li class="soon">29. Shortest paths (Dijkstra) <small>(coming soon)</small></li><li class="soon">30. Trie (prefix tree) <small>(coming soon)</small></li></ul></li></ol>
+  <ol class="toc"><li><b>Start here</b><ul><li><a href="#how-to-use">0. How to use this guide</a> <span class="toc-progress" data-lesson="how-to-use"></span></li></ul></li><li><b>Warm-up</b><ul><li><a href="#python-toolkit">1. Python toolkit for LeetCode</a> <span class="toc-progress" data-lesson="python-toolkit"></span></li><li><a href="#big-o">2. Big O in plain words</a> <span class="toc-progress" data-lesson="big-o"></span></li></ul></li><li><b>Arrays and strings</b><ul><li><a href="#array-scan">3. Arrays: one loop does a lot</a> <span class="toc-progress" data-lesson="array-scan"></span></li><li><a href="#strings">4. Strings</a> <span class="toc-progress" data-lesson="strings"></span></li><li><a href="#hash-maps">5. Hash maps and sets</a> <span class="toc-progress" data-lesson="hash-maps"></span></li><li><a href="#counting">6. Counting things</a> <span class="toc-progress" data-lesson="counting"></span></li></ul></li><li><b>First patterns</b><ul><li><a href="#two-pointers">7. Two pointers</a> <span class="toc-progress" data-lesson="two-pointers"></span></li><li><a href="#sliding-window">8. Sliding window</a> <span class="toc-progress" data-lesson="sliding-window"></span></li><li><a href="#prefix-sums">9. Prefix sums</a> <span class="toc-progress" data-lesson="prefix-sums"></span></li></ul></li><li><b>Stacks, queues, lists</b><ul><li><a href="#stack">10. Stack</a> <span class="toc-progress" data-lesson="stack"></span></li><li><a href="#queue">11. Queue and deque</a> <span class="toc-progress" data-lesson="queue"></span></li><li><a href="#linked-list">12. Linked lists</a> <span class="toc-progress" data-lesson="linked-list"></span></li></ul></li><li><b>Searching and sorting</b><ul><li><a href="#binary-search">13. Binary search</a> <span class="toc-progress" data-lesson="binary-search"></span></li><li><a href="#sorting">14. Sorting</a> <span class="toc-progress" data-lesson="sorting"></span></li></ul></li><li><b>Recursion and trees</b><ul><li><a href="#recursion">15. Recursion</a> <span class="toc-progress" data-lesson="recursion"></span></li><li><a href="#tree-dfs">16. Binary trees: depth-first</a> <span class="toc-progress" data-lesson="tree-dfs"></span></li><li><a href="#tree-bfs">17. Binary trees: level by level</a> <span class="toc-progress" data-lesson="tree-bfs"></span></li><li><a href="#bst">18. Binary search trees</a> <span class="toc-progress" data-lesson="bst"></span></li></ul></li><li><b>More tools</b><ul><li><a href="#heap">19. Heaps</a> <span class="toc-progress" data-lesson="heap"></span></li><li><a href="#greedy">20. Greedy choices</a> <span class="toc-progress" data-lesson="greedy"></span></li><li><a href="#bits">21. Bit tricks</a> <span class="toc-progress" data-lesson="bits"></span></li><li class="soon">22. Math tricks <small>(coming soon)</small></li></ul></li><li><b>Graphs and backtracking</b><ul><li class="soon">23. Graphs: BFS and DFS <small>(coming soon)</small></li><li class="soon">24. Backtracking <small>(coming soon)</small></li></ul></li><li><b>Dynamic programming</b><ul><li class="soon">25. Dynamic programming: 1D <small>(coming soon)</small></li><li class="soon">26. Dynamic programming: 2D <small>(coming soon)</small></li></ul></li><li><b>Next level</b><ul><li class="soon">27. Topological sort <small>(coming soon)</small></li><li class="soon">28. Union-Find <small>(coming soon)</small></li><li class="soon">29. Shortest paths (Dijkstra) <small>(coming soon)</small></li><li class="soon">30. Trie (prefix tree) <small>(coming soon)</small></li></ul></li></ol>
 </section>
 
 <article id="how-to-use" data-problems="two-sum"><header class="lesson-head"><p class="kicker">Lesson 0 &middot; Start here &middot; <span class="lesson-progress" data-lesson="how-to-use">1 problem</span></p><h2>How to use this guide</h2><button type="button" class="print-btn" data-print="how-to-use">Print this lesson / Save as PDF</button></header><p class="lead">This guide is for people who learn on the way to work. One lesson fits one commute: about 10 minutes of reading, then a few small LeetCode problems.</p>
@@ -3550,7 +3550,203 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <span class="c1"># A long climb from 1 to 5 equals</span>
 <span class="c1"># the sum of its small daily</span>
 <span class="c1"># steps, so nothing is missed.</span>
-<span class="c1"># O(n) time, O(1) space.</span></code></pre></li></ol></section><p class="lesson-foot no-print"><a href="#map">&uarr; Map</a></p></article>
+<span class="c1"># O(n) time, O(1) space.</span></code></pre></li></ol></section><p class="lesson-foot no-print"><a href="#map">&uarr; Map</a> &middot; Next: <a href="#bits">Bit tricks</a></p></article>
+<article id="bits" data-problems="single-number number-of-1-bits hamming-distance missing-number counting-bits"><header class="lesson-head"><p class="kicker">Lesson 21 &middot; More tools &middot; <span class="lesson-progress" data-lesson="bits">5 problems</span></p><h2>Bit tricks</h2><p class="requires">Read first: <a href="#big-o">Big O in plain words</a></p><button type="button" class="print-btn" data-print="bits">Print this lesson / Save as PDF</button></header><p class="lead">Inside the computer, every number is a row of 0s and 1s called <b>bits</b>. A few small tricks with bits solve some problems in one line, with no extra memory.</p>
+
+<h3>The idea</h3>
+<p>Picture a row of light switches. Each switch is worth a number: from the right, 1, 2, 4, 8, and each next one is worth double. A switch that is <b>on</b> is a 1. A switch that is <b>off</b> is a 0. Add up the switches that are on, and you get the number.</p>
+<figure class="diagram"><a href="diagrams/8209418b2312.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/8209418b2312.svg" alt="The number 13 as four switches. The switch worth 8 is on, 4 is on, 2 is off, 1 is on. 8 + 4 + 1 = 13, so 13 in binary is 1101." width="311" height="62" loading="lazy" decoding="async"></a></figure>
+<p>So 13 is <code>1101</code> in <b>binary</b> (numbers written with only 0 and 1). Python shows it with <code>bin</code>:</p>
+<pre class="code" data-lang="python"><code><span class="nb">bin</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>    <span class="c1"># &#39;0b1101&#39;</span>
+<span class="nb">bin</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>     <span class="c1"># &#39;0b101&#39;</span>
+<span class="nb">int</span><span class="p">(</span><span class="s2">&quot;101&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 5, back again</span></code></pre>
+<p>The <code>0b</code> at the front only means "this is binary".</p>
+
+<h3>The operators</h3>
+<p>Bit operators look at two numbers <b>switch by switch</b>, lined up from the right:</p>
+<ul>
+  <li><code>a &amp; b</code> (AND): 1 where <b>both</b> are 1.</li>
+  <li><code>a | b</code> (OR): 1 where <b>either</b> is 1.</li>
+  <li><code>a ^ b</code> (XOR): 1 where they are <b>different</b>.</li>
+  <li><code>a &lt;&lt; 1</code>: slide every bit one place left. That doubles the number.</li>
+  <li><code>a &gt;&gt; 1</code>: slide every bit one place right. That halves it (rounding down).</li>
+</ul>
+<table>
+  <tr><th>a</th><th>b</th><th>a &amp; b</th><th>a | b</th><th>a ^ b</th></tr>
+  <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+  <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+  <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+</table>
+
+<h3>Three tricks</h3>
+<p>You only need three tricks for the problems below.</p>
+<p><b>1. Pairs cancel: <code>x ^ x == 0</code>.</b> A number XOR itself has no different bits, so it is 0. And <code>x ^ 0 == x</code>. Order does not matter. So if you XOR a list where every number appears twice except one, the pairs vanish and the lonely number is left:</p>
+<figure class="diagram"><a href="diagrams/824cd0923c6e.svg" target="_blank" rel="noopener" title="Open full size"><img src="diagrams/824cd0923c6e.svg" alt="5 XOR 3 XOR 5 step by step. Start with 5, which is 101. XOR with 3, which is 011, gives 110, which is 6. XOR with 5, which is 101, gives 011, which is 3. The two 5s cancelled and 3 is left." width="133" height="260" loading="lazy" decoding="async"></a></figure>
+<p><b>2. Drop the lowest 1: <code>x &amp; (x - 1)</code>.</b> Taking 1 away flips the lowest 1-bit to 0 and every 0 to its right to 1. AND keeps only what both share, so the lowest 1 disappears:</p>
+<pre class="code" data-lang="python"><code><span class="n">x</span> <span class="o">=</span> <span class="mi">12</span>       <span class="c1"># 1100</span>
+<span class="n">x</span> <span class="o">-</span> <span class="mi">1</span>        <span class="c1"># 1011</span>
+<span class="n">x</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 1000 = 8</span></code></pre>
+<p><b>3. Odd or even: <code>x &amp; 1</code>.</b> The switch worth 1 is the only odd one. So <code>x &amp; 1</code> is 1 for odd numbers and 0 for even ones.</p>
+
+<h3>In Python</h3>
+<p>Here are the tricks as a small toolbox you can copy:</p>
+<pre class="code" data-lang="python"><code><span class="k">def</span><span class="w"> </span><span class="nf">lonely</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+    <span class="c1"># every number twice but one</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+        <span class="c1"># pairs cancel out</span>
+        <span class="n">ans</span> <span class="o">^=</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">ans</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">count_ones</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">x</span><span class="p">:</span>
+        <span class="c1"># drop the lowest 1-bit</span>
+        <span class="n">x</span> <span class="o">&amp;=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">count</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_odd</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">&amp;</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span>
+
+<span class="n">lonely</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>   <span class="c1"># 3</span>
+<span class="n">count_ones</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>      <span class="c1"># 3 (1101)</span>
+<span class="n">is_odd</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>          <span class="c1"># True</span></code></pre>
+<p>Cost: <code>lonely</code> is one pass, O(n) time and O(1) space. <code>count_ones</code> loops once per 1-bit. A LeetCode number has at most 32 bits, so that is O(1).</p>
+
+<h3>Your turn</h3>
+<p>For each problem, ask: "which of the three tricks fits?"</p>
+
+<div class="lc" id="p-single-number"><a class="lc-link" href="https://leetcode.com/problems/single-number/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">136. Single Number</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="single-number"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/single-number/</span></div><details class="hint"><summary>Hint</summary><div>Every number appears twice except one. Trick 1: XOR them all together.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">singleNumber</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+            <span class="c1"># pairs cancel: x ^ x == 0</span>
+            <span class="n">ans</span> <span class="o">^=</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="n">ans</span>
+<span class="c1"># O(n) time, O(1) space.</span></code></pre></div></details></div>
+
+<div class="lc" id="p-number-of-1-bits"><a class="lc-link" href="https://leetcode.com/problems/number-of-1-bits/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">191. Number of 1 Bits</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="number-of-1-bits"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/number-of-1-bits/</span></div><details class="hint"><summary>Hint</summary><div>Trick 2: while <code>n</code> is not 0, drop its lowest 1-bit and count how many times you did it.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hammingWeight</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">n</span><span class="p">:</span>
+            <span class="c1"># remove the lowest 1-bit</span>
+            <span class="n">n</span> <span class="o">&amp;=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">count</span>
+<span class="c1"># One step per 1-bit: O(1).</span>
+<span class="c1"># Also fine: bin(n).count(&quot;1&quot;)</span></code></pre></div></details></div>
+
+<div class="lc" id="p-hamming-distance"><a class="lc-link" href="https://leetcode.com/problems/hamming-distance/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">461. Hamming Distance</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~10 min</span><label class="solved"><input type="checkbox" data-slug="hamming-distance"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/hamming-distance/</span></div><details class="hint"><summary>Hint</summary><div>You need the places where <code>x</code> and <code>y</code> are different. XOR puts a 1 exactly there. Then count the 1s, like the problem above.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hammingDistance</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># 1 where the bits differ</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">x</span> <span class="o">^</span> <span class="n">y</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">diff</span><span class="p">:</span>
+            <span class="n">diff</span> <span class="o">&amp;=</span> <span class="n">diff</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">count</span>
+<span class="c1"># O(1): at most 32 bits.</span></code></pre></div></details></div>
+
+<div class="lc" id="p-missing-number"><a class="lc-link" href="https://leetcode.com/problems/missing-number/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">268. Missing Number</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~10 min</span><label class="solved"><input type="checkbox" data-slug="missing-number"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/missing-number/</span></div><details class="hint"><summary>Hint</summary><div>XOR every index 0..n and every number in the list. Each number that is there meets its partner and cancels. Only the missing one is left. (Adding up and subtracting also works.)</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">missingNumber</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># start with n itself</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+            <span class="c1"># i and x cancel if paired</span>
+            <span class="n">ans</span> <span class="o">^=</span> <span class="n">i</span> <span class="o">^</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="n">ans</span>
+<span class="c1"># O(n) time, O(1) space.</span></code></pre></div></details></div>
+
+<div class="lc" id="p-counting-bits"><a class="lc-link" href="https://leetcode.com/problems/counting-bits/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">338. Counting Bits</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~15 min</span><label class="solved"><input type="checkbox" data-slug="counting-bits"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/counting-bits/</span></div><details class="hint"><summary>Hint</summary><div>Build the answer list from 0 upwards. <code>i &amp; (i - 1)</code> is a smaller number with one 1-bit less, and you already know its count. Add 1.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">countBits</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># i without its lowest 1</span>
+            <span class="c1"># is smaller: already done</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="n">i</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">ans</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span><span class="p">[</span><span class="n">prev</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">ans</span>
+<span class="c1"># One pass: O(n) time.</span></code></pre></div></details></div>
+
+<details class="fact"><summary>Interesting fact: chmod 755 is three rows of switches</summary><div><p>On Linux and macOS, every file has 9 permission bits: <b>read</b>, <b>write</b> and <b>execute</b> (run it as a program), for three groups of people: the <b>owner</b>, the file's <b>group</b>, and <b>everyone else</b>.</p>
+  <p>The <code>chmod</code> command lets you set them with digits. Each digit is three switches: read is worth 4, write 2, execute 1. So <code>chmod 755 file</code> means:</p>
+  <ul>
+    <li>owner 7 = 4 + 2 + 1: read, write, execute.</li>
+    <li>group 5 = 4 + 1: read and execute.</li>
+    <li>others 5 = 4 + 1: read and execute.</li>
+  </ul>
+  <p>And <code>chmod 644</code> is the usual one for a plain file: the owner reads and writes, everyone else only reads. These values are fixed by the POSIX standard's <code>chmod</code> page, so they work the same on every Unix-like system.</p></div></details>
+
+<aside class="recap"><h3>Remember</h3><ul>
+    <li>Binary is a row of switches worth 1, 2, 4, 8… <code>&amp;</code> both, <code>|</code> either, <code>^</code> different.</li>
+    <li><code>x ^ x == 0</code>: XOR a list and the pairs cancel.</li>
+    <li><code>x &amp; (x - 1)</code> drops the lowest 1-bit. <code>x &amp; 1</code> tells odd from even.</li>
+  </ul></aside>
+<section class="answers"><h3>Answers</h3><ol><li><b>136. Single Number</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">singleNumber</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
+            <span class="c1"># pairs cancel: x ^ x == 0</span>
+            <span class="n">ans</span> <span class="o">^=</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="n">ans</span>
+<span class="c1"># O(n) time, O(1) space.</span></code></pre></li><li><b>191. Number of 1 Bits</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hammingWeight</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">n</span><span class="p">:</span>
+            <span class="c1"># remove the lowest 1-bit</span>
+            <span class="n">n</span> <span class="o">&amp;=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">count</span>
+<span class="c1"># One step per 1-bit: O(1).</span>
+<span class="c1"># Also fine: bin(n).count(&quot;1&quot;)</span></code></pre></li><li><b>461. Hamming Distance</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hammingDistance</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># 1 where the bits differ</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">x</span> <span class="o">^</span> <span class="n">y</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">diff</span><span class="p">:</span>
+            <span class="n">diff</span> <span class="o">&amp;=</span> <span class="n">diff</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">count</span>
+<span class="c1"># O(1): at most 32 bits.</span></code></pre></li><li><b>268. Missing Number</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">missingNumber</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># start with n itself</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
+            <span class="c1"># i and x cancel if paired</span>
+            <span class="n">ans</span> <span class="o">^=</span> <span class="n">i</span> <span class="o">^</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="n">ans</span>
+<span class="c1"># O(n) time, O(1) space.</span></code></pre></li><li><b>338. Counting Bits</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">countBits</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># i without its lowest 1</span>
+            <span class="c1"># is smaller: already done</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="n">i</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">ans</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span><span class="p">[</span><span class="n">prev</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">ans</span>
+<span class="c1"># One pass: O(n) time.</span></code></pre></li></ol></section><p class="lesson-foot no-print"><a href="#map">&uarr; Map</a></p></article>
 
 <footer class="site-foot">
   <p>Problems open on <a href="https://leetcode.com" rel="noopener">leetcode.com</a>, or in the LeetCode app if your phone has it. LeetCode is a trademark of its owner. This guide is an independent study aid. Solved marks are saved only in this browser.</p>
@@ -3559,7 +3755,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 </main>
 <script>
 (function(){
-  var KEY='ca-solved', LAST='ca-last', DIAGRAMS=["diagrams/02e3cf66d624.svg", "diagrams/14e505ffb520.svg", "diagrams/232261dcef52.svg", "diagrams/2eb680d2baad.svg", "diagrams/2f6cc23c2cd8.svg", "diagrams/4e77e96544ef.svg", "diagrams/539e61f59961.svg", "diagrams/6018d224f93a.svg", "diagrams/61035b511483.svg", "diagrams/6395e885270e.svg", "diagrams/671c9e8b34e8.svg", "diagrams/69cf61e84d27.svg", "diagrams/7a7da33bf012.svg", "diagrams/7b4e858a3aaf.svg", "diagrams/825536b4a14c.svg", "diagrams/a1eaf2c5d9fc.svg", "diagrams/aa2ea6204f1e.svg", "diagrams/ad2813528ebc.svg", "diagrams/b6bff1415f4c.svg", "diagrams/c18f9c81d1ed.svg", "diagrams/c33091ed046c.svg", "diagrams/c5ea8ad51100.svg", "diagrams/c74066918490.svg", "diagrams/ce07d6f3ce29.svg", "diagrams/d94ae9548f73.svg", "diagrams/dab0bc21b55f.svg", "diagrams/f0943c1dac3b.svg", "diagrams/f947d17c6c44.svg", "diagrams/fe37cbf3920c.svg"];
+  var KEY='ca-solved', LAST='ca-last', DIAGRAMS=["diagrams/02e3cf66d624.svg", "diagrams/14e505ffb520.svg", "diagrams/232261dcef52.svg", "diagrams/2eb680d2baad.svg", "diagrams/2f6cc23c2cd8.svg", "diagrams/4e77e96544ef.svg", "diagrams/539e61f59961.svg", "diagrams/6018d224f93a.svg", "diagrams/61035b511483.svg", "diagrams/6395e885270e.svg", "diagrams/671c9e8b34e8.svg", "diagrams/69cf61e84d27.svg", "diagrams/7a7da33bf012.svg", "diagrams/7b4e858a3aaf.svg", "diagrams/8209418b2312.svg", "diagrams/824cd0923c6e.svg", "diagrams/825536b4a14c.svg", "diagrams/a1eaf2c5d9fc.svg", "diagrams/aa2ea6204f1e.svg", "diagrams/ad2813528ebc.svg", "diagrams/b6bff1415f4c.svg", "diagrams/c18f9c81d1ed.svg", "diagrams/c33091ed046c.svg", "diagrams/c5ea8ad51100.svg", "diagrams/c74066918490.svg", "diagrams/ce07d6f3ce29.svg", "diagrams/d94ae9548f73.svg", "diagrams/dab0bc21b55f.svg", "diagrams/f0943c1dac3b.svg", "diagrams/f947d17c6c44.svg", "diagrams/fe37cbf3920c.svg"];
   function load(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
   function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
   var solved=load(KEY,{});
