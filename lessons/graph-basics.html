@@ -1,0 +1,229 @@
+<p class="lead">A graph is a set of places joined by connections: stations and tracks, people and friendships, pixels and their neighbours. Learn to walk a graph and a huge family of problems opens up.</p>
+
+<h3>The idea</h3>
+<p>Look at the Tube map. Each station is a <b>node</b> (a place). Each stretch of track between two stations is an <b>edge</b> (a connection). That is all a graph is. Here are five stations in central London (some stops in between are left out):</p>
+<pre class="mermaid" data-alt="A small graph of five stations. Bank connects to London Bridge. London Bridge connects to Waterloo. Waterloo connects to Westminster and to Embankment. Westminster connects to Embankment, which closes a loop of three stations.">
+%%{init: {"flowchart": {"rankSpacing": 26, "nodeSpacing": 20, "padding": 6}}}%%
+flowchart TD
+  A["Bank"] --- B["London Bridge"]
+  B --- C["Waterloo"]
+  C --- D["Westminster"]
+  C --- E["Embankment"]
+  D --- E
+</pre>
+<p>You already know one kind of graph: a <a href="#tree-bfs">tree</a>. A tree is a graph with <b>no loops</b>. Graphs can have loops: Waterloo → Westminster → Embankment → Waterloo. That one difference matters a lot. If you walk a graph the way you walk a tree, you go round that loop for ever.</p>
+<p>The fix is a <code>visited</code> set (see <a href="#hash-maps">Hash maps and sets</a>). Before you step onto a node, check: "have I been here?" If yes, skip it.</p>
+
+<p><b>Storing a graph.</b> Problems usually give you a list of edges, like <code>[[0, 1], [1, 2]]</code>. Turn it into an <b>adjacency list</b>: a dict from each node to the list of its neighbours. "Adjacent" just means "next to".</p>
+<pre class="mermaid" data-alt="The adjacency list for the station graph. Bank: London Bridge. London Bridge: Bank, Waterloo. Waterloo: London Bridge, Westminster, Embankment. Westminster: Waterloo, Embankment. Embankment: Waterloo, Westminster.">
+%%{init: {"flowchart": {"rankSpacing": 14, "nodeSpacing": 10, "padding": 6}}}%%
+flowchart TD
+  A["Bank: London Bridge"]
+  B["London Bridge: Bank, Waterloo"]
+  C["Waterloo: London Bridge,<br/>Westminster, Embankment"]
+  D["Westminster: Waterloo, Embankment"]
+  E["Embankment: Waterloo, Westminster"]
+  A ~~~ B ~~~ C ~~~ D ~~~ E
+</pre>
+
+<p><b>Grids are graphs too.</b> A grid of cells (an image, a map of land and sea) is a graph where each cell's neighbours are the cells up, down, left and right. No need to build a dict: you work out the neighbours from the row and column.</p>
+
+<p><b>Walking a graph</b> works just like trees:</p>
+<ol>
+  <li><b>DFS</b> (depth-first): go as deep as you can, then back up. Use recursion or a <a href="#stack">stack</a>.</li>
+  <li><b>BFS</b> (breadth-first): visit everything 1 step away, then 2 steps, and so on. Use a <a href="#queue">queue</a>.</li>
+</ol>
+<p>Both mark each node as visited the moment they reach it.</p>
+
+<h3>In Python</h3>
+<pre><code class="language-python">from collections import defaultdict
+from collections import deque
+
+def build(edges):
+    # node -> list of neighbours
+    graph = defaultdict(list)
+    for a, b in edges:
+        # undirected: both ways
+        graph[a].append(b)
+        graph[b].append(a)
+    return graph
+
+def bfs(graph, start):
+    visited = {start}
+    queue = deque([start])
+    while queue:
+        node = queue.popleft()
+        for nxt in graph[node]:
+            if nxt not in visited:
+                visited.add(nxt)
+                queue.append(nxt)
+    return visited
+
+def dfs(graph, node, visited):
+    visited.add(node)
+    for nxt in graph[node]:
+        if nxt not in visited:
+            dfs(graph, nxt, visited)
+</code></pre>
+<p>Cost: every node is visited once and every edge is looked at twice (once from each end). With V nodes and E edges that is <b>O(V + E)</b> time, and O(V) memory for the visited set and the queue.</p>
+<p>On a grid, the neighbours of cell <code>(r, c)</code> are:</p>
+<pre><code class="language-python">for dr, dc in ((1, 0), (-1, 0),
+               (0, 1), (0, -1)):
+    nr, nc = r + dr, c + dc
+    # stay inside the grid
+    if (0 &lt;= nr &lt; rows
+            and 0 &lt;= nc &lt; cols):
+        ...
+</code></pre>
+
+<h3>Worked example</h3>
+<p>BFS from Bank on the station graph:</p>
+<table>
+  <tr><th>Take</th><th>New neighbours</th><th>Queue after</th></tr>
+  <tr><td>Bank</td><td>London Bridge</td><td>London Bridge</td></tr>
+  <tr><td>London Bridge</td><td>Waterloo (Bank seen)</td><td>Waterloo</td></tr>
+  <tr><td>Waterloo</td><td>Westminster, Embankment</td><td>Westm., Emb.</td></tr>
+  <tr><td>Westminster</td><td>none (both seen)</td><td>Emb.</td></tr>
+  <tr><td>Embankment</td><td>none</td><td>empty</td></tr>
+</table>
+<p>Without the visited set, Westminster would add Embankment again, Embankment would add Waterloo again, and so on for ever.</p>
+
+<h3>Your turn</h3>
+<p>The first one needs no walking at all, only counting edges. Then three walks.</p>
+
+<leetcode slug="find-the-town-judge" num="997" title="Find the Town Judge" level="Easy" minutes="10">
+  <hint>Each pair <code>[a, b]</code> is an arrow: a trusts b. The judge trusts nobody (no arrows out) and everyone else trusts them (n − 1 arrows in). Count arrows in and out for each person.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def findJudge(
+        self, n: int,
+        trust: List[List[int]]
+    ) -> int:
+        # score = arrows in - arrows out
+        score = [0] * (n + 1)
+        for a, b in trust:
+            score[a] -= 1
+            score[b] += 1
+        for p in range(1, n + 1):
+            # n - 1 in, 0 out
+            if score[p] == n - 1:
+                return p
+        return -1
+# O(n + len(trust)) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="find-if-path-exists-in-graph" num="1971" title="Find if Path Exists in Graph" level="Easy" minutes="15">
+  <hint>Build the adjacency list, then BFS (or DFS) from <code>source</code>. Is <code>destination</code> in the visited set at the end?</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def validPath(
+        self, n: int,
+        edges: List[List[int]],
+        source: int,
+        destination: int
+    ) -> bool:
+        graph = defaultdict(list)
+        for a, b in edges:
+            graph[a].append(b)
+            graph[b].append(a)
+        visited = {source}
+        queue = deque([source])
+        while queue:
+            node = queue.popleft()
+            if node == destination:
+                return True
+            for nxt in graph[node]:
+                if nxt not in visited:
+                    visited.add(nxt)
+                    queue.append(nxt)
+        return False
+# O(n + len(edges)) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="flood-fill" num="733" title="Flood Fill" level="Easy" minutes="15">
+  <hint>It's a grid graph. From <code>(sr, sc)</code>, DFS to the up/down/left/right cells that still have the starting colour, and paint them. Careful: if the new colour equals the old one, return at once, or you loop for ever.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def floodFill(
+        self, image: List[List[int]],
+        sr: int, sc: int, color: int
+    ) -> List[List[int]]:
+        old = image[sr][sc]
+        if old == color:
+            return image
+        rows = len(image)
+        cols = len(image[0])
+
+        def dfs(r, c):
+            if not (0 &lt;= r &lt; rows):
+                return
+            if not (0 &lt;= c &lt; cols):
+                return
+            if image[r][c] != old:
+                return
+            # painting = marking visited
+            image[r][c] = color
+            dfs(r + 1, c)
+            dfs(r - 1, c)
+            dfs(r, c + 1)
+            dfs(r, c - 1)
+
+        dfs(sr, sc)
+        return image
+# O(rows * cols) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="number-of-islands" num="200" title="Number of Islands" level="Medium" minutes="20">
+  <hint>Stretch. Scan every cell. When you find land (<code>"1"</code>) you haven't visited, that's a new island: count it, then DFS to sink the whole island (turn it to <code>"0"</code>) so you don't count it again.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def numIslands(
+        self, grid: List[List[str]]
+    ) -> int:
+        rows = len(grid)
+        cols = len(grid[0])
+
+        def sink(r, c):
+            if not (0 &lt;= r &lt; rows):
+                return
+            if not (0 &lt;= c &lt; cols):
+                return
+            if grid[r][c] != "1":
+                return
+            # mark as visited
+            grid[r][c] = "0"
+            sink(r + 1, c)
+            sink(r - 1, c)
+            sink(r, c + 1)
+            sink(r, c - 1)
+
+        count = 0
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == "1":
+                    count += 1
+                    sink(r, c)
+        return count
+# O(rows * cols) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="The paint bucket is flood fill">
+  <p>The "paint bucket" tool in image editors is the Flood Fill problem above. In GIMP, the Bucket Fill tool's manual says that in "Fill similar colors" mode the fill starts at the pixel you click and spreads until the colour becomes "too different". A <b>threshold</b> setting decides how different is too different, and so how far the fill spreads.</p>
+  <p>In graph words: pixels are nodes, touching pixels are edges, and "close enough in colour" decides which edges you may walk. The image is a grid graph, and the fill is a walk from one start cell, exactly like LeetCode 733.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Graph = nodes + edges. Store it as a dict: node → list of neighbours.</li>
+    <li>BFS and DFS on a graph = the tree versions plus a <code>visited</code> set. Cost O(V + E).</li>
+    <li>Grids are graphs: neighbours are up, down, left, right. Count islands by starting a walk from each unvisited land cell.</li>
+  </ul>
+</recap>
