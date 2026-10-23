@@ -5,7 +5,7 @@ Short lessons for your phone: read the idea in about 10 minutes, then solve a fe
 
 👉 **[pwlae.github.io](https://pwlae.github.io/)**
 
-<img src=".github/screenshot.png" alt="The Commute Algorithms home page on a phone: a progress counter and a map of lessons grouped into stages" width="300" align="right">
+<img src=".github/screenshot.png" alt="The Commute Algorithms home page on a phone: a photo of a Northern line train leaving a tunnel, a progress counter and lessons grouped into stages" width="300" align="right">
 
 ## Why
 
@@ -48,7 +48,7 @@ The 15-minute rule: stuck for 15 minutes? Open the hint. Still stuck 5 minutes l
 | Dynamic programming | 1D DP · 2D DP |
 | Next level | Topological sort · Union-Find · Dijkstra · Trie |
 
-New lessons are added regularly. Ones not written yet show as "coming soon" on the map. Python only for now.
+New lessons are added regularly. Ones not written yet show as "coming soon" on the home page. Python only for now.
 
 ## Feedback
 
@@ -56,13 +56,19 @@ Found a mistake, a confusing explanation or a broken link? [Open an issue](https
 
 ## Building it yourself
 
-The page is generated from `curriculum.json` and one HTML fragment per lesson in `lessons/`.
+The site is generated from `curriculum.json` and one HTML fragment per lesson in `lessons/`.
 
 ```sh
 pip install pygments
 PUPPETEER_SKIP_DOWNLOAD=1 npm install   # Mermaid CLI, build time only
-python3 build.py                        # writes index.html and diagrams/*.svg
+python3 build.py                        # writes index.html, l/*.html, all.html, diagrams/, sitemap.xml
 python3 -m http.server 8765             # preview at http://localhost:8765
 ```
 
 `python3 tools/check_problems.py <lesson-id>` checks a lesson's LeetCode links (number, title, difficulty, not premium).
+
+## Licence
+
+- **Lessons** (text, code examples, diagrams): [CC BY-SA 4.0](LICENSE-content.md). Share and adapt them, with credit, under the same licence.
+- **Code** (build scripts, page template): [MIT](LICENSE).
+- The Tube photo is [public domain](https://commons.wikimedia.org/wiki/File:Why_London_Underground_is_nicknamed_The_Tube.jpg) (by SPSmiler, via Wikimedia Commons).

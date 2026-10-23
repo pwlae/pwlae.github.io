@@ -292,6 +292,47 @@ def link_rewriter(home_of_problem, here):
 LESSON_IDS = set()
 
 
+def first_text(html_text, limit=200):
+    """Plain text of the lesson's lead paragraph, for meta descriptions."""
+    m = re.search(r'<p class="lead">(.*?)</p>', html_text, re.S)
+    text = html.unescape(re.sub(r"<[^>]+>", "", m.group(1) if m else ""))
+    text = " ".join(text.split())
+    if len(text) > limit:
+        text = text[:limit].rsplit(" ", 1)[0].rstrip(",;:") + "…"
+    return text
+
+
+def git_date(path):
+    """Date of the last commit that touched a file (for the sitemap)."""
+    try:
+        out = subprocess.run(["git", "log", "-1", "--format=%cs", "--", str(path)],
+                             cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    except OSError:
+        out = ""
+    return out or date.today().isoformat()
+
+
+def head_tags(site, url, title, desc, kind):
+    """Description, canonical URL and link-preview (Open Graph) tags."""
+    image = site["url"] + "images/og.jpg"
+    tags = [
+        f'<meta name="description" content="{esc(desc)}">',
+        f'<link rel="canonical" href="{esc(url)}">',
+        f'<meta property="og:type" content="{"article" if kind == "lesson" else "website"}">',
+        f'<meta property="og:site_name" content="{esc(site["title"])}">',
+        f'<meta property="og:title" content="{esc(title)}">',
+        f'<meta property="og:description" content="{esc(desc)}">',
+        f'<meta property="og:url" content="{esc(url)}">',
+        f'<meta property="og:image" content="{esc(image)}">',
+        '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">',
+        '<meta property="og:image:alt" content="A red Northern line train leaving a round tunnel, above the title Commute Algorithms.">',
+        '<meta name="twitter:card" content="summary_large_image">',
+    ]
+    if kind == "all":
+        tags.append('<meta name="robots" content="noindex">')  # duplicate of the lesson pages
+    return "\n".join(tags)
+
+
 def build():
     cur = json.loads((ROOT / "curriculum.json").read_text())
     validate(cur)
@@ -386,17 +427,23 @@ def build():
         "{{TAGLINE}}": esc(cur["tagline"]),
         "{{CODE_CSS}}": (TOOLS / "code.css").read_text(),
         "{{UPDATED}}": date.today().isoformat(),
+        "{{REPO}}": esc(cur["repo"]),
         "{{DATA}}": json.dumps({
             "lessons": {k: lesson_problems[k] for k in lesson_problems},
             "titles": {l["id"]: l["title"] for l in done},
             "pages": [f"l/{l['id']}.html" for l in done],
+            "stages": [{"title": s["title"], "lessons": [l["id"] for l in done if l["stage"] == s["id"] and lesson_problems[l["id"]]]}
+                       for s in cur["stages"]],
             "assets": sorted(f"diagrams/{n}" for n in diagrams.used) + ["images/tube.webp"],
         }, separators=(",", ":")),
     }
 
-    def page(path, kind, title, root, body):
+    def page(path, kind, title, root, body, desc, share_title=None):
+        url = cur["url"] + ("" if path == "index.html" else path)
+        head = head_tags(cur, url, html.unescape(share_title or title), desc, kind)
         out = shell
-        for k, v in {**common, "{{PAGE_TITLE}}": title, "{{KIND}}": kind, "{{ROOT}}": root, "{{BODY}}": body}.items():
+        for k, v in {**common, "{{PAGE_TITLE}}": title, "{{KIND}}": kind, "{{ROOT}}": root,
+                     "{{HEAD}}": head, "{{BODY}}": body}.items():
             out = out.replace(k, v)
         if root:  # pages in l/ reach diagrams one level up
             out = out.replace('="diagrams/', f'="{root}diagrams/')
@@ -415,7 +462,7 @@ def build():
         f'<p class="no-print"><a href="all.html">Print the whole guide</a> (one big page, for printing only)</p>'
         f"</section>"
     )
-    sizes = {"index.html": page("index.html", "home", esc(cur["title"]), "", home)}
+    sizes = {"index.html": page("index.html", "home", esc(cur["title"]), "", home, cur["tagline"])}
 
     if PAGES.exists():
         for f in PAGES.glob("*.html"):
@@ -425,15 +472,42 @@ def build():
         k = done.index(l)
         nxt = f'<a href="{done[k + 1]["id"]}.html">Next &rarr;</a>' if k + 1 < len(done) else ""
         top = f'<nav class="topbar no-print"><a href="../">&larr; All lessons</a>{nxt}</nav>'
+        share = ('<p class="share no-print" hidden><button type="button" class="share-btn">'
+                 'Send this lesson to a friend</button></p>')
+        desc = first_text((LESSONS / f"{l['id']}.html").read_text()) or cur["tagline"]
         sizes[f"l/{l['id']}.html"] = page(
             f"l/{l['id']}.html", "lesson", f'{esc(l["title"])} &middot; {esc(cur["title"])}', "../",
-            top + article(l, "page") + pager(l))
+            top + article(l, "page") + share + pager(l), desc, f'{l["title"]}: {cur["title"]}')
 
     every = "".join(article(l, "all") for l in done)
     intro = (f'<header class="site-head no-print"><p><a href="./">&larr; Back to lessons</a></p>'
              f'<h1>{esc(cur["title"])}: the whole guide</h1><p class="muted">Every lesson on one page, for printing.</p>'
              f'<button type="button" class="print-btn" data-print="page">Print the whole guide</button></header>')
-    sizes["all.html"] = page("all.html", "all", f'{esc(cur["title"])}: whole guide', "", intro + every)
+    sizes["all.html"] = page("all.html", "all", f'{esc(cur["title"])}: whole guide', "", intro + every,
+                             "Every lesson of " + cur["title"] + " on one page, for printing.")
+
+    # For search engines and "Add to Home Screen".
+    urls = [(cur["url"], max(git_date(LESSONS / f"{l['id']}.html") for l in done))]
+    urls += [(cur["url"] + f"l/{l['id']}.html", git_date(LESSONS / f"{l['id']}.html")) for l in done]
+    (ROOT / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "".join(f"  <url><loc>{esc(u)}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls)
+        + "</urlset>\n")
+    (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {cur['url']}sitemap.xml\n")
+    (ROOT / "manifest.webmanifest").write_text(json.dumps({
+        "name": cur["title"],
+        "short_name": "Commute Algo",
+        "description": cur["tagline"],
+        "start_url": "./",
+        "scope": "./",
+        "display": "standalone",
+        "background_color": "#ffffff",
+        "theme_color": "#ffffff",
+        "icons": [
+            {"src": "images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+            {"src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"},
+        ],
+    }, indent=2) + "\n")
 
     lesson_sizes = [v for k, v in sizes.items() if k.startswith("l/")]
     print(

@@ -31,27 +31,34 @@ Underground: Northern line, then Jubilee line). Hosted on GitHub Pages from `mas
   Python assumptions: the code pipeline takes any Pygments language, so other languages can come later.
 - **Diagrams: Mermaid only.** Nothing else (no hand-drawn SVG, no images, no ASCII art).
   They are rendered to SVG at build time (`diagrams/<hash>.svg`), so readers don't download Mermaid.
-  One exception: the home page photo `images/tube.webp` (public domain, Wikimedia Commons,
-  ~38 KB, hidden in print). Don't add more photos.
+  Exceptions, all in `images/`: the home page photo `tube.webp` (public domain, Wikimedia Commons,
+  ~38 KB, hidden in print), the link-preview card `og.jpg` and the home screen icons `icon-*.png`.
+  The card and icons are made by `node tools/make_images.cjs <photo.jpg>` (run by hand, outputs
+  committed). Don't add more photos.
 - **LeetCode links are explicit**: the card shows the LeetCode logo, a "LeetCode" label,
   number, title, difficulty and time box. Link is `https://leetcode.com/problems/<slug>/`
   (phones with the LeetCode app may open it there).
 - **"Interesting fact"** expandable on every lesson: how this algorithm or data structure is
   used in a well-known real system (Git, Linux, databases, browsers, Google Maps…).
   Facts must be true. Prefer well-documented ones and avoid made-up specifics.
-- Progress ("Solved" ticks, last lesson read) lives in `localStorage` only. No accounts, no backend.
+- Progress ("Solved" ticks, last lesson read, whether we already asked for a GitHub star) lives in
+  `localStorage` only. No accounts, no backend, no analytics.
+- Each lesson page's link-preview text and meta description is its `<p class="lead">`, so keep
+  the lead to one or two plain sentences. If the site moves to a custom domain, change `url` in
+  `curriculum.json` (it feeds canonical links, previews, sitemap and robots.txt) and add a `CNAME` file.
+- Licences: code MIT (`LICENSE`), lessons CC BY-SA 4.0 (`LICENSE-content.md`).
 - Works offline after one visit (`sw.js`).
 
 ## How the site is built
 
 ```
-curriculum.json      stages + ordered lessons (id, title, stage, requires) ← source of truth
+curriculum.json      site url + repo, stages, ordered lessons (id, title, stage, requires) ← source of truth
 lessons/<id>.html    one HTML fragment per lesson (no <html>/<body>)
 template.html        page shell: all CSS + JS inline
 tools/code.css       highlight colours   tools/mermaid.json   diagram theme
 build.py             → GENERATED, committed: index.html (home: photo, progress, stage list),
                        l/<id>.html (one page per lesson), all.html (whole guide, for printing),
-                       diagrams/*.svg
+                       diagrams/*.svg, sitemap.xml, robots.txt, manifest.webmanifest
 sw.js                offline cache
 ```
 

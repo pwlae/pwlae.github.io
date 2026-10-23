@@ -1,6 +1,8 @@
 {
   "title": "Commute Algorithms",
   "tagline": "Algorithms from zero, one commute at a time. Read the idea, then solve easy LeetCode problems fast.",
+  "url": "https://pwlae.github.io/",
+  "repo": "https://github.com/pwlae/pwlae.github.io",
   "stages": [
     {"id": "start", "title": "Start here"},
     {"id": "warmup", "title": "Warm-up"},
