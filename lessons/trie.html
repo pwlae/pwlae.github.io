@@ -1,0 +1,216 @@
+<p class="lead">A trie (say "try") is a tree that stores words letter by letter, so words that start the same way share the same path. It answers "is this word stored?" and "does any word start with this?" in a few steps, however many words you have.</p>
+
+<h3>The idea</h3>
+<p>Think of your phone's keyboard. You type "ca" and it suggests "car", "card", "care", "cat". It doesn't check every word in the dictionary. It follows c, then a, and everything below that point starts with "ca".</p>
+<p>A trie is built exactly like that:</p>
+<ul>
+  <li>The <b>root</b> is an empty starting node.</li>
+  <li>Each step down is one letter. A node's <b>children</b> are the letters that can come next.</li>
+  <li>Words with the same start share nodes. "car", "card" and "care" all share c → a → r.</li>
+  <li>A node is marked <b>end</b> when a whole word stops there. That's how you know "car" is a word but "ca" is not.</li>
+</ul>
+<p>A <b>prefix</b> is the start of a word: "ca" is a prefix of "card". Here is the trie for car, card, care and cat:</p>
+<pre class="mermaid" data-alt="A trie holding car, card, care and cat. The root leads to c, then a. From a there are two children: r and t. r is marked end, for car. t is marked end, for cat. r has two children, d and e, both marked end, for card and care.">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 30}}}%%
+flowchart TD
+  R(("root")) --> C["c"]
+  C --> A["a"]
+  A --> RR["r ✓"]
+  A --> T["t ✓"]
+  RR --> D["d ✓"]
+  RR --> E["e ✓"]
+</pre>
+<p>✓ means "a word ends here". To look up a word, start at the root and follow one letter at a time. If a letter is missing, the word isn't there.</p>
+
+<h3>In Python</h3>
+<p>Each node holds a <a href="#hash-maps">dict</a> of <b>letter → child node</b>, plus an <code>end</code> flag. The dict makes "is there a child for this letter?" instant.</p>
+<pre><code class="language-python">class Node:
+    def __init__(self):
+        # letter -> child Node
+        self.children = {}
+        # does a word stop here?
+        self.end = False
+
+class Trie:
+    def __init__(self):
+        self.root = Node()
+
+    def insert(self, word):
+        node = self.root
+        for ch in word:
+            # no child yet? make one
+            if ch not in node.children:
+                node.children[ch] = Node()
+            node = node.children[ch]
+        # mark the last letter
+        node.end = True
+
+    def walk(self, text):
+        # follow text letter by letter;
+        # None if we fall off the trie
+        node = self.root
+        for ch in text:
+            if ch not in node.children:
+                return None
+            node = node.children[ch]
+        return node
+
+    def search(self, word):
+        node = self.walk(word)
+        return node is not None and node.end
+
+    def startsWith(self, prefix):
+        return self.walk(prefix) is not None
+</code></pre>
+<p>All three operations take one step per letter: O(L) for a word of length L. It doesn't matter if the trie holds ten words or a million. Space is at most one node per letter inserted, less when words share a start.</p>
+<p>A trie is a tree, so the <a href="#tree-dfs">depth-first</a> ideas still work: to list every word below a node, walk down each child in turn.</p>
+
+<h3>Worked example</h3>
+<p>Insert "car" and "card", then ask a few questions:</p>
+<table>
+  <tr><th>Call</th><th>Walk</th><th>Answer</th></tr>
+  <tr><td><code>search("car")</code></td><td>c, a, r found. r is end</td><td>True</td></tr>
+  <tr><td><code>search("ca")</code></td><td>c, a found. a is not end</td><td>False</td></tr>
+  <tr><td><code>startsWith("ca")</code></td><td>c, a found</td><td>True</td></tr>
+  <tr><td><code>search("cat")</code></td><td>c, a found. no t child</td><td>False</td></tr>
+</table>
+<p><b>Back to <a href="#p-longest-common-prefix">Longest Common Prefix</a>.</b> A trie solves it too. Insert every word, then walk down from the root while the node has exactly one child and no word ends there. The letters you passed are the shared prefix.</p>
+
+<h3>Your turn</h3>
+<p>The first two are warm-ups about prefixes. Then build the trie yourself.</p>
+
+<leetcode slug="check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence" num="1455" title="Check If a Word Occurs As a Prefix of Any Word in a Sentence" level="Easy" minutes="5">
+  <hint>Split the sentence into words. Python strings have <code>word.startswith(x)</code>. Remember the answer counts words from 1, not 0.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def isPrefixOfWord(self, sentence: str, searchWord: str) -> int:
+        words = sentence.split()
+        # start=1: words are counted from 1
+        for i, word in enumerate(words, start=1):
+            if word.startswith(searchWord):
+                return i
+        return -1
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="counting-words-with-a-given-prefix" num="2185" title="Counting Words With a Given Prefix" level="Easy" minutes="10">
+  <hint>The quick way is <code>startswith</code>. For trie practice: give every node a <code>count</code> of how many words pass through it. Then walk <code>pref</code> and read the count.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def prefixCount(self, words: List[str], pref: str) -> int:
+        # quick way:
+        # return sum(1 for w in words
+        #            if w.startswith(pref))
+
+        # trie way: each node counts
+        # the words that pass through it
+        new = lambda: {"count": 0, "kids": {}}
+        root = new()
+        for w in words:
+            node = root
+            for ch in w:
+                if ch not in node["kids"]:
+                    node["kids"][ch] = new()
+                node = node["kids"][ch]
+                # one more word passes here
+                node["count"] += 1
+        node = root
+        for ch in pref:
+            if ch not in node["kids"]:
+                return 0  # no word starts so
+            node = node["kids"][ch]
+        return node["count"]
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="implement-trie-prefix-tree" num="208" title="Implement Trie (Prefix Tree)" level="Medium" minutes="20">
+  <hint>It's labelled Medium, but it is the template from this lesson. Try to write it from memory: a <code>Node</code> with <code>children</code> and <code>end</code>, and one helper that walks a string letter by letter.</hint>
+  <solution>
+<pre><code class="language-python">class Node:
+    def __init__(self):
+        self.children = {}
+        self.end = False
+
+class Trie:
+    def __init__(self):
+        self.root = Node()
+
+    def insert(self, word: str) -> None:
+        node = self.root
+        for ch in word:
+            if ch not in node.children:
+                node.children[ch] = Node()
+            node = node.children[ch]
+        node.end = True
+
+    def walk(self, text):
+        node = self.root
+        for ch in text:
+            if ch not in node.children:
+                return None
+            node = node.children[ch]
+        return node
+
+    def search(self, word: str) -> bool:
+        node = self.walk(word)
+        return node is not None and node.end
+
+    def startsWith(self, prefix: str) -> bool:
+        return self.walk(prefix) is not None
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="longest-word-in-dictionary" num="720" title="Longest Word in Dictionary" level="Medium" minutes="20">
+  <hint>Stretch. Insert every word. A word can be "built" only if every node on its path is the end of a word. Go depth-first from the root, stepping only into children that are ends. Visit children in alphabetical order, and only replace your best answer with a strictly longer word.</hint>
+  <solution>
+<pre><code class="language-python">class Node:
+    def __init__(self):
+        self.children = {}
+        # the word ending here, if any
+        self.word = None
+
+class Solution:
+    def longestWord(self, words: List[str]) -> str:
+        root = Node()
+        for w in words:
+            node = root
+            for ch in w:
+                if ch not in node.children:
+                    node.children[ch] = Node()
+                node = node.children[ch]
+            node.word = w
+
+        best = ""
+        def dfs(node):
+            nonlocal best
+            # alphabetical order: on a tie,
+            # the first word found is smallest
+            for ch in sorted(node.children):
+                child = node.children[ch]
+                if child.word is None:
+                    continue  # a gap: stop
+                if len(child.word) > len(best):
+                    best = child.word
+                dfs(child)
+
+        dfs(root)
+        return best
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Your internet packets follow a trie">
+  <p>Every packet sent across the internet carries a destination IP address. Each router must pick which way to send it, using a table of address <b>prefixes</b>, like "addresses starting with 192.168. go this way". When several prefixes match, the router uses the <b>longest</b> one, because it is the most specific. This is called <b>longest prefix match</b>.</p>
+  <p>Walking a trie bit by bit through the address finds that longest match naturally. The Linux kernel stores its IPv4 routing table in a compressed trie called an <b>LC-trie</b> ("level-compressed"), known in the source code as <code>fib_trie</code>.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>A trie stores words letter by letter. Shared starts share nodes. An <code>end</code> flag marks where a word stops.</li>
+    <li>Each node is a <code>dict</code> of letter → child. insert, search and startsWith all walk one letter at a time: O(length of the word).</li>
+    <li>search needs <code>end</code> to be True. startsWith only needs the path to exist.</li>
+  </ul>
+</recap>
