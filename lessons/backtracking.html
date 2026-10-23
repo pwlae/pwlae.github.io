@@ -1,0 +1,224 @@
+<p class="lead">Backtracking is a way to try <b>every possible choice</b>, one step at a time, and undo a step when it leads nowhere. Use it when a problem says "list all the ways": all subsets, all orders, all paths.</p>
+
+<h3>The idea</h3>
+<p>Picture a maze. You walk down a path. At a fork, you pick one way. If you hit a dead end, you <b>step back</b> to the last fork and try the next way. You keep going until you have tried every way from every fork.</p>
+<pre class="mermaid" data-alt="A maze as a tree. From the start you reach a fork. The left way is a dead end, so you step back to the fork. The right way leads to the exit.">
+%%{init: {"flowchart": {"rankSpacing": 26, "nodeSpacing": 20, "padding": 6}}}%%
+flowchart TD
+  S["Start"] --> F["Fork"]
+  F -->|"try left"| D["Dead end"]
+  D -.->|"step back"| F
+  F -->|"try right"| E["Exit!"]
+</pre>
+<p>That "step back" is the whole trick. In code, every step has three parts:</p>
+<ol>
+  <li><b>Choose</b>: add one item to the path you are building.</li>
+  <li><b>Explore</b>: call the function again (<a href="#recursion">recursion</a>) to make the next choice.</li>
+  <li><b>Un-choose</b>: remove that item again, so the path is clean for the next option.</li>
+</ol>
+<p>Example: list all <b>subsets</b> of <code>[1, 2]</code>. A subset is any group you can pick from the list, including none of it. For each number you have two choices: <b>take</b> it or <b>skip</b> it. Draw every choice and you get a <b>decision tree</b>:</p>
+<pre class="mermaid" data-alt="Decision tree for subsets of 1, 2. The start is an empty path. Take 1 gives path 1, skip 1 gives an empty path. From path 1: take 2 gives 1, 2 and skip 2 gives 1. From the empty path: take 2 gives 2 and skip 2 gives empty. The four leaves are the four subsets.">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 10, "padding": 6}}}%%
+flowchart TD
+  A["[ ]"] -->|"take 1"| B["[1]"]
+  A -->|"skip 1"| C["[ ]"]
+  B -->|"take 2"| D["[1, 2]"]
+  B -->|"skip 2"| E["[1]"]
+  C -->|"take 2"| F["[2]"]
+  C -->|"skip 2"| G["[ ]"]
+</pre>
+<p>Each <b>leaf</b> (a box at the bottom) is one answer. Backtracking walks this tree depth-first: down the left side, back up, then down the next branch, just like DFS on a <a href="#tree-dfs">tree</a>.</p>
+
+<h3>In Python</h3>
+<pre><code class="language-python">def subsets(nums):
+    result = []
+    path = []
+
+    def go(i):
+        # base case: all decided
+        if i == len(nums):
+            # save a copy of the path
+            result.append(path[:])
+            return
+        # option 1: take nums[i]
+        path.append(nums[i]) # choose
+        go(i + 1)            # explore
+        path.pop()           # un-choose
+        # option 2: skip nums[i]
+        go(i + 1)
+
+    go(0)
+    return result
+
+subsets([1, 2])
+# [[1, 2], [1], [2], []]
+</code></pre>
+<p>Two details trip everyone up:</p>
+<ul>
+  <li><b>Save a copy</b>: <code>path[:]</code>, not <code>path</code>. There is only one <code>path</code> list, and it changes all the time. Save the list itself and every answer ends up empty.</li>
+  <li><b>Every <code>append</code> needs a <code>pop</code></b>. After the "take" branch finishes, the path must look exactly as it did before.</li>
+</ul>
+<p><b>Cost.</b> A list of n numbers has 2<sup>n</sup> subsets (each number doubles the count), and copying each one takes up to n steps: <b>O(n · 2<sup>n</sup>)</b>. That is exponential, and it's fine here: when the problem asks for <i>all</i> the answers, there simply are that many. That's why these problems keep n small (often 10 or less).</p>
+
+<h3>Worked example</h3>
+<p>Watch <code>path</code> while <code>subsets([1, 2])</code> runs:</p>
+<table>
+  <tr><th>Step</th><th>path</th><th>Saved</th></tr>
+  <tr><td>take 1</td><td>[1]</td><td></td></tr>
+  <tr><td>take 2, end</td><td>[1, 2]</td><td>[1, 2]</td></tr>
+  <tr><td>pop 2, skip 2, end</td><td>[1]</td><td>[1]</td></tr>
+  <tr><td>pop 1, skip 1</td><td>[ ]</td><td></td></tr>
+  <tr><td>take 2, end</td><td>[2]</td><td>[2]</td></tr>
+  <tr><td>pop 2, skip 2, end</td><td>[ ]</td><td>[ ]</td></tr>
+</table>
+<p>The path grows and shrinks like a <a href="#stack">stack</a>. When the function finishes, it is empty again.</p>
+
+<h3>Your turn</h3>
+<p>Each problem uses the same template. Before coding, ask: what is the choice at each step, and when is the path finished?</p>
+
+<leetcode slug="sum-of-all-subset-xor-totals" num="1863" title="Sum of All Subset XOR Totals" level="Easy" minutes="10">
+  <hint>Take or skip each number, exactly like the template. You don't need the path itself: carry the running XOR (<code>^</code>, see <a href="#bits">Bit tricks</a>) as an argument, and add it to the total at each leaf.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def subsetXORSum(
+        self, nums: List[int]
+    ) -> int:
+        def go(i, xor):
+            # leaf: one subset done
+            if i == len(nums):
+                return xor
+            # take nums[i]
+            take = go(i + 1,
+                      xor ^ nums[i])
+            # skip nums[i]
+            skip = go(i + 1, xor)
+            return take + skip
+
+        return go(0, 0)
+# 2^n subsets: O(2^n) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="binary-tree-paths" num="257" title="Binary Tree Paths" level="Easy" minutes="15">
+  <hint>Walk the tree with DFS. Choose: add the node's value to <code>path</code>. If it's a leaf (no children), save <code>"->".join(path)</code>. Explore both children. Un-choose: <code>path.pop()</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def binaryTreePaths(
+        self, root: Optional[TreeNode]
+    ) -> List[str]:
+        result = []
+        path = []
+
+        def go(node):
+            if not node:
+                return
+            # choose
+            path.append(str(node.val))
+            if not (node.left
+                    or node.right):
+                # leaf: save this path
+                s = "->".join(path)
+                result.append(s)
+            else:
+                # explore
+                go(node.left)
+                go(node.right)
+            # un-choose
+            path.pop()
+
+        go(root)
+        return result
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="binary-watch" num="401" title="Binary Watch" level="Easy" minutes="15">
+  <hint>The watch has 10 lights: hours worth 8, 4, 2, 1 and minutes worth 32, 16, 8, 4, 2, 1. For each light, take it (turn it on) or skip it. At the end, keep the time only if exactly <code>turnedOn</code> lights are on, hours &lt; 12 and minutes &lt; 60.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def readBinaryWatch(
+        self, turnedOn: int
+    ) -> List[str]:
+        # (hours, minutes) per light
+        leds = [(8, 0), (4, 0),
+                (2, 0), (1, 0),
+                (0, 32), (0, 16),
+                (0, 8), (0, 4),
+                (0, 2), (0, 1)]
+        result = []
+
+        def go(i, left, h, m):
+            # invalid time: prune
+            if h > 11 or m > 59:
+                return
+            # all lights on: one answer
+            if left == 0:
+                t = f"{h}:{m:02d}"
+                result.append(t)
+                return
+            # ran out of lights
+            if i == len(leds):
+                return
+            dh, dm = leds[i]
+            # take light i
+            go(i + 1, left - 1,
+               h + dh, m + dm)
+            # skip light i
+            go(i + 1, left, h, m)
+
+        go(0, turnedOn, 0, 0)
+        return result
+# Stopping early on a bad time is
+# called pruning: skip whole branches.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="letter-combinations-of-a-phone-number" num="17" title="Letter Combinations of a Phone Number" level="Medium" minutes="20">
+  <hint>Stretch. Now each step has 3 or 4 choices instead of 2: one per letter on that phone key. Loop over the letters: append, recurse to the next digit, pop. The path is finished when it has one letter per digit. Empty input? Return <code>[]</code>.</hint>
+  <solution>
+<pre><code class="language-python">class Solution:
+    def letterCombinations(
+        self, digits: str
+    ) -> List[str]:
+        if not digits:
+            return []
+        keys = {"2": "abc", "3": "def",
+                "4": "ghi", "5": "jkl",
+                "6": "mno", "7": "pqrs",
+                "8": "tuv", "9": "wxyz"}
+        result = []
+        path = []
+
+        def go(i):
+            # one letter per digit: done
+            if i == len(digits):
+                s = "".join(path)
+                result.append(s)
+                return
+            for ch in keys[digits[i]]:
+                # choose, explore, undo
+                path.append(ch)
+                go(i + 1)
+                path.pop()
+
+        go(0)
+        return result
+# Up to 4^n answers: O(n * 4^n).
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="A regex that backtracked the internet">
+  <p>Regular expressions ("regex") are patterns for searching text. Python's <code>re</code> module matches them by backtracking: its official guide says that when the rest of the pattern doesn't match, "the matching engine will then back up and try again".</p>
+  <p>Usually that is quick. But some patterns, like <code>.*.*=.*</code>, give the engine a huge number of ways to try before it can say "no match". On 2 July 2019, Cloudflare (a company whose network sits in front of a huge number of websites) deployed one such regex in its firewall rules. CPUs across its network jumped to nearly 100%, and for 27 minutes visitors to Cloudflare's customers' sites saw a "502" error page instead. Afterwards Cloudflare planned to switch to regex engines like re2 or Rust's regex crate, which do not backtrack, so their run time is guaranteed.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Template: choose (<code>append</code>), explore (recurse), un-choose (<code>pop</code>).</li>
+    <li>At the leaf, save a copy: <code>path[:]</code> or <code>"".join(path)</code>.</li>
+    <li>"List all the ways" means exponentially many answers. That's expected, and n is small.</li>
+  </ul>
+</recap>
