@@ -116,7 +116,7 @@ Supported: flowchart, sequence, state, class, etc.
 
 Look at `lessons/python-toolkit.html` as the model lesson.
 
-## Loop workflow (Linear)
+## Loop workflow (Linear, parallel)
 
 Work is tracked in Linear: workspace **pwlae-personal-blog**, team **PWL**, project
 **algorithmic-coding-easy**. One issue per lesson. The issue description lists the scope,
@@ -125,14 +125,19 @@ the verified problem set, a diagram idea and a fact idea. Issues are linked with
 `curriculum.json`, counting from 0) is issue **PWL-(N+6)**: lesson 2 Big O = PWL-8 … lesson 30 Trie = PWL-36.
 PWL-5 is the scaffold.
 
-Each loop iteration:
-1. List the project's issues and pick the **lowest-numbered issue not Done** whose
-   blockers are all Done. Move it to **In Progress**.
-2. Write `lessons/<id>.html` following the format above and the issue's notes. You may swap
-   a problem if it fits the lesson better: verify it with `tools/check_problems.py`.
-3. `python3 tools/check_problems.py <id>` and `python3 build.py` must both pass. Look at the
-   phone screenshot and the `?print=<id>` PDF.
-4. Commit (`Add lesson: <title> (PWL-N)`) and push to `master`. Pushing deploys the site.
-5. Comment on the issue with a short summary (problems used, anything changed) and move it to **Done**.
-6. One lesson per iteration. If something in the site itself needs fixing, open a new
-   issue in the same project instead of mixing it into a lesson commit.
+Run it with `/loop /lesson-loop` (the steps are in `.claude/commands/lesson-loop.md`).
+The owner approved subagents, git worktrees, and merging to `master` without review.
+
+- **Orchestrator** (the main session, on `master`): picks every issue whose blockers are
+  all Done, moves each to In Progress, and starts one subagent per issue in its own
+  worktree. Then it merges them one at a time, rebuilds, pushes, comments on the issue
+  and moves it to Done. Only the orchestrator pushes or touches Linear.
+- **Subagent** (one issue, own worktree): writes `lessons/<id>.html` following the format
+  above and the issue's notes. You may swap a problem if it fits better: verify it with
+  `tools/check_problems.py` and keep every problem unique across lessons. `check_problems.py`
+  and `build.py` must pass; look at the phone screenshot and the print PDF. Commit **only**
+  the lesson file and new `diagrams/*.svg` (`Add lesson: <title> (PWL-N)`). Don't commit
+  generated pages, because the orchestrator rebuilds them on merge, so parallel branches
+  never clash. Don't push and don't touch Linear.
+- If something in the site itself needs fixing, open a new issue in the same project
+  instead of mixing it into a lesson commit.
