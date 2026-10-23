@@ -283,22 +283,45 @@ def validate(cur):
         seen.add(l["id"])
 
 
+PAGES = ROOT / "l"  # one generated page per lesson
+
+
+def link_rewriter(home_of_problem, here):
+    """In a lesson page, '#<lesson>' becomes '<lesson>.html' and '#p-<slug>'
+    points at the page that has that problem card."""
+    def repl(m):
+        target = m.group(1)
+        if target.startswith("p-"):
+            page = home_of_problem.get(target[2:])
+            if page and page != here:
+                return f'href="{page}.html#{target}"'
+            return m.group(0)
+        if target in LESSON_IDS:
+            return f'href="{target}.html"'
+        return m.group(0)
+
+    return lambda text: re.sub(r'href="#([\w-]+)"', repl, text)
+
+
+LESSON_IDS = set()
+
+
 def build():
     cur = json.loads((ROOT / "curriculum.json").read_text())
     validate(cur)
     stage_title = {s["id"]: s["title"] for s in cur["stages"]}
     by_id = {l["id"]: l for l in cur["lessons"]}
+    LESSON_IDS.update(by_id)
     written = {l["id"] for l in cur["lessons"] if (LESSONS / f"{l['id']}.html").exists()}
     for f in LESSONS.glob("*.html"):
         if f.stem not in by_id:
             raise BuildError(f"{f.name} is not listed in curriculum.json")
 
     diagrams = Diagrams()
-    articles, all_problems = [], []
     order = cur["lessons"]
-    for i, l in enumerate(order):
-        if l["id"] not in written:
-            continue
+    done = [l for l in order if l["id"] in written]
+    parts, all_problems, lesson_problems, home_of_problem = {}, [], {}, {}
+    for l in done:
         try:
             body = (LESSONS / f"{l['id']}.html").read_text()
             problems = []
@@ -311,61 +334,129 @@ def build():
         except BuildError as e:
             raise BuildError(f"lessons/{l['id']}.html: {e}")
         all_problems += problems
-        reqs = ", ".join(f'<a href="#{r}">{esc(by_id[r]["title"])}</a>' for r in l["requires"])
-        nxt = next((o for o in order[i + 1:] if o["id"] in written), None)
-        meta = [esc(stage_title[l["stage"]])]
-        if problems:
-            meta.append(f'<span class="lesson-progress" data-lesson="{l["id"]}">{len(problems)} problem{"s" if len(problems) != 1 else ""}</span>')
-        foot = '<a href="#map">&uarr; Map</a>'
-        if nxt:
-            foot += f' &middot; Next: <a href="#{nxt["id"]}">{esc(nxt["title"])}</a>'
-        articles.append(
-            f'<article id="{l["id"]}" data-problems="{" ".join(problems)}">'
-            f'<header class="lesson-head"><p class="kicker">Lesson {i} &middot; {" &middot; ".join(meta)}</p>'
-            f'<h2>{esc(l["title"])}</h2>'
-            + (f'<p class="requires">Read first: {reqs}</p>' if reqs else "")
-            + f'<button type="button" class="print-btn" data-print="{l["id"]}">Print this lesson / Save as PDF</button>'
-            f"</header>{body}{answers}"
-            f'<p class="lesson-foot no-print">{foot}</p></article>'
-        )
+        lesson_problems[l["id"]] = problems
+        for p in problems:
+            home_of_problem.setdefault(p, l["id"])
+        parts[l["id"]] = (body, answers)
 
     dupes = {p for p in all_problems if all_problems.count(p) > 1}
     if dupes:
         print(f"note: problems used in more than one lesson: {', '.join(sorted(dupes))}")
 
+    def article(l, mode):
+        """mode 'page': standalone lesson page in l/. mode 'all': inside all.html."""
+        i = order.index(l)
+        body, answers = parts[l["id"]]
+        problems = lesson_problems[l["id"]]
+        href = (lambda x: f"{x}.html") if mode == "page" else (lambda x: f"#{x}")
+        if mode == "page":
+            fix = link_rewriter(home_of_problem, l["id"])
+            body, answers = fix(body), fix(answers)
+        reqs = ", ".join(f'<a href="{href(r)}">{esc(by_id[r]["title"])}</a>' for r in l["requires"])
+        meta = [esc(stage_title[l["stage"]])]
+        if problems:
+            meta.append(f'<span class="lesson-progress" data-lesson="{l["id"]}">{len(problems)} problem{"s" if len(problems) != 1 else ""}</span>')
+        head = (
+            f'<header class="lesson-head"><p class="kicker">Lesson {i} &middot; {" &middot; ".join(meta)}</p>'
+            f'<h2>{esc(l["title"])}</h2>'
+            + (f'<p class="requires">Read first: {reqs}</p>' if reqs else "")
+        )
+        if mode == "page":
+            head += '<button type="button" class="print-btn" data-print="page">Print this lesson / Save as PDF</button>'
+        head += "</header>"
+        return (f'<article id="{l["id"]}" data-problems="{" ".join(problems)}">'
+                f"{head}{body}{answers}</article>")
+
+    def pager(l):
+        k = done.index(l)
+        prev = done[k - 1] if k else None
+        nxt = done[k + 1] if k + 1 < len(done) else None
+        cell = lambda x, cls, label: (
+            f'<a class="{cls}" href="{x["id"]}.html"><small>{label}</small>{esc(x["title"])}</a>' if x else "<span></span>")
+        return (f'<nav class="pager no-print">{cell(prev, "prev", "&larr; Previous")}'
+                f'{cell(nxt, "next", "Next &rarr;")}</nav>')
+
+    # Home page: progress, roadmap, stage list (each stage is a <details>).
     toc = []
     for s in cur["stages"]:
-        items = []
+        items, n_written = [], 0
         for i, l in enumerate(order):
             if l["stage"] != s["id"]:
                 continue
             if l["id"] in written:
-                items.append(f'<li><a href="#{l["id"]}">{i}. {esc(l["title"])}</a> <span class="toc-progress" data-lesson="{l["id"]}"></span></li>')
+                n_written += 1
+                items.append(f'<li><a href="l/{l["id"]}.html"><span class="num">{i}</span> {esc(l["title"])}</a>'
+                             f' <span class="toc-progress" data-lesson="{l["id"]}"></span></li>')
             else:
-                items.append(f'<li class="soon">{i}. {esc(l["title"])} <small>(coming soon)</small></li>')
-        toc.append(f"<li><b>{esc(s['title'])}</b><ul>{''.join(items)}</ul></li>")
+                items.append(f'<li class="soon"><span class="num">{i}</span> {esc(l["title"])} <small>(coming soon)</small></li>')
+        status = f'{n_written} lesson{"s" if n_written != 1 else ""}' if n_written else "coming soon"
+        toc.append(f'<details class="stage" open data-stage="{s["id"]}"><summary>{esc(s["title"])}'
+                   f' <small class="stage-status">{status}</small></summary><ul>{"".join(items)}</ul></details>')
     roadmap = diagrams.render(roadmap_source(cur, written), "Map of all lessons. Arrows point from a lesson to the lessons that build on it.")
     diagrams.prune()
 
-    page = (ROOT / "template.html").read_text()
-    pygments_css = (TOOLS / "code.css").read_text()
-    repl = {
+    shell = (ROOT / "template.html").read_text()
+    common = {
         "{{TITLE}}": esc(cur["title"]),
         "{{TAGLINE}}": esc(cur["tagline"]),
-        "{{CODE_CSS}}": pygments_css,
-        "{{ROADMAP}}": roadmap,
-        "{{TOC}}": f'<ol class="toc">{"".join(toc)}</ol>',
-        "{{LESSONS}}": "\n".join(articles),
-        "{{TOTAL_PROBLEMS}}": str(len(set(all_problems))),
-        "{{DIAGRAMS}}": json.dumps(sorted(f"diagrams/{n}" for n in diagrams.used)),
+        "{{CODE_CSS}}": (TOOLS / "code.css").read_text(),
         "{{UPDATED}}": date.today().isoformat(),
+        "{{DATA}}": json.dumps({
+            "lessons": {k: lesson_problems[k] for k in lesson_problems},
+            "titles": {l["id"]: l["title"] for l in done},
+            "pages": [f"l/{l['id']}.html" for l in done],
+            "diagrams": sorted(f"diagrams/{n}" for n in diagrams.used),
+        }, separators=(",", ":")),
     }
-    for k, v in repl.items():
-        page = page.replace(k, v)
-    (ROOT / "index.html").write_text(page)
+
+    def page(path, kind, title, root, body):
+        out = shell
+        for k, v in {**common, "{{PAGE_TITLE}}": title, "{{KIND}}": kind, "{{ROOT}}": root, "{{BODY}}": body}.items():
+            out = out.replace(k, v)
+        if root:  # pages in l/ reach diagrams one level up
+            out = out.replace('="diagrams/', f'="{root}diagrams/')
+        (ROOT / path).parent.mkdir(exist_ok=True)
+        (ROOT / path).write_text(out)
+        return len(out)
+
+    total = len(set(all_problems))
+    home = (
+        f'<header class="site-head"><h1>{esc(cur["title"])}</h1><p class="lead">{esc(cur["tagline"])}</p>'
+        f'<p class="progress-line no-print">Solved: <span id="solved-count">0</span> / {total} problems</p>'
+        f'<p id="resume" class="resume no-print" hidden></p></header>'
+        f'<section id="map"><h2>Lessons</h2>'
+        f'<p class="muted">Go from top to bottom. Each stage builds on the one above it. Tap a stage to open it.</p>'
+        f'<div class="toc">{"".join(toc)}</div>'
+        f'<details class="roadmap"><summary>Show the map as a picture</summary>{roadmap}</details>'
+        f'<p class="no-print"><a href="all.html">Print the whole guide</a> (one big page, for printing only)</p>'
+        f"</section>"
+    )
+    sizes = {"index.html": page("index.html", "home", esc(cur["title"]), "", home)}
+
+    if PAGES.exists():
+        for f in PAGES.glob("*.html"):
+            if f.stem not in written:
+                f.unlink()
+    for l in done:
+        k = done.index(l)
+        nxt = f'<a href="{done[k + 1]["id"]}.html">Next &rarr;</a>' if k + 1 < len(done) else ""
+        top = f'<nav class="topbar no-print"><a href="../">&larr; All lessons</a>{nxt}</nav>'
+        sizes[f"l/{l['id']}.html"] = page(
+            f"l/{l['id']}.html", "lesson", f'{esc(l["title"])} &middot; {esc(cur["title"])}', "../",
+            top + article(l, "page") + pager(l))
+
+    every = "".join(article(l, "all") for l in done)
+    intro = (f'<header class="site-head no-print"><p><a href="./">&larr; Back to lessons</a></p>'
+             f'<h1>{esc(cur["title"])}: the whole guide</h1><p class="muted">Every lesson on one page, for printing.</p>'
+             f'<button type="button" class="print-btn" data-print="page">Print the whole guide</button></header>')
+    sizes["all.html"] = page("all.html", "all", f'{esc(cur["title"])}: whole guide', "", intro + every)
+
+    lesson_sizes = [v for k, v in sizes.items() if k.startswith("l/")]
     print(
-        f"built index.html: {len(written)}/{len(order)} lessons, {len(set(all_problems))} problems, "
-        f"{len(diagrams.used)} diagrams ({diagrams.rendered} newly rendered), {len(page) // 1024} KB"
+        f"built {len(sizes)} pages: {len(written)}/{len(order)} lessons, {total} problems, "
+        f"{len(diagrams.used)} diagrams ({diagrams.rendered} newly rendered). "
+        f"index {sizes['index.html'] // 1024} KB, lessons {min(lesson_sizes) // 1024}-{max(lesson_sizes) // 1024} KB, "
+        f"all.html {sizes['all.html'] // 1024} KB"
     )
 
 
