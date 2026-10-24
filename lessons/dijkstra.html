@@ -1,0 +1,231 @@
+<p class="lead">When the connections in a graph have different lengths, like minutes between Tube stations, Dijkstra's algorithm finds the quickest way from one place to every other place. It is BFS with a <a href="#heap">heap</a> instead of a queue.</p>
+
+<h3>The idea</h3>
+<p>In <a href="#graph-basics">Graphs</a>, BFS found the path with the <b>fewest stops</b>. That is the right answer when every edge costs the same. On the Tube it doesn't: some hops take 1 minute, some take 9. Now each edge has a number on it, called its <b>weight</b> (here: minutes). A graph like this is a <b>weighted graph</b>.</p>
+<p>Here are five stations again. The minutes are made up to keep the sums easy.</p>
+<pre class="mermaid" data-alt="A weighted graph of five stations. Bank to London Bridge 2 minutes. Bank to Embankment 9 minutes. London Bridge to Waterloo 3 minutes. Waterloo to Embankment 2 minutes. Waterloo to Westminster 4 minutes. Embankment to Westminster 1 minute.">
+%%{init: {"flowchart": {"rankSpacing": 30, "nodeSpacing": 24, "padding": 6}}}%%
+flowchart TD
+  A["Bank"] ---|2| B["London Bridge"]
+  A ---|9| E["Embankment"]
+  B ---|3| C["Waterloo"]
+  C ---|2| E
+  C ---|4| D["Westminster"]
+  E ---|1| D
+</pre>
+<p>From Bank, BFS says "Embankment is 1 stop away". True, but that stop takes 9 minutes. Going Bank → London Bridge → Waterloo → Embankment is 3 stops and only 2 + 3 + 2 = <b>7</b> minutes. Fewest stops is not quickest.</p>
+<p><b>Dijkstra's rule:</b> always deal next with the <b>closest place you haven't finished yet</b>. Picture ink spreading from Bank along the tracks at one minute per minute. The ink reaches stations in order of how far they are. Whatever it reaches first, it reached by the quickest way.</p>
+<ol>
+  <li>Keep <code>dist</code>: the best time found so far to each station. Start: <code>dist[Bank] = 0</code>.</li>
+  <li>Keep a min-heap of <code>(time, station)</code>. The heap always hands you the smallest time first.</li>
+  <li>Pop the closest station. For each neighbour, try "my time + edge weight". If that beats the neighbour's <code>dist</code>, write it down and push it onto the heap.</li>
+  <li>Repeat until the heap is empty.</li>
+</ol>
+<p>One catch: a station can sit in the heap twice, once with an old, worse time. When you pop an entry whose time is bigger than <code>dist[station]</code>, it is <b>stale</b> (out of date). Just skip it.</p>
+<p>The quickest times from Bank, with the tracks the quickest routes use:</p>
+<pre class="mermaid" data-alt="The quickest times from Bank. Bank 0 minutes. London Bridge 2, reached from Bank. Waterloo 5, reached from London Bridge. Embankment 7, reached from Waterloo. Westminster 8, reached from Embankment.">
+%%{init: {"flowchart": {"rankSpacing": 22, "nodeSpacing": 20, "padding": 6}}}%%
+flowchart TD
+  A["Bank: 0"] -->|2| B["London Bridge: 2"]
+  B -->|3| C["Waterloo: 5"]
+  C -->|2| E["Embankment: 7"]
+  E -->|1| D["Westminster: 8"]
+</pre>
+
+<h3>In Python</h3>
+<p>The graph is an adjacency list as before, but each neighbour comes with its weight: <code>graph[a]</code> is a list of <code>(b, minutes)</code> pairs.</p>
+<pre><code class="language-python">from heapq import heappush, heappop
+from collections import defaultdict
+
+INF = float("inf")
+
+def build(edges):
+    graph = defaultdict(list)
+    for a, b, w in edges:
+        # undirected: both ways
+        graph[a].append((b, w))
+        graph[b].append((a, w))
+    return graph
+
+def dijkstra(graph, start):
+    # best time found so far
+    dist = {start: 0}
+    heap = [(0, start)]
+    while heap:
+        d, node = heappop(heap)
+        if d > dist[node]:
+            continue  # stale, skip
+        for nxt, w in graph[node]:
+            nd = d + w
+            if nd &lt; dist.get(nxt, INF):
+                dist[nxt] = nd
+                heappush(heap,
+                         (nd, nxt))
+    # places missing from dist
+    # can't be reached at all
+    return dist
+</code></pre>
+<p>Tuples compare by their first item, so the heap orders entries by time. Cost: each edge can push at most one entry, and each push or pop on the heap costs O(log E). With E edges that is <b>O(E log E)</b> time and O(V + E) memory.</p>
+<p><b>Limit:</b> Dijkstra needs every weight to be zero or more. With a negative weight, a "finished" place could still get cheaper later, and the answer can be wrong.</p>
+
+<h3>Worked example</h3>
+<p>Dijkstra from Bank on the graph above (station names shortened):</p>
+<table>
+  <tr><th>Pop</th><th>What happens</th><th>Heap after</th></tr>
+  <tr><td>(0, Bank)</td><td>LB = 2, Emb = 9</td><td>(2, LB) (9, Emb)</td></tr>
+  <tr><td>(2, LB)</td><td>Wat = 2 + 3 = 5</td><td>(5, Wat) (9, Emb)</td></tr>
+  <tr><td>(5, Wat)</td><td>Emb = 7 (beats 9), Wes = 9</td><td>(7, Emb) (9, Emb) (9, Wes)</td></tr>
+  <tr><td>(7, Emb)</td><td>Wes = 8 (beats 9)</td><td>(8, Wes) (9, Emb) (9, Wes)</td></tr>
+  <tr><td>(8, Wes)</td><td>nothing better</td><td>(9, Emb) (9, Wes)</td></tr>
+  <tr><td>(9, Emb)</td><td>stale: dist is 7, skip</td><td>(9, Wes)</td></tr>
+  <tr><td>(9, Wes)</td><td>stale: dist is 8, skip</td><td>empty</td></tr>
+</table>
+<p>Final <code>dist</code>: Bank 0, London Bridge 2, Waterloo 5, Embankment 7, Westminster 8.</p>
+
+<h3>Your turn</h3>
+<p>Dijkstra problems on LeetCode start at Medium, so all three are Medium. The first is the template almost as is. The next two change what "distance" means. Give each one its time box, then read the solution and move on.</p>
+
+<leetcode slug="network-delay-time" num="743" title="Network Delay Time" level="Medium" minutes="20">
+  <hint>Edges here are one-way: <code>[u, v, w]</code> means u → v only. Run the template from <code>k</code>. If <code>dist</code> has fewer than <code>n</code> nodes, someone was never reached: return −1. Otherwise the answer is the biggest value in <code>dist</code>.</hint>
+  <solution>
+<pre><code class="language-python">from heapq import heappush, heappop
+
+class Solution:
+    def networkDelayTime(
+        self, times: List[List[int]],
+        n: int, k: int
+    ) -> int:
+        graph = defaultdict(list)
+        for u, v, w in times:
+            # one-way: u -> v
+            graph[u].append((v, w))
+
+        INF = float("inf")
+        dist = {k: 0}
+        heap = [(0, k)]
+        while heap:
+            d, node = heappop(heap)
+            if d > dist[node]:
+                continue  # stale
+            for nxt, w in graph[node]:
+                nd = d + w
+                old = dist.get(nxt, INF)
+                if nd >= old:
+                    continue
+                dist[nxt] = nd
+                heappush(heap,
+                         (nd, nxt))
+
+        if len(dist) &lt; n:
+            return -1  # not all reached
+        # everyone has the signal once
+        # the slowest node has it
+        return max(dist.values())
+# O(E log E) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="path-with-maximum-probability" num="1514" title="Path with Maximum Probability" level="Medium" minutes="20">
+  <hint>Same idea, flipped. Along a path you <b>multiply</b> probabilities, and you want the <b>biggest</b> result. Multiplying by a number ≤ 1 never makes it bigger, so "best first" still works. Python's heap pops the smallest, so push <code>-prob</code> to pop the biggest first.</hint>
+  <solution>
+<pre><code class="language-python">from heapq import heappush, heappop
+
+class Solution:
+    def maxProbability(
+        self, n: int,
+        edges: List[List[int]],
+        succProb: List[float],
+        start_node: int, end_node: int
+    ) -> float:
+        graph = defaultdict(list)
+        for i in range(len(edges)):
+            a, b = edges[i]
+            p = succProb[i]
+            graph[a].append((b, p))
+            graph[b].append((a, p))
+
+        best = {start_node: 1.0}
+        # negate: biggest pops first
+        heap = [(-1.0, start_node)]
+        while heap:
+            neg, node = heappop(heap)
+            p = -neg
+            if node == end_node:
+                return p  # best
+            if p &lt; best[node]:
+                continue  # stale
+            for nxt, q in graph[node]:
+                np = p * q
+                old = best.get(nxt, 0.0)
+                if np &lt;= old:
+                    continue
+                best[nxt] = np
+                heappush(heap,
+                         (-np, nxt))
+        return 0.0  # no path
+# O(E log E) time.
+</code></pre>
+  </solution>
+</leetcode>
+
+<leetcode slug="path-with-minimum-effort" num="1631" title="Path With Minimum Effort" level="Medium" minutes="25">
+  <hint>Stretch. Each cell is a node; its neighbours are up, down, left, right. The "length" of a path is not a sum: it is the <b>biggest single step</b> on it. So the new distance is <code>max(d, abs(height difference))</code> instead of <code>d + w</code>. Everything else is the template.</hint>
+  <solution>
+<pre><code class="language-python">from heapq import heappush, heappop
+
+class Solution:
+    def minimumEffortPath(
+        self, heights: List[List[int]]
+    ) -> int:
+        rows = len(heights)
+        cols = len(heights[0])
+        goal = (rows - 1, cols - 1)
+        steps = ((1, 0), (-1, 0),
+                 (0, 1), (0, -1))
+        INF = float("inf")
+        dist = {(0, 0): 0}
+        # (effort, row, col)
+        heap = [(0, 0, 0)]
+        while heap:
+            d, r, c = heappop(heap)
+            if (r, c) == goal:
+                return d
+            if d > dist[(r, c)]:
+                continue  # stale
+            here = heights[r][c]
+            for dr, dc in steps:
+                nr, nc = r + dr, c + dc
+                if not (0 &lt;= nr &lt; rows):
+                    continue
+                if not (0 &lt;= nc &lt; cols):
+                    continue
+                h = heights[nr][nc]
+                step = abs(h - here)
+                # effort = biggest step
+                nd = max(d, step)
+                nxt = (nr, nc)
+                old = dist.get(nxt, INF)
+                if nd &gt;= old:
+                    continue
+                dist[nxt] = nd
+                heappush(heap,
+                         (nd, nr, nc))
+        return 0
+# O(R*C log(R*C)) time, R*C cells.
+</code></pre>
+  </solution>
+</leetcode>
+
+<fact title="Invented in 20 minutes at a café">
+  <p>Edsger Dijkstra came up with the algorithm in 1956 in Amsterdam. In a 2001 interview (printed in Communications of the ACM) he said he was shopping with his fiancée, they sat down on a café terrace for a coffee, and he designed it there: "a twenty-minute invention", worked out without pencil and paper. He wanted a demo for a new computer, so he asked it for the shortest route between two Dutch cities. He published it in 1959.</p>
+  <p>It is still at work today. OSPF is a routing protocol used inside many company and internet-provider networks. Its standard (RFC 2328) has every router build a map of the network and run Dijkstra's algorithm on it to pick the shortest path to every other router.</p>
+</fact>
+
+<recap>
+  <ul>
+    <li>Weighted edges? BFS finds fewest stops, not the shortest time. Use Dijkstra.</li>
+    <li>Heap of <code>(distance, node)</code> + a <code>dist</code> dict. Pop the closest, try each neighbour, push if it got better. Skip stale entries.</li>
+    <li>Only works when no edge weight is negative. Cost O(E log E).</li>
+  </ul>
+</recap>
