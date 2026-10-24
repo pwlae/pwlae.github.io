@@ -155,18 +155,19 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <pre class="code" data-lang="python"><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
 
 <span class="n">q</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
-<span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>       <span class="c1"># join at the back  -&gt; deque([4])</span>
-<span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>       <span class="c1">#                   -&gt; deque([4, 7])</span>
-<span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>       <span class="c1">#                   -&gt; deque([4, 7, 2])</span>
-<span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>              <span class="c1"># peek at the front -&gt; 4</span>
-<span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>       <span class="c1"># leave from front  -&gt; 4, now deque([7, 2])</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>            <span class="c1"># 2</span>
-<span class="k">if</span> <span class="n">q</span><span class="p">:</span>             <span class="c1"># non-empty?</span>
+<span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># join at the back</span>
+<span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># now deque([4, 7, 2])</span>
+<span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>         <span class="c1"># peek at the front: 4</span>
+<span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>  <span class="c1"># leave from the front: 4</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>       <span class="c1"># 2, deque([7, 2]) left</span>
+<span class="k">if</span> <span class="n">q</span><span class="p">:</span>        <span class="c1"># non-empty?</span>
     <span class="o">...</span>
 
-<span class="c1"># Both ends work, so a deque can also act as a stack:</span>
-<span class="n">q</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>   <span class="c1"># -&gt; deque([9, 7, 2])</span>
-<span class="n">q</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>           <span class="c1"># -&gt; 2, from the back</span></code></pre>
+<span class="c1"># Both ends work, so a deque can</span>
+<span class="c1"># also act as a stack:</span>
+<span class="n">q</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>  <span class="c1"># deque([9, 7, 2])</span>
+<span class="n">q</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>          <span class="c1"># 2, from the back</span></code></pre>
 <p>On LeetCode, <code>deque</code> is already imported.</p>
 
 <h3>When to think "queue"</h3>
@@ -195,7 +196,8 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 
     <span class="k">def</span><span class="w"> </span><span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">3000</span><span class="p">:</span>     <span class="c1"># too old: leave from the front</span>
+        <span class="c1"># too old: leave from the front</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">3000</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">)</span></code></pre></div></details></div>
 
@@ -209,8 +211,10 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_refill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="p">:</span>
-            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span><span class="p">:</span>              <span class="c1"># reversing puts the oldest on top</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+            <span class="c1"># reversing: oldest on top</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_refill</span><span class="p">()</span>
@@ -221,17 +225,21 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span>
-<span class="c1"># Each item is moved at most once, so every operation is O(1) on average.</span></code></pre></div></details></div>
+        <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="p">)</span>
+<span class="c1"># Each item is moved at most once, so</span>
+<span class="c1"># every operation is O(1) on average.</span></code></pre></div></details></div>
 
 <div class="lc" id="p-implement-stack-using-queues"><a class="lc-link" href="https://leetcode.com/problems/implement-stack-using-queues/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">225. Implement Stack using Queues</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~15 min</span><label class="solved"><input type="checkbox" data-slug="implement-stack-using-queues"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/implement-stack-using-queues/</span></div><details class="hint"><summary>Hint</summary><div>Use one queue. After you <code>append</code> a new item, rotate the queue: move every <i>older</i> item from the front to the back. Now the newest item is at the front, ready to leave first.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">MyStack</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>   <span class="c1"># rotate older items behind x</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span>
+        <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># rotate older items behind x</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
@@ -257,7 +265,8 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 
     <span class="k">def</span><span class="w"> </span><span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">3000</span><span class="p">:</span>     <span class="c1"># too old: leave from the front</span>
+        <span class="c1"># too old: leave from the front</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">3000</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">)</span></code></pre></li><li><b>232. Implement Queue using Stacks</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">MyQueue</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -269,8 +278,10 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_refill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="p">:</span>
-            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span><span class="p">:</span>              <span class="c1"># reversing puts the oldest on top</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+            <span class="c1"># reversing: oldest on top</span>
+            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_refill</span><span class="p">()</span>
@@ -281,15 +292,19 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span>
-<span class="c1"># Each item is moved at most once, so every operation is O(1) on average.</span></code></pre></li><li><b>225. Implement Stack using Queues</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">MyStack</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inbox</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outbox</span><span class="p">)</span>
+<span class="c1"># Each item is moved at most once, so</span>
+<span class="c1"># every operation is O(1) on average.</span></code></pre></li><li><b>225. Implement Stack using Queues</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">MyStack</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>   <span class="c1"># rotate older items behind x</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span>
+        <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># rotate older items behind x</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>

@@ -24,11 +24,12 @@ flowchart TD
 
 <h3>In Python</h3>
 <pre><code class="language-python">def scan(nums):
-    best = 0          # the answer so far
-    current = 0       # what we are tracking right now
+    best = 0     # the answer so far
+    current = 0  # what we track now
     for x in nums:
-        current = ...              # update using x
-        best = max(best, current)  # keep the best one seen
+        current = ...  # update using x
+        # keep the best one seen
+        best = max(best, current)
     return best
 </code></pre>
 <p>It visits each item once, so it is <b>O(n) time</b>. It only keeps a couple of variables, so it is <b>O(1) extra space</b>. You can't do much better than that.</p>
@@ -59,9 +60,12 @@ flowchart TD
   <hint>This is exactly the worked example. Reset <code>current</code> on a 0, and update <code>best</code> on every step.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def findMaxConsecutiveOnes(self, nums: List[int]) -> int:
+    def findMaxConsecutiveOnes(
+        self, nums: List[int]
+    ) -> int:
         best = 0
-        current = 0          # length of the run of 1s ending here
+        # length of the run of 1s here
+        current = 0
         for x in nums:
             if x == 1:
                 current += 1
@@ -77,9 +81,12 @@ flowchart TD
   <hint>You start at altitude 0. <code>current</code> is your altitude now: add each gain to it. <code>best</code> is the highest altitude so far, and it starts at 0 because the start point counts.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def largestAltitude(self, gain: List[int]) -> int:
-        best = 0             # the starting point (altitude 0) counts
-        current = 0          # altitude right now
+    def largestAltitude(
+        self, gain: List[int]
+    ) -> int:
+        # the start (altitude 0) counts
+        best = 0
+        current = 0  # altitude now
         for g in gain:
             current += g
             best = max(best, current)
@@ -92,14 +99,21 @@ flowchart TD
   <hint>Walk through the days. Keep the <b>lowest price so far</b> (the best day to have bought). On each day, ask: "if I sold today, what would I make?"</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def maxProfit(self, prices: List[int]) -> int:
-        lowest = float('inf')   # cheapest price seen so far
-        best = 0                # best profit so far (0 = don't trade)
+    def maxProfit(
+        self, prices: List[int]
+    ) -> int:
+        # cheapest price seen so far
+        lowest = float('inf')
+        # best profit (0 = don't trade)
+        best = 0
         for p in prices:
             lowest = min(lowest, p)
-            best = max(best, p - lowest)   # sell today?
+            # profit if we sell today
+            profit = p - lowest
+            best = max(best, profit)
         return best
-# One pass: O(n) time, O(1) space. Two nested loops would be O(n²),
+# One pass: O(n) time, O(1) space.
+# Two nested loops would be O(n²),
 # too slow for 100,000 prices.
 </code></pre>
   </solution>

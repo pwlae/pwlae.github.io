@@ -161,7 +161,8 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <p>LeetCode gives you this class (it's in a comment above your code):</p>
 <pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">TreeNode</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span></code></pre>
@@ -239,8 +240,9 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="c1"># empty tree has depth 0</span>
         <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxDepth</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">depth</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">depth</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
         <span class="c1"># this node adds one level</span>
         <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
 <span class="c1"># O(n) time. O(h) space for the calls.</span></code></pre></div></details></div>
@@ -254,14 +256,15 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="k">def</span><span class="w"> </span><span class="nf">walk</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span>
-            <span class="c1"># node, then left, then right</span>
+            <span class="c1"># node, left, then right</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
             <span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
             <span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
 
         <span class="n">walk</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span>
-<span class="c1"># Try the stack version from the lesson too.</span></code></pre></div></details></div>
+<span class="c1"># Also try the stack version from</span>
+<span class="c1"># the lesson.</span></code></pre></div></details></div>
 
 <div class="lc" id="p-binary-tree-inorder-traversal"><a class="lc-link" href="https://leetcode.com/problems/binary-tree-inorder-traversal/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">94. Binary Tree Inorder Traversal</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="binary-tree-inorder-traversal"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/binary-tree-inorder-traversal/</span></div><details class="hint"><summary>Hint</summary><div>Same as the last one. Only move one line.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">inorderTraversal</span><span class="p">(</span>
@@ -273,7 +276,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span>
             <span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-            <span class="c1"># node goes between the subtrees</span>
+            <span class="c1"># node between the subtrees</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
             <span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
 
@@ -311,8 +314,9 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="k">return</span> <span class="kc">False</span>
         <span class="c1"># both sides must match</span>
         <span class="n">same</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSameTree</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">same</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-                <span class="ow">and</span> <span class="n">same</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">right</span><span class="p">))</span></code></pre></div></details></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">same</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">left</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">same</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">right</span><span class="p">)</span></code></pre></div></details></div>
 
 <div class="lc" id="p-symmetric-tree"><a class="lc-link" href="https://leetcode.com/problems/symmetric-tree/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">101. Symmetric Tree</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~15 min</span><label class="solved"><input type="checkbox" data-slug="symmetric-tree"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/symmetric-tree/</span></div><details class="hint"><summary>Hint</summary><div>Like Same Tree, but comparing the left subtree with the <i>mirror</i> of the right one. Write a helper <code>mirror(a, b)</code>: the values match, <code>a.left</code> mirrors <code>b.right</code>, and <code>a.right</code> mirrors <code>b.left</code>.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">isSymmetric</span><span class="p">(</span>
@@ -326,12 +330,15 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                 <span class="k">return</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">val</span> <span class="o">!=</span> <span class="n">b</span><span class="o">.</span><span class="n">val</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
-            <span class="c1"># outside pair, then inside pair</span>
-            <span class="n">outside</span> <span class="o">=</span> <span class="n">mirror</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
-            <span class="n">inside</span> <span class="o">=</span> <span class="n">mirror</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+            <span class="c1"># outside pair, inside pair</span>
+            <span class="n">outside</span> <span class="o">=</span> <span class="n">mirror</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">left</span><span class="p">,</span>
+                             <span class="n">b</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+            <span class="n">inside</span> <span class="o">=</span> <span class="n">mirror</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">right</span><span class="p">,</span>
+                            <span class="n">b</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">outside</span> <span class="ow">and</span> <span class="n">inside</span>
 
-        <span class="k">return</span> <span class="n">mirror</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span></code></pre></div></details></div>
+        <span class="k">return</span> <span class="n">mirror</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span>
+                      <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span></code></pre></div></details></div>
 
 <details class="fact"><summary>Interesting fact: Every web page is a tree</summary><div><p>When a browser loads a page, it turns the HTML into a tree called the <b>DOM</b> (Document Object Model). <code>&lt;html&gt;</code> is the root, <code>&lt;head&gt;</code> and <code>&lt;body&gt;</code> are its children, and every tag inside is a node further down.</p>
   <p>The DOM standard defines "tree order" as a <b>pre-order, depth-first</b> walk: a node first, then everything inside it, from first child to last. When JavaScript calls <code>document.querySelectorAll("a")</code>, the links come back in exactly this order, which is the order they appear in the HTML source.</p></div></details>
@@ -348,8 +355,9 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="c1"># empty tree has depth 0</span>
         <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="mi">0</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxDepth</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxDepth</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">depth</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">depth</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
         <span class="c1"># this node adds one level</span>
         <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
 <span class="c1"># O(n) time. O(h) space for the calls.</span></code></pre></li><li><b>144. Binary Tree Preorder Traversal</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
@@ -361,14 +369,15 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="k">def</span><span class="w"> </span><span class="nf">walk</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span>
-            <span class="c1"># node, then left, then right</span>
+            <span class="c1"># node, left, then right</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
             <span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
             <span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
 
         <span class="n">walk</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span>
-<span class="c1"># Try the stack version from the lesson too.</span></code></pre></li><li><b>94. Binary Tree Inorder Traversal</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+<span class="c1"># Also try the stack version from</span>
+<span class="c1"># the lesson.</span></code></pre></li><li><b>94. Binary Tree Inorder Traversal</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">inorderTraversal</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
@@ -378,7 +387,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span>
             <span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-            <span class="c1"># node goes between the subtrees</span>
+            <span class="c1"># node between the subtrees</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
             <span class="n">walk</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
 
@@ -412,8 +421,9 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="k">return</span> <span class="kc">False</span>
         <span class="c1"># both sides must match</span>
         <span class="n">same</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSameTree</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">same</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-                <span class="ow">and</span> <span class="n">same</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">right</span><span class="p">))</span></code></pre></li><li><b>101. Symmetric Tree</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">same</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">left</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">same</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">right</span><span class="p">)</span></code></pre></li><li><b>101. Symmetric Tree</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">isSymmetric</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreeNode</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -425,12 +435,15 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                 <span class="k">return</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">val</span> <span class="o">!=</span> <span class="n">b</span><span class="o">.</span><span class="n">val</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
-            <span class="c1"># outside pair, then inside pair</span>
-            <span class="n">outside</span> <span class="o">=</span> <span class="n">mirror</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
-            <span class="n">inside</span> <span class="o">=</span> <span class="n">mirror</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+            <span class="c1"># outside pair, inside pair</span>
+            <span class="n">outside</span> <span class="o">=</span> <span class="n">mirror</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">left</span><span class="p">,</span>
+                             <span class="n">b</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+            <span class="n">inside</span> <span class="o">=</span> <span class="n">mirror</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">right</span><span class="p">,</span>
+                            <span class="n">b</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">outside</span> <span class="ow">and</span> <span class="n">inside</span>
 
-        <span class="k">return</span> <span class="n">mirror</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span></code></pre></li></ol></section></article><nav class="pager no-print"><a class="prev" href="recursion.html"><small>&larr; Previous</small>Recursion</a><a class="next" href="tree-bfs.html"><small>Next &rarr;</small>Binary trees: level by level</a></nav>
+        <span class="k">return</span> <span class="n">mirror</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">left</span><span class="p">,</span>
+                      <span class="n">root</span><span class="o">.</span><span class="n">right</span><span class="p">)</span></code></pre></li></ol></section></article><nav class="pager no-print"><a class="prev" href="recursion.html"><small>&larr; Previous</small>Recursion</a><a class="next" href="tree-bfs.html"><small>Next &rarr;</small>Binary trees: level by level</a></nav>
 <footer class="site-foot">
   <p>Problems open on <a href="https://leetcode.com" rel="noopener">leetcode.com</a>, or in the LeetCode app if your phone has it. LeetCode is a trademark of its owner. This guide is an independent study aid. Solved marks are saved only in this browser.</p>
   <p>Updated 2026-10-24. Found a mistake? <a href="https://github.com/pwlae/pwlae.github.io/issues" rel="noopener">Open an issue</a>.</p>

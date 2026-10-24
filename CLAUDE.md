@@ -66,6 +66,8 @@ sw.js                offline cache
   which uses the system Chromium at /snap/bin/chromium).
 - Check problems: `python3 tools/check_problems.py <lesson-id>` (verifies slug, number, title,
   difficulty and not-premium against LeetCode's API).
+- Check code width: `python3 tools/check_code_width.py [lesson-id]` (lists code lines longer
+  than 39 characters, solutions included; exits non-zero if it finds any).
 - Lessons not yet written still show in the map as "coming soon". Lessons may be written in any
   order, but the map and numbering follow `curriculum.json`.
 - Preview: `python3 -m http.server 8765`, then
@@ -93,6 +95,11 @@ Sections, in this order (use `<h3>`):
    marked as a stretch. Each problem should be used in only one lesson.
 6. `<fact title="...">`: the interesting real-world use.
 7. `<recap>`: a 3-bullet "Remember" list (what you'd want on a flashcard).
+
+Keep code lines ≤ 39 characters so they fit a phone without sideways scrolling. Check with
+`python3 tools/check_code_width.py <id>`. Put comments on their own line above the code, break
+long expressions inside brackets, and wrap long `def` lines as `def name(` / `self, args` /
+`) -> type:`.
 
 Markup available in lesson files (build.py expands it):
 

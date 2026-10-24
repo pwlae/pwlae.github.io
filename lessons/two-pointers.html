@@ -17,11 +17,12 @@ flowchart TD
 <pre><code class="language-python"># Flavour 1: opposite ends
 left, right = 0, len(nums) - 1
 while left &lt; right:
-    # look at nums[left] and nums[right], then move one or both
+    # look at both ends, then move
+    # one pointer or both
     left += 1
     right -= 1
 
-# Flavour 2: slow (write) and fast (read)
+# Flavour 2: slow (write), fast (read)
 write = 0
 for read in range(len(nums)):
     if keep(nums[read]):
@@ -49,10 +50,14 @@ for read in range(len(nums)):
   <hint>Opposite ends: swap <code>s[left]</code> and <code>s[right]</code>, then move both inwards. In Python, <code>a, b = b, a</code> swaps two values.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def reverseString(self, s: List[str]) -> None:
+    def reverseString(
+        self, s: List[str]
+    ) -> None:
         left, right = 0, len(s) - 1
         while left &lt; right:
-            s[left], s[right] = s[right], s[left]
+            # swap the two ends
+            a, b = s[left], s[right]
+            s[left], s[right] = b, a
             left += 1
             right -= 1
 </code></pre>
@@ -63,14 +68,18 @@ for read in range(len(nums)):
   <hint>Same as the racecar picture, but first skip anything that isn't a letter or digit (<code>ch.isalnum()</code>) and compare with <code>.lower()</code>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def isPalindrome(self, s: str) -> bool:
+    def isPalindrome(
+        self, s: str
+    ) -> bool:
         left, right = 0, len(s) - 1
         while left &lt; right:
-            if not s[left].isalnum():
+            a = s[left].lower()
+            b = s[right].lower()
+            if not a.isalnum():
                 left += 1
-            elif not s[right].isalnum():
+            elif not b.isalnum():
                 right -= 1
-            elif s[left].lower() != s[right].lower():
+            elif a != b:
                 return False
             else:
                 left += 1
@@ -84,19 +93,28 @@ for read in range(len(nums)):
   <hint>Negative numbers make big squares too, so the biggest square is at one of the two <b>ends</b>. Compare the ends, put the bigger square at the back of the result, and move that pointer inwards.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def sortedSquares(self, nums: List[int]) -> List[int]:
+    def sortedSquares(
+        self, nums: List[int]
+    ) -> List[int]:
         n = len(nums)
         result = [0] * n
         left, right = 0, n - 1
-        for pos in range(n - 1, -1, -1):      # fill from the back
-            if abs(nums[left]) > abs(nums[right]):
-                result[pos] = nums[left] ** 2
+        # fill from the back:
+        # pos = n - 1, n - 2, ..., 0
+        for pos in reversed(range(n)):
+            a = nums[left] ** 2
+            b = nums[right] ** 2
+            # bigger square goes here
+            if a > b:
+                result[pos] = a
                 left += 1
             else:
-                result[pos] = nums[right] ** 2
+                result[pos] = b
                 right -= 1
         return result
-# O(n). The easy way, sorted(x * x for x in nums), is O(n log n): also accepted.
+# O(n). The easy way is also accepted:
+# sorted(x * x for x in nums), which
+# is O(n log n).
 </code></pre>
   </solution>
 </leetcode>
@@ -105,12 +123,18 @@ for read in range(len(nums)):
   <hint>Exactly the worked example: <b>read</b> visits everything, non-zeros get swapped to <b>write</b>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def moveZeroes(self, nums: List[int]) -> None:
+    def moveZeroes(
+        self, nums: List[int]
+    ) -> None:
         write = 0
         for read in range(len(nums)):
-            if nums[read] != 0:
-                nums[write], nums[read] = nums[read], nums[write]
-                write += 1
+            if nums[read] == 0:
+                continue
+            # swap it into place write
+            x = nums[read]
+            nums[read] = nums[write]
+            nums[write] = x
+            write += 1
 </code></pre>
   </solution>
 </leetcode>
@@ -119,11 +143,16 @@ for read in range(len(nums)):
   <hint>The list is sorted, so duplicates sit next to each other. Keep a number only if it differs from the last <i>kept</i> number, <code>nums[write - 1]</code>. Return <code>write</code>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def removeDuplicates(self, nums: List[int]) -> int:
-        write = 1                       # the first number is always kept
-        for read in range(1, len(nums)):
-            if nums[read] != nums[write - 1]:
-                nums[write] = nums[read]
+    def removeDuplicates(
+        self, nums: List[int]
+    ) -> int:
+        # the first number always stays
+        write = 1
+        n = len(nums)
+        for read in range(1, n):
+            x = nums[read]
+            if x != nums[write - 1]:
+                nums[write] = x
                 write += 1
         return write
 </code></pre>
@@ -134,16 +163,25 @@ for read in range(len(nums)):
   <hint>Filling from the front would overwrite numbers you still need. Fill from the <b>back</b> instead: one pointer at the end of each list's real numbers, and a third at the very end of <code>nums1</code>. Put the bigger of the two there.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
-        i, j = m - 1, n - 1              # last real number in each list
-        for pos in range(m + n - 1, -1, -1):
-            # take from nums2 if nums1 is used up, or nums2's number is bigger
-            if i &lt; 0 or (j >= 0 and nums2[j] > nums1[i]):
-                nums1[pos] = nums2[j]
-                j -= 1
-            else:
+    def merge(
+        self, nums1: List[int], m: int,
+        nums2: List[int], n: int
+    ) -> None:
+        # last real number in each list
+        i, j = m - 1, n - 1
+        # fill nums1 from the very back
+        pos = m + n - 1
+        # when nums2 runs out, the rest
+        # of nums1 is already in place
+        while j >= 0:
+            b = nums2[j]
+            if i >= 0 and nums1[i] > b:
                 nums1[pos] = nums1[i]
                 i -= 1
+            else:
+                nums1[pos] = b
+                j -= 1
+            pos -= 1
 </code></pre>
   </solution>
 </leetcode>

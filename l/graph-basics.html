@@ -221,7 +221,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">trust</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="c1"># score = arrows in - arrows out</span>
+        <span class="c1"># score: arrows in - arrows out</span>
         <span class="n">score</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">trust</span><span class="p">:</span>
             <span class="n">score</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
@@ -275,7 +275,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                 <span class="k">return</span>
             <span class="k">if</span> <span class="n">image</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">!=</span> <span class="n">old</span><span class="p">:</span>
                 <span class="k">return</span>
-            <span class="c1"># painting = marking visited</span>
+            <span class="c1"># painting marks it visited</span>
             <span class="n">image</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
             <span class="n">dfs</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
             <span class="n">dfs</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
@@ -329,7 +329,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">trust</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="c1"># score = arrows in - arrows out</span>
+        <span class="c1"># score: arrows in - arrows out</span>
         <span class="n">score</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">trust</span><span class="p">:</span>
             <span class="n">score</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
@@ -379,7 +379,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                 <span class="k">return</span>
             <span class="k">if</span> <span class="n">image</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">!=</span> <span class="n">old</span><span class="p">:</span>
                 <span class="k">return</span>
-            <span class="c1"># painting = marking visited</span>
+            <span class="c1"># painting marks it visited</span>
             <span class="n">image</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
             <span class="n">dfs</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
             <span class="n">dfs</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>

@@ -58,7 +58,7 @@ def topo_sort(n, edges):
         for nxt in graph[node]:
             indeg[nxt] -= 1
             if indeg[nxt] == 0:
-                # all its "befores" are done
+                # all "befores" done
                 queue.append(nxt)
 
     if len(order) &lt; n:
@@ -90,7 +90,7 @@ def topo_sort(n, edges):
     def destCity(
         self, paths: List[List[str]]
     ) -> str:
-        # cities with an arrow going out
+        # cities with an arrow out
         starts = {a for a, b in paths}
         for a, b in paths:
             if b not in starts:
@@ -136,10 +136,10 @@ def topo_sort(n, edges):
             graph[b].append(a)
             indeg[a] += 1
 
-        queue = deque(
-            i for i in range(numCourses)
-            if indeg[i] == 0
-        )
+        queue = deque()
+        for i in range(numCourses):
+            if indeg[i] == 0:
+                queue.append(i)
         taken = 0
         while queue:
             node = queue.popleft()
@@ -169,10 +169,10 @@ def topo_sort(n, edges):
             graph[b].append(a)
             indeg[a] += 1
 
-        queue = deque(
-            i for i in range(numCourses)
-            if indeg[i] == 0
-        )
+        queue = deque()
+        for i in range(numCourses):
+            if indeg[i] == 0:
+                queue.append(i)
         order = []
         while queue:
             node = queue.popleft()

@@ -171,25 +171,26 @@ flowchart TD
 </leetcode>
 
 <leetcode slug="validate-binary-search-tree" num="98" title="Validate Binary Search Tree" level="Medium" minutes="20">
-  <hint>Stretch. Checking each node against its two children is not enough: a node deep on the left must be smaller than the root too. Pass down the allowed range <code>(low, high)</code>. Going left, the node's value becomes the new <code>high</code>; going right, the new <code>low</code>.</hint>
+  <hint>Stretch. Checking each node against its two children is not enough: a node deep on the left must be smaller than the root too. Pass down the allowed range <code>(lo, hi)</code>. Going left, the node's value becomes the new <code>hi</code>; going right, the new <code>lo</code>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
     def isValidBST(
         self, root: Optional[TreeNode]
     ) -> bool:
 
-        def ok(node, low, high):
+        def ok(node, lo, hi):
             if node is None:
                 return True
+            v = node.val
             # must be strictly inside
-            if not low < node.val < high:
+            if not lo < v < hi:
                 return False
-            # left side: below node.val
-            # right side: above node.val
+            # left side: below v
+            # right side: above v
             return (
-                ok(node.left, low, node.val)
+                ok(node.left, lo, v)
                 and
-                ok(node.right, node.val, high))
+                ok(node.right, v, hi))
 
         inf = float("inf")
         return ok(root, -inf, inf)

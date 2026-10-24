@@ -38,10 +38,11 @@ class Trie:
     def insert(self, word):
         node = self.root
         for ch in word:
+            kids = node.children
             # no child yet? make one
-            if ch not in node.children:
-                node.children[ch] = Node()
-            node = node.children[ch]
+            if ch not in kids:
+                kids[ch] = Node()
+            node = kids[ch]
         # mark the last letter
         node.end = True
 
@@ -57,10 +58,13 @@ class Trie:
 
     def search(self, word):
         node = self.walk(word)
-        return node is not None and node.end
+        if node is None:
+            return False
+        return node.end
 
     def startsWith(self, prefix):
-        return self.walk(prefix) is not None
+        node = self.walk(prefix)
+        return node is not None
 </code></pre>
 <p>All three operations take one step per letter: O(L) for a word of length L. It doesn't matter if the trie holds ten words or a million. Space is at most one node per letter inserted, less when words share a start.</p>
 <p>A trie is a tree, so the <a href="#tree-dfs">depth-first</a> ideas still work: to list every word below a node, walk down each child in turn.</p>
@@ -83,12 +87,16 @@ class Trie:
   <hint>Split the sentence into words. Python strings have <code>word.startswith(x)</code>. Remember the answer counts words from 1, not 0.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def isPrefixOfWord(self, sentence: str, searchWord: str) -> int:
+    def isPrefixOfWord(
+        self, sentence: str,
+        searchWord: str
+    ) -> int:
         words = sentence.split()
-        # start=1: words are counted from 1
-        for i, word in enumerate(words, start=1):
-            if word.startswith(searchWord):
-                return i
+        prefix = searchWord
+        for i, w in enumerate(words):
+            if w.startswith(prefix):
+                # words count from 1
+                return i + 1
         return -1
 </code></pre>
   </solution>
@@ -98,27 +106,35 @@ class Trie:
   <hint>The quick way is <code>startswith</code>. For trie practice: give every node a <code>count</code> of how many words pass through it. Then walk <code>pref</code> and read the count.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def prefixCount(self, words: List[str], pref: str) -> int:
+    def prefixCount(
+        self, words: List[str],
+        pref: str
+    ) -> int:
         # quick way:
         # return sum(1 for w in words
-        #            if w.startswith(pref))
+        #     if w.startswith(pref))
 
         # trie way: each node counts
-        # the words that pass through it
-        new = lambda: {"count": 0, "kids": {}}
+        # the words passing through it
+        def new():
+            return {"count": 0,
+                    "kids": {}}
+
         root = new()
         for w in words:
             node = root
             for ch in w:
-                if ch not in node["kids"]:
-                    node["kids"][ch] = new()
-                node = node["kids"][ch]
-                # one more word passes here
+                kids = node["kids"]
+                if ch not in kids:
+                    kids[ch] = new()
+                node = kids[ch]
+                # one more word here
                 node["count"] += 1
         node = root
         for ch in pref:
             if ch not in node["kids"]:
-                return 0  # no word starts so
+                # no word starts so
+                return 0
             node = node["kids"][ch]
         return node["count"]
 </code></pre>
@@ -137,12 +153,15 @@ class Trie:
     def __init__(self):
         self.root = Node()
 
-    def insert(self, word: str) -> None:
+    def insert(
+        self, word: str
+    ) -> None:
         node = self.root
         for ch in word:
-            if ch not in node.children:
-                node.children[ch] = Node()
-            node = node.children[ch]
+            kids = node.children
+            if ch not in kids:
+                kids[ch] = Node()
+            node = kids[ch]
         node.end = True
 
     def walk(self, text):
@@ -153,12 +172,19 @@ class Trie:
             node = node.children[ch]
         return node
 
-    def search(self, word: str) -> bool:
+    def search(
+        self, word: str
+    ) -> bool:
         node = self.walk(word)
-        return node is not None and node.end
+        if node is None:
+            return False
+        return node.end
 
-    def startsWith(self, prefix: str) -> bool:
-        return self.walk(prefix) is not None
+    def startsWith(
+        self, prefix: str
+    ) -> bool:
+        node = self.walk(prefix)
+        return node is not None
 </code></pre>
   </solution>
 </leetcode>
@@ -173,27 +199,34 @@ class Trie:
         self.word = None
 
 class Solution:
-    def longestWord(self, words: List[str]) -> str:
+    def longestWord(
+        self, words: List[str]
+    ) -> str:
         root = Node()
         for w in words:
             node = root
             for ch in w:
-                if ch not in node.children:
-                    node.children[ch] = Node()
-                node = node.children[ch]
+                kids = node.children
+                if ch not in kids:
+                    kids[ch] = Node()
+                node = kids[ch]
             node.word = w
 
         best = ""
         def dfs(node):
             nonlocal best
-            # alphabetical order: on a tie,
-            # the first word found is smallest
-            for ch in sorted(node.children):
-                child = node.children[ch]
-                if child.word is None:
-                    continue  # a gap: stop
-                if len(child.word) > len(best):
-                    best = child.word
+            # go in alphabetical order:
+            # on a tie, the first word
+            # found is the smallest
+            kids = node.children
+            for ch in sorted(kids):
+                child = kids[ch]
+                w = child.word
+                if w is None:
+                    # a gap: stop
+                    continue
+                if len(w) > len(best):
+                    best = w
                 dfs(child)
 
         dfs(root)

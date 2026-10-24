@@ -74,12 +74,17 @@ people.sort(key=lambda p: p[1])  # age
   <hint>Pair each name with its height using <code>zip(names, heights)</code>. Sort the pairs by height, tallest first (<code>key=</code> and <code>reverse=True</code>). Then keep only the names.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def sortPeople(self, names: List[str],
-                   heights: List[int]) -> List[str]:
-        pairs = list(zip(names, heights))
-        pairs.sort(key=lambda p: p[1],
-                   reverse=True)  # tallest first
-        return [name for name, h in pairs]
+    def sortPeople(
+        self, names: List[str],
+        heights: List[int]
+    ) -> List[str]:
+        pairs = zip(names, heights)
+        # by height, tallest first
+        pairs = sorted(
+            pairs, key=lambda p: p[1],
+            reverse=True)
+        # keep just the names
+        return [p[0] for p in pairs]
 # O(n log n) time, O(n) space.
 </code></pre>
   </solution>
@@ -89,10 +94,13 @@ people.sort(key=lambda p: p[1])  # age
   <hint>Make a sorted copy: that's the "expected" line. Count the places where the copy and the original differ. Bonus: heights are only 1 to 100, so try counting sort instead.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def heightChecker(self, heights: List[int]) -> int:
+    def heightChecker(
+        self, heights: List[int]
+    ) -> int:
         expected = sorted(heights)
         wrong = 0
-        for a, b in zip(heights, expected):
+        pairs = zip(heights, expected)
+        for a, b in pairs:
             if a != b:
                 wrong += 1
         return wrong
@@ -112,15 +120,23 @@ people.sort(key=lambda p: p[1])  # age
   <hint>Sort both lists. Put pointer <code>i</code> on the first, <code>j</code> on the second. If the values are equal, you found a common number. Otherwise move the pointer with the smaller value. Skip numbers you already added. (A set solution works too: try both.)</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def intersection(self, nums1: List[int],
-                     nums2: List[int]) -> List[int]:
-        a, b = sorted(nums1), sorted(nums2)
+    def intersection(
+        self, nums1: List[int],
+        nums2: List[int]
+    ) -> List[int]:
+        a = sorted(nums1)
+        b = sorted(nums2)
+        n, m = len(a), len(b)
         i = j = 0
         out = []
-        while i &lt; len(a) and j &lt; len(b):
+        # the last number added
+        prev = None
+        while i &lt; n and j &lt; m:
             if a[i] == b[j]:
-                if not out or out[-1] != a[i]:
-                    out.append(a[i])  # new one
+                # skip repeats
+                if a[i] != prev:
+                    out.append(a[i])
+                    prev = a[i]
                 i += 1
                 j += 1
             elif a[i] &lt; b[j]:
@@ -129,7 +145,8 @@ people.sort(key=lambda p: p[1])  # age
                 j += 1
         return out
 # O(n log n + m log m) time.
-# Set version: list(set(nums1) &amp; set(nums2))
+# Set version:
+# list(set(nums1) &amp; set(nums2))
 </code></pre>
   </solution>
 </leetcode>
@@ -138,25 +155,32 @@ people.sort(key=lambda p: p[1])  # age
   <hint>Stretch. The problem forbids the built-in sort, so write merge sort. A helper <code>merge(left, right)</code> does the two-pointer merge from the table. Then <code>sort</code> calls itself on each half and merges. A list of 0 or 1 items is already sorted. (Calling a function from inside itself is <b>recursion</b>; it gets its own lesson later.)</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def sortArray(self, nums: List[int]) -> List[int]:
+    def sortArray(
+        self, nums: List[int]
+    ) -> List[int]:
         if len(nums) &lt;= 1:
-            return nums  # already sorted
+            # already sorted
+            return nums
         mid = len(nums) // 2
-        left = self.sortArray(nums[:mid])
-        right = self.sortArray(nums[mid:])
+        sort = self.sortArray
+        left = sort(nums[:mid])
+        right = sort(nums[mid:])
         return self.merge(left, right)
 
     def merge(self, left, right):
         out = []
         i = j = 0
-        while i &lt; len(left) and j &lt; len(right):
-            if left[i] &lt;= right[j]:  # &lt;= keeps it stable
+        n, m = len(left), len(right)
+        while i &lt; n and j &lt; m:
+            # &lt;= keeps it stable
+            if left[i] &lt;= right[j]:
                 out.append(left[i])
                 i += 1
             else:
                 out.append(right[j])
                 j += 1
-        out.extend(left[i:])   # leftovers
+        # leftovers
+        out.extend(left[i:])
         out.extend(right[j:])
         return out
 # O(n log n) time, O(n) space.
@@ -168,16 +192,23 @@ people.sort(key=lambda p: p[1])  # age
   <hint>Stretch. Sort the intervals by start. Walk through them, keeping a result list. If the next interval starts before (or at) the end of the last one in the result, they overlap: stretch that end. Otherwise add it as a new interval.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def merge(self, intervals: List[List[int]]
-              ) -> List[List[int]]:
-        intervals.sort(key=lambda iv: iv[0])
-        out = []
-        for start, end in intervals:
-            if out and start &lt;= out[-1][1]:
-                # overlaps the last one
-                out[-1][1] = max(out[-1][1], end)
+    def merge(
+        self,
+        intervals: List[List[int]]
+    ) -> List[List[int]]:
+        # sort by start
+        intervals.sort(
+            key=lambda iv: iv[0])
+        out = [intervals[0]]
+        rest = intervals[1:]
+        for lo, hi in rest:
+            last = out[-1]
+            if lo &lt;= last[1]:
+                # overlap: stretch it
+                if hi > last[1]:
+                    last[1] = hi
             else:
-                out.append([start, end])
+                out.append([lo, hi])
         return out
 # Sort O(n log n), then one scan O(n).
 </code></pre>

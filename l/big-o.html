@@ -161,19 +161,25 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 
 <h3>How to spot it in Python</h3>
 <p>You don't need maths. Look at the shape of the code:</p>
-<pre class="code" data-lang="python"><code><span class="n">nums</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>                 <span class="c1"># O(1): jump straight to a box</span>
-<span class="n">x</span> <span class="ow">in</span> <span class="n">some_set</span>           <span class="c1"># O(1): sets and dicts look up instantly</span>
-<span class="n">x</span> <span class="ow">in</span> <span class="n">some_list</span>          <span class="c1"># O(n): checks the boxes one by one</span>
+<pre class="code" data-lang="python"><code><span class="c1"># O(1): jump straight to a box</span>
+<span class="n">nums</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="c1"># O(1): sets and dicts look up fast</span>
+<span class="n">x</span> <span class="ow">in</span> <span class="n">some_set</span>
+<span class="c1"># O(n): checks the boxes one by one</span>
+<span class="n">x</span> <span class="ow">in</span> <span class="n">some_list</span>
 
-<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>          <span class="c1"># one loop over n items: O(n)</span>
+<span class="c1"># one loop over n items: O(n)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
     <span class="n">total</span> <span class="o">+=</span> <span class="n">x</span>
 
-<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>          <span class="c1"># a loop inside a loop: O(n²)</span>
+<span class="c1"># a loop inside a loop: O(n²)</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
             <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
 
-<span class="nb">sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>            <span class="c1"># O(n log n)</span></code></pre>
+<span class="c1"># O(n log n)</span>
+<span class="nb">sorted</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span></code></pre>
 <p>Watch out for hidden loops: <code>x in some_list</code>, <code>nums.index(x)</code>, <code>nums.count(x)</code> and slicing <code>nums[a:b]</code> all walk through the list. Put one inside a <code>for</code> loop and you have O(n²) without seeing two loops.</p>
 
 <h3>Memory counts too</h3>
@@ -192,37 +198,50 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <h3>Worked example</h3>
 <p>"Count how many numbers in the list are smaller than each number." The simple way compares every pair:</p>
 <pre class="code" data-lang="python"><code><span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>              <span class="c1"># n times...</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>  <span class="c1"># n times...</span>
     <span class="n">smaller</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>          <span class="c1"># ...n times each</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>  <span class="c1"># ...n times each</span>
         <span class="k">if</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">a</span><span class="p">:</span>
             <span class="n">smaller</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">smaller</span><span class="p">)</span>
-<span class="c1"># n × n comparisons: O(n²) time, O(n) space for the result</span></code></pre>
+<span class="c1"># n × n comparisons: O(n²) time,</span>
+<span class="c1"># O(n) space for the result</span></code></pre>
 <p>If the list has 500 numbers, that's 250,000 comparisons: instant. With 1,000,000 numbers it's a million million: far too slow. The problem's limits tell you which world you are in.</p>
 
 <h3>Your turn</h3>
 <p>For each problem, say the Big O of your answer out loud (or in your head on the train) before you submit.</p>
 
 <div class="lc" id="p-find-numbers-with-even-number-of-digits"><a class="lc-link" href="https://leetcode.com/problems/find-numbers-with-even-number-of-digits/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">1295. Find Numbers with Even Number of Digits</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="find-numbers-with-even-number-of-digits"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/find-numbers-with-even-number-of-digits/</span></div><details class="hint"><summary>Hint</summary><div><code>len(str(x))</code> is the number of digits. Count the numbers where it is even.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">findNumbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findNumbers</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>   <span class="c1"># even number of digits</span>
+            <span class="c1"># even number of digits</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">count</span>
-<span class="c1"># One loop: O(n). Each number has at most 6 digits, so str() is O(1) here.</span></code></pre></div></details></div>
+<span class="c1"># One loop: O(n). Each number has at</span>
+<span class="c1"># most 6 digits, so str() is O(1).</span></code></pre></div></details></div>
 
 <div class="lc" id="p-palindrome-number"><a class="lc-link" href="https://leetcode.com/problems/palindrome-number/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">9. Palindrome Number</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~10 min</span><label class="solved"><input type="checkbox" data-slug="palindrome-number"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/palindrome-number/</span></div><details class="hint"><summary>Hint</summary><div>A palindrome reads the same backwards. <code>s[::-1]</code> reverses a string. Negative numbers can never be palindromes (the "-" is only at the front).</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isPalindrome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isPalindrome</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">s</span> <span class="o">==</span> <span class="n">s</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="c1"># O(d) time and space, where d is the number of digits.</span>
-<span class="c1"># The follow-up asks for no string: build the reversed number</span>
-<span class="c1"># with x % 10 (last digit) and x // 10 (drop it). Same O(d) time, O(1) space.</span></code></pre></div></details></div>
+<span class="c1"># O(d) time and space, where d is the</span>
+<span class="c1"># number of digits.</span>
+<span class="c1"># The follow-up asks for no string:</span>
+<span class="c1"># build the reversed number with</span>
+<span class="c1"># x % 10 (last digit) and x // 10</span>
+<span class="c1"># (drop it). Same O(d) time, but</span>
+<span class="c1"># O(1) space.</span></code></pre></div></details></div>
 
 <div class="lc" id="p-how-many-numbers-are-smaller-than-the-current-number"><a class="lc-link" href="https://leetcode.com/problems/how-many-numbers-are-smaller-than-the-current-number/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">1365. How Many Numbers Are Smaller Than the Current Number</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~10 min</span><label class="solved"><input type="checkbox" data-slug="how-many-numbers-are-smaller-than-the-current-number"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/how-many-numbers-are-smaller-than-the-current-number/</span></div><details class="hint"><summary>Hint</summary><div>Check the limits: the list has at most 500 numbers. Is the double loop from the worked example fast enough?</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">smallerNumbersThanCurrent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">smallerNumbersThanCurrent</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
             <span class="n">smaller</span> <span class="o">=</span> <span class="mi">0</span>
@@ -231,9 +250,12 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                     <span class="n">smaller</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">smaller</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
-<span class="c1"># O(n²), and with n ≤ 500 that&#39;s at most 250,000 steps: fast enough.</span>
-<span class="c1"># Faster idea for later: sort a copy, and the first position of each</span>
-<span class="c1"># number in the sorted list is how many numbers are smaller. O(n log n).</span></code></pre></div></details></div>
+<span class="c1"># O(n²), and with n ≤ 500 that&#39;s at</span>
+<span class="c1"># most 250,000 steps: fast enough.</span>
+<span class="c1"># Faster idea for later: sort a copy.</span>
+<span class="c1"># The first position of each number</span>
+<span class="c1"># in the sorted list is how many</span>
+<span class="c1"># numbers are smaller. O(n log n).</span></code></pre></div></details></div>
 
 <details class="fact"><summary>Interesting fact: When the worst case is an attack</summary><div><p>A Python <code>dict</code> is O(1) on average, but if many keys land on the same shelf it slows down to O(n). In 2003, researchers Scott Crosby and Dan Wallach showed that attackers could <b>pick keys on purpose</b> to make that happen. In 2011 the same trick was shown to freeze web servers in PHP, Java, Ruby and Python by sending one form full of carefully chosen field names.</p>
   <p>Python's fix was to add a random secret to its string hashing, chosen fresh every time Python starts. It is on by default since Python 3.3, so attackers can no longer guess which keys collide.</p></div></details>
@@ -244,20 +266,32 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <li>Read the limits first: small n means the simple answer is fine.</li>
   </ul></aside>
 <section class="answers"><h3>Answers</h3><ol><li><b>1295. Find Numbers with Even Number of Digits</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">findNumbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findNumbers</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>   <span class="c1"># even number of digits</span>
+            <span class="c1"># even number of digits</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">count</span>
-<span class="c1"># One loop: O(n). Each number has at most 6 digits, so str() is O(1) here.</span></code></pre></li><li><b>9. Palindrome Number</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isPalindrome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="c1"># One loop: O(n). Each number has at</span>
+<span class="c1"># most 6 digits, so str() is O(1).</span></code></pre></li><li><b>9. Palindrome Number</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isPalindrome</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">s</span> <span class="o">==</span> <span class="n">s</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="c1"># O(d) time and space, where d is the number of digits.</span>
-<span class="c1"># The follow-up asks for no string: build the reversed number</span>
-<span class="c1"># with x % 10 (last digit) and x // 10 (drop it). Same O(d) time, O(1) space.</span></code></pre></li><li><b>1365. How Many Numbers Are Smaller Than the Current Number</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">smallerNumbersThanCurrent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="c1"># O(d) time and space, where d is the</span>
+<span class="c1"># number of digits.</span>
+<span class="c1"># The follow-up asks for no string:</span>
+<span class="c1"># build the reversed number with</span>
+<span class="c1"># x % 10 (last digit) and x // 10</span>
+<span class="c1"># (drop it). Same O(d) time, but</span>
+<span class="c1"># O(1) space.</span></code></pre></li><li><b>1365. How Many Numbers Are Smaller Than the Current Number</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">smallerNumbersThanCurrent</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
             <span class="n">smaller</span> <span class="o">=</span> <span class="mi">0</span>
@@ -266,9 +300,12 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                     <span class="n">smaller</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">smaller</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
-<span class="c1"># O(n²), and with n ≤ 500 that&#39;s at most 250,000 steps: fast enough.</span>
-<span class="c1"># Faster idea for later: sort a copy, and the first position of each</span>
-<span class="c1"># number in the sorted list is how many numbers are smaller. O(n log n).</span></code></pre></li></ol></section></article><nav class="pager no-print"><a class="prev" href="python-toolkit.html"><small>&larr; Previous</small>Python toolkit for LeetCode</a><a class="next" href="array-scan.html"><small>Next &rarr;</small>Arrays: one loop does a lot</a></nav>
+<span class="c1"># O(n²), and with n ≤ 500 that&#39;s at</span>
+<span class="c1"># most 250,000 steps: fast enough.</span>
+<span class="c1"># Faster idea for later: sort a copy.</span>
+<span class="c1"># The first position of each number</span>
+<span class="c1"># in the sorted list is how many</span>
+<span class="c1"># numbers are smaller. O(n log n).</span></code></pre></li></ol></section></article><nav class="pager no-print"><a class="prev" href="python-toolkit.html"><small>&larr; Previous</small>Python toolkit for LeetCode</a><a class="next" href="array-scan.html"><small>Next &rarr;</small>Arrays: one loop does a lot</a></nav>
 <footer class="site-foot">
   <p>Problems open on <a href="https://leetcode.com" rel="noopener">leetcode.com</a>, or in the LeetCode app if your phone has it. LeetCode is a trademark of its owner. This guide is an independent study aid. Solved marks are saved only in this browser.</p>
   <p>Updated 2026-10-24. Found a mistake? <a href="https://github.com/pwlae/pwlae.github.io/issues" rel="noopener">Open an issue</a>.</p>

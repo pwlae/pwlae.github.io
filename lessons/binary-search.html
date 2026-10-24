@@ -47,8 +47,9 @@ flowchart TD
 </code></pre>
 <p>Python has this built in. <code>bisect.bisect_left(nums, x)</code> returns the first index where <code>nums[i] &gt;= x</code>, which is where <code>x</code> would go to keep the list sorted.</p>
 <pre><code class="language-python">import bisect
-bisect.bisect_left([1, 3, 5, 7], 5)  # 2
-bisect.bisect_left([1, 3, 5, 7], 4)  # 2
+nums = [1, 3, 5, 7]
+bisect.bisect_left(nums, 5)  # 2
+bisect.bisect_left(nums, 4)  # 2
 </code></pre>
 <p>Both give 2: 5 is at index 2, and 4 would also go at index 2, just before the 5.</p>
 
@@ -59,7 +60,10 @@ bisect.bisect_left([1, 3, 5, 7], 4)  # 2
   <hint>This is exactly the template. Type it from memory, then compare.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def search(self, nums: List[int], target: int) -> int:
+    def search(
+        self, nums: List[int],
+        target: int
+    ) -> int:
         lo, hi = 0, len(nums) - 1
         while lo &lt;= hi:
             mid = (lo + hi) // 2
@@ -78,7 +82,9 @@ bisect.bisect_left([1, 3, 5, 7], 4)  # 2
   <hint>The number game from the top of the lesson. There's no list: <code>lo = 1</code>, <code>hi = n</code>. Read carefully what <code>guess(mid)</code> returns: <code>-1</code> means your guess is too <b>high</b>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def guessNumber(self, n: int) -> int:
+    def guessNumber(
+        self, n: int
+    ) -> int:
         lo, hi = 1, n
         while lo &lt;= hi:
             mid = (lo + hi) // 2
@@ -98,7 +104,10 @@ bisect.bisect_left([1, 3, 5, 7], 4)  # 2
   <hint>Find the first index where <code>nums[i] &gt;= target</code>. Use the "first yes" variant with <code>lo = 0</code> and <code>hi = len(nums)</code> (not <code>len - 1</code>: the target may belong after the last item).</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def searchInsert(self, nums: List[int], target: int) -> int:
+    def searchInsert(
+        self, nums: List[int],
+        target: int
+    ) -> int:
         lo, hi = 0, len(nums)
         while lo &lt; hi:
             mid = (lo + hi) // 2
@@ -108,7 +117,8 @@ bisect.bisect_left([1, 3, 5, 7], 4)  # 2
                 lo = mid + 1
         return lo
 # Or in one line:
-# return bisect.bisect_left(nums, target)
+# return bisect.bisect_left(
+#     nums, target)
 </code></pre>
   </solution>
 </leetcode>
@@ -117,14 +127,18 @@ bisect.bisect_left([1, 3, 5, 7], 4)  # 2
   <hint>The versions go good, good, good, bad, bad. That's a switch point. Use the "first yes" variant with <code>lo = 1</code>, <code>hi = n</code>, and <code>isBadVersion(mid)</code> as the "yes" test.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def firstBadVersion(self, n: int) -> int:
+    def firstBadVersion(
+        self, n: int
+    ) -> int:
         lo, hi = 1, n
         while lo &lt; hi:
             mid = (lo + hi) // 2
             if isBadVersion(mid):
-                hi = mid  # bad: maybe first
+                # bad: maybe first
+                hi = mid
             else:
-                lo = mid + 1  # good: skip
+                # good: skip
+                lo = mid + 1
         return lo
 </code></pre>
   </solution>
@@ -140,12 +154,14 @@ bisect.bisect_left([1, 3, 5, 7], 4)  # 2
         while lo &lt;= hi:
             mid = (lo + hi) // 2
             if mid * mid &lt;= x:
-                ans = mid  # fits; try bigger
+                # fits; try bigger
+                ans = mid
                 lo = mid + 1
             else:
                 hi = mid - 1  # too big
         return ans
-# O(log x) time. Works for x = 0 and x = 1 too.
+# O(log x) time. Works for x = 0
+# and x = 1 too.
 </code></pre>
   </solution>
 </leetcode>

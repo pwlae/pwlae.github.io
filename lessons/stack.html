@@ -12,11 +12,13 @@
 <h3>In Python</h3>
 <p>A plain list is already a stack. The end of the list is the top.</p>
 <pre><code class="language-python">stack = []
-stack.append(3)     # push -> [3]
-stack.append(7)     # push -> [3, 7]
-stack[-1]           # peek -> 7
-stack.pop()         # pop  -> 7, stack is [3] again
-if stack:           # is it non-empty? (pop on an empty list is an error)
+stack.append(3)  # push -> [3]
+stack.append(7)  # push -> [3, 7]
+stack[-1]        # peek -> 7
+stack.pop()      # pop -> 7, now [3]
+# pop on an empty list is an error,
+# so check first: is it non-empty?
+if stack:
     ...
 </code></pre>
 <p><code>append</code>, <code>pop()</code> and <code>[-1]</code> are all <b>O(1)</b>. Avoid <code>pop(0)</code>, which takes from the bottom and is slow (that's a queue, next lesson).</p>
@@ -48,15 +50,21 @@ flowchart TD
   <hint>Keep the valid scores on a stack. <code>"C"</code> pops the last score, <code>"D"</code> pushes double the top, <code>"+"</code> pushes the sum of the top two, and anything else is a number to push.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def calPoints(self, operations: List[str]) -> int:
+    def calPoints(
+        self, operations: List[str]
+    ) -> int:
         stack = []
         for op in operations:
             if op == "C":
-                stack.pop()                       # cancel the last score
+                # cancel the last score
+                stack.pop()
             elif op == "D":
-                stack.append(stack[-1] * 2)
+                last = stack[-1]
+                stack.append(last * 2)
             elif op == "+":
-                stack.append(stack[-1] + stack[-2])
+                # sum of the last two
+                total = sum(stack[-2:])
+                stack.append(total)
             else:
                 stack.append(int(op))
         return sum(stack)
@@ -69,16 +77,22 @@ flowchart TD
   <solution>
 <pre><code class="language-python">class Solution:
     def isValid(self, s: str) -> bool:
-        partner = {")": "(", "]": "[", "}": "{"}
+        partner = {")": "(",
+                   "]": "[",
+                   "}": "{"}
         stack = []
         for ch in s:
-            if ch in partner:                      # a closer
-                if not stack or stack[-1] != partner[ch]:
+            # a closer
+            if ch in partner:
+                if not stack:
                     return False
-                stack.pop()
-            else:                                  # an opener
+                top = stack.pop()
+                if top != partner[ch]:
+                    return False
+            else:  # an opener
                 stack.append(ch)
-        return not stack                           # nothing left open
+        # nothing left open
+        return not stack
 </code></pre>
   </solution>
 </leetcode>
@@ -87,14 +101,18 @@ flowchart TD
   <hint>Push letters one by one. If the new letter equals the top of the stack, they cancel: pop instead of pushing. Join the stack at the end.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def removeDuplicates(self, s: str) -> str:
-        stack = []
+    def removeDuplicates(
+        self, s: str
+    ) -> str:
+        # the letters kept, as a stack
+        kept = []
         for ch in s:
-            if stack and stack[-1] == ch:
-                stack.pop()            # the pair cancels out
+            if kept and kept[-1] == ch:
+                # the pair cancels out
+                kept.pop()
             else:
-                stack.append(ch)
-        return "".join(stack)
+                kept.append(ch)
+        return "".join(kept)
 </code></pre>
   </solution>
 </leetcode>
@@ -104,11 +122,18 @@ flowchart TD
   <solution>
 <pre><code class="language-python">class MinStack:
     def __init__(self):
-        self.stack = []        # each item: (value, min of everything up to here)
+        # each item: (value, min of
+        # everything up to here)
+        self.stack = []
 
     def push(self, val: int) -> None:
-        smallest = min(val, self.stack[-1][1]) if self.stack else val
-        self.stack.append((val, smallest))
+        smallest = val
+        if self.stack:
+            # min of everything below
+            below = self.stack[-1][1]
+            smallest = min(val, below)
+        pair = (val, smallest)
+        self.stack.append(pair)
 
     def pop(self) -> None:
         self.stack.pop()
@@ -126,17 +151,29 @@ flowchart TD
   <hint>Keep a stack of <b>days still waiting</b> for a warmer day (store their indexes). For each new day, while it's warmer than the day on top of the stack, that waiting day has found its answer: pop it and record the distance. Then push today.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
-        answer = [0] * len(temperatures)
-        waiting = []                       # indexes of days with no warmer day yet
-        for i, t in enumerate(temperatures):
-            while waiting and temperatures[waiting[-1]] &lt; t:
-                day = waiting.pop()
-                answer[day] = i - day      # found its warmer day
+    def dailyTemperatures(
+        self, temperatures: List[int]
+    ) -> List[int]:
+        temps = temperatures
+        answer = [0] * len(temps)
+        # indexes of days with no
+        # warmer day yet
+        waiting = []
+        for i, t in enumerate(temps):
+            while waiting:
+                day = waiting[-1]
+                # not warmer: stop here
+                if temps[day] >= t:
+                    break
+                waiting.pop()
+                # found its warmer day
+                answer[day] = i - day
             waiting.append(i)
         return answer
-# Each day is pushed once and popped at most once: O(n).
-# This is called a "monotonic stack": temperatures on it only go down.
+# Each day is pushed once and popped
+# at most once: O(n).
+# This is called a "monotonic stack":
+# temperatures on it only go down.
 </code></pre>
   </solution>
 </leetcode>

@@ -22,11 +22,16 @@ for ch in "banana":
 <p>Python has a ready-made tool for this, <code>Counter</code>. It is a dict with extras:</p>
 <pre><code class="language-python">from collections import Counter
 
-count = Counter("banana")   # Counter({'a': 3, 'n': 2, 'b': 1})
-count["a"]                  # 3
-count["z"]                  # 0, missing keys count as 0 (no error)
-count.most_common(1)        # [('a', 3)], the top item
-Counter("listen") == Counter("silent")   # True: same letters, same counts
+count = Counter("banana")
+# Counter({'a': 3, 'n': 2, 'b': 1})
+count["a"]  # 3
+# missing keys count as 0 (no error)
+count["z"]  # 0
+# the top item
+count.most_common(1)  # [('a', 3)]
+# same letters, same counts
+Counter("listen") == Counter("silent")
+# True
 </code></pre>
 <p>Building the tally is one pass: <b>O(n) time</b>, and <b>O(k) space</b> where k is the number of different items. On LeetCode, <code>Counter</code> is already imported for you.</p>
 
@@ -43,7 +48,9 @@ Counter("listen") == Counter("silent")   # True: same letters, same counts
 <pre><code class="language-python">count = [0] * 26
 for ch in "banana":
     count[ord(ch) - ord("a")] += 1
-# count[0] is "a": 3,  count[1] is "b": 1,  count[13] is "n": 2
+# count[0] is "a": 3
+# count[1] is "b": 1
+# count[13] is "n": 2
 </code></pre>
 
 <h3>Your turn</h3>
@@ -52,9 +59,13 @@ for ch in "banana":
   <hint>Two passes. Count all letters first. Then walk the string with <code>enumerate</code> and return the first index whose letter has count 1.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def firstUniqChar(self, s: str) -> int:
-        count = Counter(s)                 # pass 1: tally
-        for i, ch in enumerate(s):         # pass 2: in original order
+    def firstUniqChar(
+        self, s: str
+    ) -> int:
+        # pass 1: tally
+        count = Counter(s)
+        # pass 2: in original order
+        for i, ch in enumerate(s):
             if count[ch] == 1:
                 return i
         return -1
@@ -66,19 +77,30 @@ for ch in "banana":
   <hint>Count everything, then return the number whose count is bigger than <code>len(nums) // 2</code>. <code>most_common(1)</code> does it in one call.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def majorityElement(self, nums: List[int]) -> int:
-        return Counter(nums).most_common(1)[0][0]
+    def majorityElement(
+        self, nums: List[int]
+    ) -> int:
+        count = Counter(nums)
+        # top: [(number, count)]
+        top = count.most_common(1)
+        return top[0][0]
 # O(n) time, O(n) space.
 #
-# Bonus, O(1) space (Boyer-Moore voting): keep one candidate and a score.
-# Same number as the candidate: +1. Different: -1. Score hits 0: pick a new
-# candidate. The majority has more votes than everyone else combined, so it
-# is the one left standing.
+# Bonus, O(1) space (Boyer-Moore
+# voting): keep one candidate and a
+# score. Same number as the candidate:
+# +1. Different: -1. Score hits 0:
+# pick a new candidate. The majority
+# outvotes everyone else combined,
+# so it is the one left standing.
 #     candidate, score = None, 0
 #     for x in nums:
 #         if score == 0:
 #             candidate = x
-#         score += 1 if x == candidate else -1
+#         if x == candidate:
+#             score += 1
+#         else:
+#             score -= 1
 #     return candidate
 </code></pre>
   </solution>
@@ -88,9 +110,15 @@ for ch in "banana":
   <hint>Count first. Then look only at the counts (<code>count.values()</code>): are they all different? Putting them in a <code>set</code> removes repeats.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def uniqueOccurrences(self, arr: List[int]) -> bool:
-        counts = list(Counter(arr).values())   # e.g. [3, 2, 1]
-        return len(counts) == len(set(counts))  # no count repeated?
+    def uniqueOccurrences(
+        self, arr: List[int]
+    ) -> bool:
+        count = Counter(arr)
+        # e.g. [3, 2, 1]
+        counts = list(count.values())
+        n = len(counts)
+        # no count repeated?
+        return len(set(counts)) == n
 </code></pre>
   </solution>
 </leetcode>

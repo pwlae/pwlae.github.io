@@ -61,7 +61,8 @@ make_change(6, [1, 3, 4])
   <solution>
 <pre><code class="language-python">class Solution:
     def findContentChildren(
-        self, g: List[int], s: List[int]
+        self, g: List[int],
+        s: List[int]
     ) -> int:
         g.sort()
         s.sort()
@@ -103,7 +104,8 @@ make_change(6, [1, 3, 4])
   <solution>
 <pre><code class="language-python">class Solution:
     def maximumUnits(
-        self, boxTypes: List[List[int]],
+        self,
+        boxTypes: List[List[int]],
         truckSize: int
     ) -> int:
         # most units per box first
@@ -111,8 +113,9 @@ make_change(6, [1, 3, 4])
             key=lambda b: b[1],
             reverse=True)
         total = 0
-        for count, units in boxTypes:
-            take = min(count, truckSize)
+        # n boxes, each holding units
+        for n, units in boxTypes:
+            take = min(n, truckSize)
             total += take * units
             truckSize -= take
             if truckSize == 0:

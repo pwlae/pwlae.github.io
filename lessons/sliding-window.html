@@ -17,11 +17,14 @@ flowchart TD
   C --> D["best sum = 51"]
 </pre>
 <p>Re-adding 4 numbers for every position would be O(n·k). Updating with one add and one subtract is <b>O(n)</b>.</p>
-<pre><code class="language-python">window = sum(nums[:k])             # the first window
+<pre><code class="language-python"># the first window
+window = sum(nums[:k])
 best = window
 for right in range(k, len(nums)):
-    window += nums[right]          # item coming in
-    window -= nums[right - k]      # item going out
+    # item coming in
+    window += nums[right]
+    # item going out
+    window -= nums[right - k]
     best = max(best, window)
 </code></pre>
 
@@ -31,11 +34,14 @@ for right in range(k, len(nums)):
 inside = set()
 best = 0
 for right, x in enumerate(items):
-    while x in inside:          # adding x would break the rule...
+    # adding x would break the rule...
+    while x in inside:
         inside.remove(items[left])
-        left += 1               # ...so shrink from the left until it's OK
+        # ...so shrink from the left
+        left += 1
     inside.add(x)
-    best = max(best, right - left + 1)   # window length
+    # window length
+    best = max(best, right - left + 1)
 </code></pre>
 <p>It looks like a loop inside a loop, but <code>left</code> only ever moves forward, so it moves at most n times in total. Overall it's still <b>O(n)</b>. That's the two-pointers idea again.</p>
 
@@ -60,11 +66,15 @@ for right, x in enumerate(items):
   <hint>Fixed window of size k. Find the best <b>sum</b> with the template, then divide by k once at the end.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def findMaxAverage(self, nums: List[int], k: int) -> float:
+    def findMaxAverage(
+        self, nums: List[int], k: int
+    ) -> float:
         window = sum(nums[:k])
         best = window
-        for right in range(k, len(nums)):
-            window += nums[right] - nums[right - k]
+        n = len(nums)
+        for right in range(k, n):
+            window += nums[right]
+            window -= nums[right - k]
             best = max(best, window)
         return best / k
 </code></pre>
@@ -75,14 +85,19 @@ for right, x in enumerate(items):
   <hint>Keep a <code>set</code> of the last k numbers only. Before adding a number, check whether it's already in the set. After adding, if the set holds more than k numbers, remove the one that fell out of the window: <code>nums[i - k]</code>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
-        window = set()                  # the last k numbers
+    def containsNearbyDuplicate(
+        self, nums: List[int], k: int
+    ) -> bool:
+        # the last k numbers
+        window = set()
         for i, x in enumerate(nums):
             if x in window:
                 return True
             window.add(x)
             if len(window) > k:
-                window.remove(nums[i - k])   # too old, slide past it
+                # too old: drop it
+                old = nums[i - k]
+                window.remove(old)
         return False
 </code></pre>
   </solution>
@@ -92,16 +107,20 @@ for right, x in enumerate(items):
   <hint>Stretch problem, but it's exactly the worked example: the growing/shrinking template with a <code>set</code> of letters inside the window.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def lengthOfLongestSubstring(self, s: str) -> int:
+    def lengthOfLongestSubstring(
+        self, s: str
+    ) -> int:
         left = 0
         inside = set()
         best = 0
         for right, ch in enumerate(s):
-            while ch in inside:          # repeat: shrink from the left
+            # repeat: shrink from left
+            while ch in inside:
                 inside.remove(s[left])
                 left += 1
             inside.add(ch)
-            best = max(best, right - left + 1)
+            size = right - left + 1
+            best = max(best, size)
         return best
 </code></pre>
   </solution>

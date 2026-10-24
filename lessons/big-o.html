@@ -23,19 +23,25 @@ flowchart TD
 
 <h3>How to spot it in Python</h3>
 <p>You don't need maths. Look at the shape of the code:</p>
-<pre><code class="language-python">nums[5]                 # O(1): jump straight to a box
-x in some_set           # O(1): sets and dicts look up instantly
-x in some_list          # O(n): checks the boxes one by one
+<pre><code class="language-python"># O(1): jump straight to a box
+nums[5]
+# O(1): sets and dicts look up fast
+x in some_set
+# O(n): checks the boxes one by one
+x in some_list
 
-for x in nums:          # one loop over n items: O(n)
+# one loop over n items: O(n)
+for x in nums:
     total += x
 
-for a in nums:          # a loop inside a loop: O(n²)
+# a loop inside a loop: O(n²)
+for a in nums:
     for b in nums:
         if a + b == 10:
             count += 1
 
-sorted(nums)            # O(n log n)
+# O(n log n)
+sorted(nums)
 </code></pre>
 <p>Watch out for hidden loops: <code>x in some_list</code>, <code>nums.index(x)</code>, <code>nums.count(x)</code> and slicing <code>nums[a:b]</code> all walk through the list. Put one inside a <code>for</code> loop and you have O(n²) without seeing two loops.</p>
 
@@ -55,13 +61,14 @@ sorted(nums)            # O(n log n)
 <h3>Worked example</h3>
 <p>"Count how many numbers in the list are smaller than each number." The simple way compares every pair:</p>
 <pre><code class="language-python">result = []
-for a in nums:              # n times...
+for a in nums:  # n times...
     smaller = 0
-    for b in nums:          # ...n times each
+    for b in nums:  # ...n times each
         if b &lt; a:
             smaller += 1
     result.append(smaller)
-# n × n comparisons: O(n²) time, O(n) space for the result
+# n × n comparisons: O(n²) time,
+# O(n) space for the result
 </code></pre>
 <p>If the list has 500 numbers, that's 250,000 comparisons: instant. With 1,000,000 numbers it's a million million: far too slow. The problem's limits tell you which world you are in.</p>
 
@@ -72,13 +79,17 @@ for a in nums:              # n times...
   <hint><code>len(str(x))</code> is the number of digits. Count the numbers where it is even.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def findNumbers(self, nums: List[int]) -> int:
+    def findNumbers(
+        self, nums: List[int]
+    ) -> int:
         count = 0
         for x in nums:
-            if len(str(x)) % 2 == 0:   # even number of digits
+            # even number of digits
+            if len(str(x)) % 2 == 0:
                 count += 1
         return count
-# One loop: O(n). Each number has at most 6 digits, so str() is O(1) here.
+# One loop: O(n). Each number has at
+# most 6 digits, so str() is O(1).
 </code></pre>
   </solution>
 </leetcode>
@@ -87,12 +98,18 @@ for a in nums:              # n times...
   <hint>A palindrome reads the same backwards. <code>s[::-1]</code> reverses a string. Negative numbers can never be palindromes (the "-" is only at the front).</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def isPalindrome(self, x: int) -> bool:
+    def isPalindrome(
+        self, x: int
+    ) -> bool:
         s = str(x)
         return s == s[::-1]
-# O(d) time and space, where d is the number of digits.
-# The follow-up asks for no string: build the reversed number
-# with x % 10 (last digit) and x // 10 (drop it). Same O(d) time, O(1) space.
+# O(d) time and space, where d is the
+# number of digits.
+# The follow-up asks for no string:
+# build the reversed number with
+# x % 10 (last digit) and x // 10
+# (drop it). Same O(d) time, but
+# O(1) space.
 </code></pre>
   </solution>
 </leetcode>
@@ -101,7 +118,9 @@ for a in nums:              # n times...
   <hint>Check the limits: the list has at most 500 numbers. Is the double loop from the worked example fast enough?</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def smallerNumbersThanCurrent(self, nums: List[int]) -> List[int]:
+    def smallerNumbersThanCurrent(
+        self, nums: List[int]
+    ) -> List[int]:
         result = []
         for a in nums:
             smaller = 0
@@ -110,9 +129,12 @@ for a in nums:              # n times...
                     smaller += 1
             result.append(smaller)
         return result
-# O(n²), and with n ≤ 500 that's at most 250,000 steps: fast enough.
-# Faster idea for later: sort a copy, and the first position of each
-# number in the sorted list is how many numbers are smaller. O(n log n).
+# O(n²), and with n ≤ 500 that's at
+# most 250,000 steps: fast enough.
+# Faster idea for later: sort a copy.
+# The first position of each number
+# in the sorted list is how many
+# numbers are smaller. O(n log n).
 </code></pre>
   </solution>
 </leetcode>

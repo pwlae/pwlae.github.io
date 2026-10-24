@@ -25,7 +25,7 @@ flowchart TD
     # 1. base case: empty list
     if not nums:
         return 0
-    # 2. smaller step: the rest of the list
+    # 2. smaller step: rest of the list
     return nums[0] + total(nums[1:])
 
 def countdown(n):
@@ -41,7 +41,8 @@ def countdown(n):
 <h3>Worked example: Fibonacci</h3>
 <p>The Fibonacci numbers are 0, 1, 1, 2, 3, 5, 8, … Each one is the sum of the two before it. That's already a recursive rule:</p>
 <pre><code class="language-python">def fib(n):
-    # base cases: fib(0) = 0, fib(1) = 1
+    # base cases:
+    # fib(0) = 0 and fib(1) = 1
     if n &lt; 2:
         return n
     # two smaller calls
@@ -64,7 +65,8 @@ flowchart TD
 <p>The fix: <b>remember</b> each answer the first time you compute it. This is called <b>memoisation</b>. Python does it for you with <code>@cache</code>:</p>
 <pre><code class="language-python">from functools import cache
 
-@cache   # remembers every fib(n) it has seen
+# remembers every fib(n) it has seen
+@cache
 def fib(n):
     if n &lt; 2:
         return n
@@ -84,11 +86,12 @@ class Solution:
     def fib(self, n: int) -> int:
         @cache
         def f(k):
-            if k &lt; 2:               # base cases: f(0) = 0, f(1) = 1
+            # base: f(0) = 0, f(1) = 1
+            if k &lt; 2:
                 return k
             return f(k - 1) + f(k - 2)
         return f(n)
-# O(n) time: each f(k) is computed once.
+# O(n) time: each f(k) runs once.
 </code></pre>
   </solution>
 </leetcode>
@@ -97,13 +100,20 @@ class Solution:
   <hint>Base cases: <code>1</code> is a power of two (2⁰). Zero, negatives and odd numbers above 1 are not. Smaller step: if <code>n</code> is even, the answer for <code>n</code> is the answer for <code>n // 2</code>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def isPowerOfTwo(self, n: int) -> bool:
-        if n == 1:                  # base case: 2 to the power 0
+    def isPowerOfTwo(
+        self, n: int
+    ) -> bool:
+        # base case: 2 to the power 0
+        if n == 1:
             return True
-        if n &lt;= 0 or n % 2 == 1:    # base case: can't be a power of two
+        # base case: not a power of 2
+        if n &lt;= 0 or n % 2 == 1:
             return False
-        return self.isPowerOfTwo(n // 2)   # smaller step: halve it
-# Each call halves n, so about log n calls: O(log n).
+        # smaller step: halve it
+        m = n // 2
+        return self.isPowerOfTwo(m)
+# Each call halves n, so there are
+# about log n calls: O(log n).
 </code></pre>
   </solution>
 </leetcode>
@@ -112,12 +122,18 @@ class Solution:
   <hint>The same shape as Power of Two. Swap "even" for "divides by 3" and "halve" for "divide by 3".</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def isPowerOfThree(self, n: int) -> bool:
-        if n == 1:                  # base case: 3 to the power 0
+    def isPowerOfThree(
+        self, n: int
+    ) -> bool:
+        # base case: 3 to the power 0
+        if n == 1:
             return True
-        if n &lt;= 0 or n % 3 != 0:    # base case: not a power of three
+        # base case: not a power of 3
+        if n &lt;= 0 or n % 3 != 0:
             return False
-        return self.isPowerOfThree(n // 3)  # smaller step
+        # smaller step: divide by 3
+        m = n // 3
+        return self.isPowerOfThree(m)
 </code></pre>
   </solution>
 </leetcode>

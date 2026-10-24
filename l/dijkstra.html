@@ -231,17 +231,18 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">d</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">heappop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
                 <span class="k">continue</span>  <span class="c1"># stale</span>
-            <span class="k">for</span> <span class="n">nxt</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
+            <span class="c1"># v: a neighbour of node</span>
+            <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
                 <span class="n">nd</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="n">w</span>
-                <span class="n">old</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nxt</span><span class="p">,</span> <span class="n">INF</span><span class="p">)</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">INF</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">nd</span> <span class="o">&gt;=</span> <span class="n">old</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="n">dist</span><span class="p">[</span><span class="n">nxt</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span>
-                <span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span>
-                         <span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">nxt</span><span class="p">))</span>
+                <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span>
+                <span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span> <span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
-            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># not all reached</span>
+            <span class="c1"># not all reached</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
         <span class="c1"># everyone has the signal once</span>
         <span class="c1"># the slowest node has it</span>
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
@@ -273,14 +274,15 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                 <span class="k">return</span> <span class="n">p</span>  <span class="c1"># best</span>
             <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
                 <span class="k">continue</span>  <span class="c1"># stale</span>
-            <span class="k">for</span> <span class="n">nxt</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
+            <span class="c1"># v: a neighbour of node</span>
+            <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
                 <span class="n">np</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
-                <span class="n">old</span> <span class="o">=</span> <span class="n">best</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nxt</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="n">best</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">np</span> <span class="o">&lt;=</span> <span class="n">old</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="n">best</span><span class="p">[</span><span class="n">nxt</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span>
+                <span class="n">best</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span>
                 <span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span>
-                         <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="p">,</span> <span class="n">nxt</span><span class="p">))</span>
+                         <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
         <span class="k">return</span> <span class="mf">0.0</span>  <span class="c1"># no path</span>
 <span class="c1"># O(E log E) time.</span></code></pre></div></details></div>
 
@@ -308,19 +310,20 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">here</span> <span class="o">=</span> <span class="n">heights</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">dr</span><span class="p">,</span> <span class="n">dc</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
                 <span class="n">nr</span><span class="p">,</span> <span class="n">nc</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">dr</span><span class="p">,</span> <span class="n">c</span> <span class="o">+</span> <span class="n">dc</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">nr</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">nr</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">nc</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">nc</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="n">h</span> <span class="o">=</span> <span class="n">heights</span><span class="p">[</span><span class="n">nr</span><span class="p">][</span><span class="n">nc</span><span class="p">]</span>
                 <span class="n">step</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">here</span><span class="p">)</span>
                 <span class="c1"># effort = biggest step</span>
                 <span class="n">nd</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-                <span class="n">nxt</span> <span class="o">=</span> <span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">nc</span><span class="p">)</span>
-                <span class="n">old</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nxt</span><span class="p">,</span> <span class="n">INF</span><span class="p">)</span>
+                <span class="c1"># v: the neighbour cell</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">nc</span><span class="p">)</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">INF</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">nd</span> <span class="o">&gt;=</span> <span class="n">old</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="n">dist</span><span class="p">[</span><span class="n">nxt</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span>
+                <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span>
                 <span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span>
                          <span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">nc</span><span class="p">))</span>
         <span class="k">return</span> <span class="mi">0</span>
@@ -353,17 +356,18 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">d</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">heappop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
                 <span class="k">continue</span>  <span class="c1"># stale</span>
-            <span class="k">for</span> <span class="n">nxt</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
+            <span class="c1"># v: a neighbour of node</span>
+            <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
                 <span class="n">nd</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="n">w</span>
-                <span class="n">old</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nxt</span><span class="p">,</span> <span class="n">INF</span><span class="p">)</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">INF</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">nd</span> <span class="o">&gt;=</span> <span class="n">old</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="n">dist</span><span class="p">[</span><span class="n">nxt</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span>
-                <span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span>
-                         <span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">nxt</span><span class="p">))</span>
+                <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span>
+                <span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span> <span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
-            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># not all reached</span>
+            <span class="c1"># not all reached</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
         <span class="c1"># everyone has the signal once</span>
         <span class="c1"># the slowest node has it</span>
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
@@ -393,14 +397,15 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                 <span class="k">return</span> <span class="n">p</span>  <span class="c1"># best</span>
             <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
                 <span class="k">continue</span>  <span class="c1"># stale</span>
-            <span class="k">for</span> <span class="n">nxt</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
+            <span class="c1"># v: a neighbour of node</span>
+            <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
                 <span class="n">np</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
-                <span class="n">old</span> <span class="o">=</span> <span class="n">best</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nxt</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="n">best</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">np</span> <span class="o">&lt;=</span> <span class="n">old</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="n">best</span><span class="p">[</span><span class="n">nxt</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span>
+                <span class="n">best</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span>
                 <span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span>
-                         <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="p">,</span> <span class="n">nxt</span><span class="p">))</span>
+                         <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
         <span class="k">return</span> <span class="mf">0.0</span>  <span class="c1"># no path</span>
 <span class="c1"># O(E log E) time.</span></code></pre></li><li><b>1631. Path With Minimum Effort</b><pre class="code" data-lang="python"><code><span class="kn">from</span><span class="w"> </span><span class="nn">heapq</span><span class="w"> </span><span class="kn">import</span> <span class="n">heappush</span><span class="p">,</span> <span class="n">heappop</span>
 
@@ -426,19 +431,20 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">here</span> <span class="o">=</span> <span class="n">heights</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">c</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">dr</span><span class="p">,</span> <span class="n">dc</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
                 <span class="n">nr</span><span class="p">,</span> <span class="n">nc</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">dr</span><span class="p">,</span> <span class="n">c</span> <span class="o">+</span> <span class="n">dc</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">nr</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">nr</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">nc</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">nc</span> <span class="o">&lt;</span> <span class="n">cols</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="n">h</span> <span class="o">=</span> <span class="n">heights</span><span class="p">[</span><span class="n">nr</span><span class="p">][</span><span class="n">nc</span><span class="p">]</span>
                 <span class="n">step</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="n">here</span><span class="p">)</span>
                 <span class="c1"># effort = biggest step</span>
                 <span class="n">nd</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-                <span class="n">nxt</span> <span class="o">=</span> <span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">nc</span><span class="p">)</span>
-                <span class="n">old</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nxt</span><span class="p">,</span> <span class="n">INF</span><span class="p">)</span>
+                <span class="c1"># v: the neighbour cell</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">nc</span><span class="p">)</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">INF</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">nd</span> <span class="o">&gt;=</span> <span class="n">old</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="n">dist</span><span class="p">[</span><span class="n">nxt</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span>
+                <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span>
                 <span class="n">heappush</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span>
                          <span class="p">(</span><span class="n">nd</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">nc</span><span class="p">))</span>
         <span class="k">return</span> <span class="mi">0</span>

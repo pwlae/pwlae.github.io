@@ -41,9 +41,10 @@ flowchart TD
             result.append(path[:])
             return
         # option 1: take nums[i]
-        path.append(nums[i]) # choose
-        go(i + 1)            # explore
-        path.pop()           # un-choose
+        # choose, explore, un-choose
+        path.append(nums[i])
+        go(i + 1)
+        path.pop()
         # option 2: skip nums[i]
         go(i + 1)
 
@@ -184,15 +185,17 @@ subsets([1, 2])
     ) -> List[str]:
         if not digits:
             return []
-        keys = {"2": "abc", "3": "def",
-                "4": "ghi", "5": "jkl",
-                "6": "mno", "7": "pqrs",
-                "8": "tuv", "9": "wxyz"}
+        keys = {
+            "2": "abc", "3": "def",
+            "4": "ghi", "5": "jkl",
+            "6": "mno", "7": "pqrs",
+            "8": "tuv", "9": "wxyz",
+        }
         result = []
         path = []
 
         def go(i):
-            # one letter per digit: done
+            # all digits used: save
             if i == len(digits):
                 s = "".join(path)
                 result.append(s)

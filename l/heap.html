@@ -221,7 +221,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
             <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
-            <span class="c1"># a &gt;= b. Keep what is left.</span>
+            <span class="c1"># a &gt;= b: keep what is left</span>
             <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">:</span>
                 <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span>
                     <span class="n">heap</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">))</span>
@@ -312,7 +312,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
             <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">heap</span><span class="p">)</span>
-            <span class="c1"># a &gt;= b. Keep what is left.</span>
+            <span class="c1"># a &gt;= b: keep what is left</span>
             <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">:</span>
                 <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span>
                     <span class="n">heap</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">))</span>

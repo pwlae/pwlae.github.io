@@ -26,7 +26,8 @@ flowchart TD
 <p>LeetCode gives you this class (it's in a comment above your code):</p>
 <pre><code class="language-python">class TreeNode:
     def __init__(self, val=0,
-                 left=None, right=None):
+                 left=None,
+                 right=None):
         self.val = val
         self.left = left
         self.right = right
@@ -112,8 +113,9 @@ flowchart TD
         # empty tree has depth 0
         if root is None:
             return 0
-        left = self.maxDepth(root.left)
-        right = self.maxDepth(root.right)
+        depth = self.maxDepth
+        left = depth(root.left)
+        right = depth(root.right)
         # this node adds one level
         return 1 + max(left, right)
 # O(n) time. O(h) space for the calls.
@@ -133,14 +135,15 @@ flowchart TD
         def walk(node):
             if node is None:
                 return
-            # node, then left, then right
+            # node, left, then right
             out.append(node.val)
             walk(node.left)
             walk(node.right)
 
         walk(root)
         return out
-# Try the stack version from the lesson too.
+# Also try the stack version from
+# the lesson.
 </code></pre>
   </solution>
 </leetcode>
@@ -158,7 +161,7 @@ flowchart TD
             if node is None:
                 return
             walk(node.left)
-            # node goes between the subtrees
+            # node between the subtrees
             out.append(node.val)
             walk(node.right)
 
@@ -208,8 +211,9 @@ flowchart TD
             return False
         # both sides must match
         same = self.isSameTree
-        return (same(p.left, q.left)
-                and same(p.right, q.right))
+        if not same(p.left, q.left):
+            return False
+        return same(p.right, q.right)
 </code></pre>
   </solution>
 </leetcode>
@@ -229,12 +233,15 @@ flowchart TD
                 return False
             if a.val != b.val:
                 return False
-            # outside pair, then inside pair
-            outside = mirror(a.left, b.right)
-            inside = mirror(a.right, b.left)
+            # outside pair, inside pair
+            outside = mirror(a.left,
+                             b.right)
+            inside = mirror(a.right,
+                            b.left)
             return outside and inside
 
-        return mirror(root.left, root.right)
+        return mirror(root.left,
+                      root.right)
 </code></pre>
   </solution>
 </leetcode>

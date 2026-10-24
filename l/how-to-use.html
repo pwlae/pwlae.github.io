@@ -168,9 +168,12 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <p>Every problem looks like this card. Tap the title to open it on LeetCode. If the LeetCode app is installed, your phone may open it there.</p>
 <p>Try this one now. It is the smallest problem on LeetCode: add two numbers. It is here so you can see how LeetCode works: you fill in a function, press <b>Submit</b>, and LeetCode tests it.</p>
 <div class="lc" id="p-add-two-integers"><a class="lc-link" href="https://leetcode.com/problems/add-two-integers/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">2235. Add Two Integers</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="add-two-integers"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/add-two-integers/</span></div><details class="hint"><summary>Hint</summary><div>LeetCode already wrote the function line for you. You only need one line inside it: <code>return</code> the two numbers added together with <code>+</code>.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num2</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="c1"># The function gets two numbers.</span>
-        <span class="c1"># &quot;return&quot; hands the answer back to LeetCode.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num2</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># It gets two numbers.</span>
+        <span class="c1"># &quot;return&quot; hands the answer</span>
+        <span class="c1"># back to LeetCode.</span>
         <span class="k">return</span> <span class="n">num1</span> <span class="o">+</span> <span class="n">num2</span></code></pre></div></details></div>
 <p>Tick <b>Solved</b> when you are done. Ticks are saved on this phone only. There is no account and nothing is sent anywhere.</p>
 
@@ -188,9 +191,12 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <li>Many quick wins beat one long fight.</li>
   </ul></aside>
 <section class="answers"><h3>Answers</h3><ol><li><b>2235. Add Two Integers</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num2</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="c1"># The function gets two numbers.</span>
-        <span class="c1"># &quot;return&quot; hands the answer back to LeetCode.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">num1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num2</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># It gets two numbers.</span>
+        <span class="c1"># &quot;return&quot; hands the answer</span>
+        <span class="c1"># back to LeetCode.</span>
         <span class="k">return</span> <span class="n">num1</span> <span class="o">+</span> <span class="n">num2</span></code></pre></li></ol></section></article><nav class="pager no-print"><span></span><a class="next" href="python-toolkit.html"><small>Next &rarr;</small>Python toolkit for LeetCode</a></nav>
 <footer class="site-foot">
   <p>Problems open on <a href="https://leetcode.com" rel="noopener">leetcode.com</a>, or in the LeetCode app if your phone has it. LeetCode is a trademark of its owner. This guide is an independent study aid. Solved marks are saved only in this browser.</p>

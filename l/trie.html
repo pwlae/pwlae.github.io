@@ -173,10 +173,11 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
         <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
+            <span class="n">kids</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span>
             <span class="c1"># no child yet? make one</span>
-            <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-                <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
-            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kids</span><span class="p">:</span>
+                <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
         <span class="c1"># mark the last letter</span>
         <span class="n">node</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -192,10 +193,13 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 
     <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">end</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">end</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">startsWith</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></code></pre>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></code></pre>
 <p>All three operations take one step per letter: O(L) for a word of length L. It doesn't matter if the trie holds ten words or a million. Space is at most one node per letter inserted, less when words share a start.</p>
 <p>A trie is a tree, so the <a href="tree-dfs.html">depth-first</a> ideas still work: to list every word below a node, walk down each child in turn.</p>
 
@@ -214,36 +218,48 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <p>The first two are warm-ups about prefixes. Then build the trie yourself.</p>
 
 <div class="lc" id="p-check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence"><a class="lc-link" href="https://leetcode.com/problems/check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">1455. Check If a Word Occurs As a Prefix of Any Word in a Sentence</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence/</span></div><details class="hint"><summary>Hint</summary><div>Split the sentence into words. Python strings have <code>word.startswith(x)</code>. Remember the answer counts words from 1, not 0.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isPrefixOfWord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">searchWord</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isPrefixOfWord</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">searchWord</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">words</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-        <span class="c1"># start=1: words are counted from 1</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">word</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">searchWord</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">i</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">searchWord</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">words</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+                <span class="c1"># words count from 1</span>
+                <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></code></pre></div></details></div>
 
 <div class="lc" id="p-counting-words-with-a-given-prefix"><a class="lc-link" href="https://leetcode.com/problems/counting-words-with-a-given-prefix/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">2185. Counting Words With a Given Prefix</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~10 min</span><label class="solved"><input type="checkbox" data-slug="counting-words-with-a-given-prefix"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/counting-words-with-a-given-prefix/</span></div><details class="hint"><summary>Hint</summary><div>The quick way is <code>startswith</code>. For trie practice: give every node a <code>count</code> of how many words pass through it. Then walk <code>pref</code> and read the count.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">prefixCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">pref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prefixCount</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">pref</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># quick way:</span>
         <span class="c1"># return sum(1 for w in words</span>
-        <span class="c1">#            if w.startswith(pref))</span>
+        <span class="c1">#     if w.startswith(pref))</span>
 
         <span class="c1"># trie way: each node counts</span>
-        <span class="c1"># the words that pass through it</span>
-        <span class="n">new</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;kids&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+        <span class="c1"># the words passing through it</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">new</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;kids&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+
         <span class="n">root</span> <span class="o">=</span> <span class="n">new</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">root</span>
             <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">w</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">]:</span>
-                    <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">][</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span><span class="p">()</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">][</span><span class="n">ch</span><span class="p">]</span>
-                <span class="c1"># one more word passes here</span>
+                <span class="n">kids</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kids</span><span class="p">:</span>
+                    <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span><span class="p">()</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+                <span class="c1"># one more word here</span>
                 <span class="n">node</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">root</span>
         <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">pref</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="mi">0</span>  <span class="c1"># no word starts so</span>
+                <span class="c1"># no word starts so</span>
+                <span class="k">return</span> <span class="mi">0</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">][</span><span class="n">ch</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span></code></pre></div></details></div>
 
@@ -256,12 +272,15 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
         <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-                <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
-            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+            <span class="n">kids</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kids</span><span class="p">:</span>
+                <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
         <span class="n">node</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
@@ -272,12 +291,19 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">node</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">end</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">end</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">startsWith</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></code></pre></div></details></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">startsWith</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></code></pre></div></details></div>
 
 <div class="lc" id="p-longest-word-in-dictionary"><a class="lc-link" href="https://leetcode.com/problems/longest-word-in-dictionary/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">720. Longest Word in Dictionary</span></a><div class="lc-meta"><span class="lvl lvl-medium">Medium</span> <span class="mins">~20 min</span><label class="solved"><input type="checkbox" data-slug="longest-word-in-dictionary"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/longest-word-in-dictionary/</span></div><details class="hint"><summary>Hint</summary><div>Stretch. Insert every word. A word can be "built" only if every node on its path is the end of a word. Go depth-first from the root, stepping only into children that are ends. Visit children in alphabetical order, and only replace your best answer with a strictly longer word.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Node</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -286,27 +312,34 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="bp">self</span><span class="o">.</span><span class="n">word</span> <span class="o">=</span> <span class="kc">None</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">longestWord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">longestWord</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">root</span>
             <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">w</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-                    <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+                <span class="n">kids</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span>
+                <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kids</span><span class="p">:</span>
+                    <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
             <span class="n">node</span><span class="o">.</span><span class="n">word</span> <span class="o">=</span> <span class="n">w</span>
 
         <span class="n">best</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">dfs</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="k">nonlocal</span> <span class="n">best</span>
-            <span class="c1"># alphabetical order: on a tie,</span>
-            <span class="c1"># the first word found is smallest</span>
-            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">):</span>
-                <span class="n">child</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">word</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">continue</span>  <span class="c1"># a gap: stop</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">best</span><span class="p">):</span>
-                    <span class="n">best</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">word</span>
+            <span class="c1"># go in alphabetical order:</span>
+            <span class="c1"># on a tie, the first word</span>
+            <span class="c1"># found is the smallest</span>
+            <span class="n">kids</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">kids</span><span class="p">):</span>
+                <span class="n">child</span> <span class="o">=</span> <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">word</span>
+                <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># a gap: stop</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">best</span><span class="p">):</span>
+                    <span class="n">best</span> <span class="o">=</span> <span class="n">w</span>
                 <span class="n">dfs</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
 
         <span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
@@ -321,34 +354,46 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <li>search needs <code>end</code> to be True. startsWith only needs the path to exist.</li>
   </ul></aside>
 <section class="answers"><h3>Answers</h3><ol><li><b>1455. Check If a Word Occurs As a Prefix of Any Word in a Sentence</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">isPrefixOfWord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">searchWord</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isPrefixOfWord</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">searchWord</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">words</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-        <span class="c1"># start=1: words are counted from 1</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">word</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">searchWord</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">i</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">searchWord</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">words</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+                <span class="c1"># words count from 1</span>
+                <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></code></pre></li><li><b>2185. Counting Words With a Given Prefix</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">prefixCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">pref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prefixCount</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">pref</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># quick way:</span>
         <span class="c1"># return sum(1 for w in words</span>
-        <span class="c1">#            if w.startswith(pref))</span>
+        <span class="c1">#     if w.startswith(pref))</span>
 
         <span class="c1"># trie way: each node counts</span>
-        <span class="c1"># the words that pass through it</span>
-        <span class="n">new</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;kids&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+        <span class="c1"># the words passing through it</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">new</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;kids&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+
         <span class="n">root</span> <span class="o">=</span> <span class="n">new</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">root</span>
             <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">w</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">]:</span>
-                    <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">][</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span><span class="p">()</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">][</span><span class="n">ch</span><span class="p">]</span>
-                <span class="c1"># one more word passes here</span>
+                <span class="n">kids</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kids</span><span class="p">:</span>
+                    <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span><span class="p">()</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+                <span class="c1"># one more word here</span>
                 <span class="n">node</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">root</span>
         <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">pref</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="mi">0</span>  <span class="c1"># no word starts so</span>
+                <span class="c1"># no word starts so</span>
+                <span class="k">return</span> <span class="mi">0</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;kids&quot;</span><span class="p">][</span><span class="n">ch</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span></code></pre></li><li><b>208. Implement Trie (Prefix Tree)</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Node</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -359,12 +404,15 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">insert</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
         <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-                <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
-            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+            <span class="n">kids</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kids</span><span class="p">:</span>
+                <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
         <span class="n">node</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
@@ -375,39 +423,53 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">node</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">end</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">end</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">startsWith</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></code></pre></li><li><b>720. Longest Word in Dictionary</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Node</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">startsWith</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></code></pre></li><li><b>720. Longest Word in Dictionary</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Node</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># the word ending here, if any</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">word</span> <span class="o">=</span> <span class="kc">None</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">longestWord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">longestWord</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">root</span>
             <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">w</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-                    <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+                <span class="n">kids</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span>
+                <span class="k">if</span> <span class="n">ch</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kids</span><span class="p">:</span>
+                    <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
             <span class="n">node</span><span class="o">.</span><span class="n">word</span> <span class="o">=</span> <span class="n">w</span>
 
         <span class="n">best</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">dfs</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
             <span class="k">nonlocal</span> <span class="n">best</span>
-            <span class="c1"># alphabetical order: on a tie,</span>
-            <span class="c1"># the first word found is smallest</span>
-            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">):</span>
-                <span class="n">child</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">word</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">continue</span>  <span class="c1"># a gap: stop</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">best</span><span class="p">):</span>
-                    <span class="n">best</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">word</span>
+            <span class="c1"># go in alphabetical order:</span>
+            <span class="c1"># on a tie, the first word</span>
+            <span class="c1"># found is the smallest</span>
+            <span class="n">kids</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">kids</span><span class="p">):</span>
+                <span class="n">child</span> <span class="o">=</span> <span class="n">kids</span><span class="p">[</span><span class="n">ch</span><span class="p">]</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">word</span>
+                <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># a gap: stop</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">best</span><span class="p">):</span>
+                    <span class="n">best</span> <span class="o">=</span> <span class="n">w</span>
                 <span class="n">dfs</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
 
         <span class="n">dfs</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>

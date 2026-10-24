@@ -14,18 +14,19 @@ flowchart TD
 <pre><code class="language-python">from collections import deque
 
 q = deque()
-q.append(4)       # join at the back  -> deque([4])
-q.append(7)       #                   -> deque([4, 7])
-q.append(2)       #                   -> deque([4, 7, 2])
-q[0]              # peek at the front -> 4
-q.popleft()       # leave from front  -> 4, now deque([7, 2])
-len(q)            # 2
-if q:             # non-empty?
+q.append(4)  # join at the back
+q.append(7)
+q.append(2)  # now deque([4, 7, 2])
+q[0]         # peek at the front: 4
+q.popleft()  # leave from the front: 4
+len(q)       # 2, deque([7, 2]) left
+if q:        # non-empty?
     ...
 
-# Both ends work, so a deque can also act as a stack:
-q.appendleft(9)   # -> deque([9, 7, 2])
-q.pop()           # -> 2, from the back
+# Both ends work, so a deque can
+# also act as a stack:
+q.appendleft(9)  # deque([9, 7, 2])
+q.pop()          # 2, from the back
 </code></pre>
 <p>On LeetCode, <code>deque</code> is already imported.</p>
 
@@ -58,7 +59,8 @@ q.pop()           # -> 2, from the back
 
     def ping(self, t: int) -> int:
         self.q.append(t)
-        while self.q[0] &lt; t - 3000:     # too old: leave from the front
+        # too old: leave from the front
+        while self.q[0] &lt; t - 3000:
             self.q.popleft()
         return len(self.q)
 </code></pre>
@@ -78,8 +80,10 @@ q.pop()           # -> 2, from the back
 
     def _refill(self):
         if not self.outbox:
-            while self.inbox:              # reversing puts the oldest on top
-                self.outbox.append(self.inbox.pop())
+            # reversing: oldest on top
+            while self.inbox:
+                x = self.inbox.pop()
+                self.outbox.append(x)
 
     def pop(self) -> int:
         self._refill()
@@ -90,8 +94,10 @@ q.pop()           # -> 2, from the back
         return self.outbox[-1]
 
     def empty(self) -> bool:
-        return not self.inbox and not self.outbox
-# Each item is moved at most once, so every operation is O(1) on average.
+        return (not self.inbox
+                and not self.outbox)
+# Each item is moved at most once, so
+# every operation is O(1) on average.
 </code></pre>
   </solution>
 </leetcode>
@@ -104,9 +110,11 @@ q.pop()           # -> 2, from the back
         self.q = deque()
 
     def push(self, x: int) -> None:
-        self.q.append(x)
-        for _ in range(len(self.q) - 1):   # rotate older items behind x
-            self.q.append(self.q.popleft())
+        q = self.q
+        q.append(x)
+        # rotate older items behind x
+        for _ in range(len(q) - 1):
+            q.append(q.popleft())
 
     def pop(self) -> int:
         return self.q.popleft()

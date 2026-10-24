@@ -189,7 +189,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="k">for</span> <span class="n">nxt</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">]:</span>
             <span class="n">indeg</span><span class="p">[</span><span class="n">nxt</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="n">indeg</span><span class="p">[</span><span class="n">nxt</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="c1"># all its &quot;befores&quot; are done</span>
+                <span class="c1"># all &quot;befores&quot; done</span>
                 <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nxt</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
@@ -217,7 +217,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <span class="k">def</span><span class="w"> </span><span class="nf">destCity</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># cities with an arrow going out</span>
+        <span class="c1"># cities with an arrow out</span>
         <span class="n">starts</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">b</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">:</span>
@@ -251,10 +251,10 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">graph</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="n">indeg</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span>
-            <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numCourses</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="p">)</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numCourses</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">taken</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
@@ -278,10 +278,10 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">graph</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="n">indeg</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span>
-            <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numCourses</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="p">)</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numCourses</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">order</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
@@ -307,7 +307,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <span class="k">def</span><span class="w"> </span><span class="nf">destCity</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># cities with an arrow going out</span>
+        <span class="c1"># cities with an arrow out</span>
         <span class="n">starts</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">b</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">starts</span><span class="p">:</span>
@@ -337,10 +337,10 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">graph</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="n">indeg</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span>
-            <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numCourses</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="p">)</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numCourses</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">taken</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
@@ -362,10 +362,10 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">graph</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
             <span class="n">indeg</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span>
-            <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numCourses</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="p">)</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numCourses</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">indeg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">order</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
             <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>

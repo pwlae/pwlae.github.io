@@ -13,13 +13,16 @@ flowchart LR
 <h3>In Python</h3>
 <p>LeetCode gives you this class (it's shown in a comment above your code):</p>
 <pre><code class="language-python">class ListNode:
-    def __init__(self, val=0, next=None):
+    def __init__(self, val=0,
+                 next=None):
         self.val = val
         self.next = next
 
 # walking the whole list: O(n)
 node = head
-while node:              # stops after the last node (node becomes None)
+# stops after the last node,
+# when node becomes None
+while node:
     print(node.val)
     node = node.next
 </code></pre>
@@ -30,9 +33,11 @@ while node:              # stops after the last node (node becomes None)
 <pre><code class="language-python">dummy = ListNode()
 tail = dummy
 for v in [4, 5, 6]:
-    tail.next = ListNode(v)   # attach a new node
-    tail = tail.next          # move to the new end
-return dummy.next             # skip the fake node
+    # attach a new node, move to it
+    tail.next = ListNode(v)
+    tail = tail.next
+# skip the fake node
+return dummy.next
 </code></pre>
 <p><b>2. Fast and slow pointers.</b> From the two-pointers lesson: <code>slow</code> moves 1 step, <code>fast</code> moves 2. When <code>fast</code> hits the end, <code>slow</code> is in the <b>middle</b>. And if the list loops back on itself, <code>fast</code> will eventually <b>lap</b> <code>slow</code>, like a faster runner on a track. That's how you detect a cycle.</p>
 <p><b>3. Save before you re-point.</b> Changing <code>node.next</code> throws away the old arrow. If you still need the rest of the list, save it in a variable first.</p>
@@ -41,11 +46,12 @@ return dummy.next             # skip the fake node
 <p>Turn 1 → 2 → 3 into 3 → 2 → 1. Walk the list, flipping each arrow to point backwards. Three variables: <code>prev</code> (the already-reversed part), <code>cur</code> (the node we're flipping), and <code>nxt</code> (trick 3: the rest, saved before we flip).</p>
 <pre><code class="language-python">prev, cur = None, head
 while cur:
-    nxt = cur.next      # save the rest
-    cur.next = prev     # flip the arrow
-    prev = cur          # step forward
+    nxt = cur.next   # save the rest
+    cur.next = prev  # flip the arrow
+    prev = cur       # step forward
     cur = nxt
-return prev             # the old last node is the new head
+# the old last node is the new head
+return prev
 </code></pre>
 <table>
   <tr><th>step</th><th>reversed part (prev)</th><th>still to do (cur)</th></tr>
@@ -66,7 +72,9 @@ flowchart LR
   <hint>Fast and slow pointers. Move <code>slow</code> one step and <code>fast</code> two steps while <code>fast</code> and <code>fast.next</code> exist. Return <code>slow</code>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+    def middleNode(
+        self, head: Optional[ListNode]
+    ) -> Optional[ListNode]:
         slow = fast = head
         while fast and fast.next:
             slow = slow.next
@@ -80,13 +88,17 @@ flowchart LR
   <hint>Duplicates sit next to each other. While the next node has the same value as the current one, skip it: <code>node.next = node.next.next</code>. Only move forward when they differ.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
+    def deleteDuplicates(
+        self, head: Optional[ListNode]
+    ) -> Optional[ListNode]:
         node = head
         while node and node.next:
-            if node.next.val == node.val:
-                node.next = node.next.next   # skip the duplicate
+            nxt = node.next
+            if nxt.val == node.val:
+                # skip the duplicate
+                node.next = nxt.next
             else:
-                node = node.next
+                node = nxt
         return head
 </code></pre>
   </solution>
@@ -96,7 +108,9 @@ flowchart LR
   <hint>The worked example. Write the four lines inside the loop from memory: save, flip, step, step.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+    def reverseList(
+        self, head: Optional[ListNode]
+    ) -> Optional[ListNode]:
         prev, cur = None, head
         while cur:
             nxt = cur.next
@@ -112,7 +126,11 @@ flowchart LR
   <hint>Dummy head plus two pointers: attach whichever current node is smaller, then move that list forward. When one list runs out, attach the rest of the other.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+    def mergeTwoLists(
+        self,
+        list1: Optional[ListNode],
+        list2: Optional[ListNode]
+    ) -> Optional[ListNode]:
         dummy = ListNode()
         tail = dummy
         while list1 and list2:
@@ -123,7 +141,8 @@ flowchart LR
                 tail.next = list2
                 list2 = list2.next
             tail = tail.next
-        tail.next = list1 or list2     # whatever is left
+        # whatever is left
+        tail.next = list1 or list2
         return dummy.next
 </code></pre>
   </solution>
@@ -133,15 +152,19 @@ flowchart LR
   <hint>Fast and slow again. If there's no cycle, <code>fast</code> reaches the end. If there is one, <code>fast</code> laps <code>slow</code> and they land on the same node: check <code>slow is fast</code>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def hasCycle(self, head: Optional[ListNode]) -> bool:
+    def hasCycle(
+        self, head: Optional[ListNode]
+    ) -> bool:
         slow = fast = head
         while fast and fast.next:
             slow = slow.next
             fast = fast.next.next
-            if slow is fast:         # the fast runner lapped the slow one
+            # fast lapped slow: a loop
+            if slow is fast:
                 return True
         return False
-# O(n) time, O(1) space. A set of seen nodes also works, with O(n) space.
+# O(n) time, O(1) space. A set of seen
+# nodes also works, with O(n) space.
 </code></pre>
   </solution>
 </leetcode>

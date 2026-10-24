@@ -107,17 +107,18 @@ class Solution:
             d, node = heappop(heap)
             if d > dist[node]:
                 continue  # stale
-            for nxt, w in graph[node]:
+            # v: a neighbour of node
+            for v, w in graph[node]:
                 nd = d + w
-                old = dist.get(nxt, INF)
+                old = dist.get(v, INF)
                 if nd >= old:
                     continue
-                dist[nxt] = nd
-                heappush(heap,
-                         (nd, nxt))
+                dist[v] = nd
+                heappush(heap, (nd, v))
 
         if len(dist) &lt; n:
-            return -1  # not all reached
+            # not all reached
+            return -1
         # everyone has the signal once
         # the slowest node has it
         return max(dist.values())
@@ -155,14 +156,15 @@ class Solution:
                 return p  # best
             if p &lt; best[node]:
                 continue  # stale
-            for nxt, q in graph[node]:
+            # v: a neighbour of node
+            for v, q in graph[node]:
                 np = p * q
-                old = best.get(nxt, 0.0)
+                old = best.get(v, 0.0)
                 if np &lt;= old:
                     continue
-                best[nxt] = np
+                best[v] = np
                 heappush(heap,
-                         (-np, nxt))
+                         (-np, v))
         return 0.0  # no path
 # O(E log E) time.
 </code></pre>
@@ -196,19 +198,20 @@ class Solution:
             here = heights[r][c]
             for dr, dc in steps:
                 nr, nc = r + dr, c + dc
-                if not (0 &lt;= nr &lt; rows):
+                if not 0 &lt;= nr &lt; rows:
                     continue
-                if not (0 &lt;= nc &lt; cols):
+                if not 0 &lt;= nc &lt; cols:
                     continue
                 h = heights[nr][nc]
                 step = abs(h - here)
                 # effort = biggest step
                 nd = max(d, step)
-                nxt = (nr, nc)
-                old = dist.get(nxt, INF)
+                # v: the neighbour cell
+                v = (nr, nc)
+                old = dist.get(v, INF)
                 if nd &gt;= old:
                     continue
-                dist[nxt] = nd
+                dist[v] = nd
                 heappush(heap,
                          (nd, nr, nc))
         return 0

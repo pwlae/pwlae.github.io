@@ -169,9 +169,10 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">[:])</span>
             <span class="k">return</span>
         <span class="c1"># option 1: take nums[i]</span>
-        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="c1"># choose</span>
-        <span class="n">go</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>            <span class="c1"># explore</span>
-        <span class="n">path</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>           <span class="c1"># un-choose</span>
+        <span class="c1"># choose, explore, un-choose</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">go</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="c1"># option 2: skip nums[i]</span>
         <span class="n">go</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -290,15 +291,17 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">digits</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
-        <span class="n">keys</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span> <span class="s2">&quot;def&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="s2">&quot;ghi&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">:</span> <span class="s2">&quot;jkl&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;6&quot;</span><span class="p">:</span> <span class="s2">&quot;mno&quot;</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">:</span> <span class="s2">&quot;pqrs&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;8&quot;</span><span class="p">:</span> <span class="s2">&quot;tuv&quot;</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">:</span> <span class="s2">&quot;wxyz&quot;</span><span class="p">}</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span> <span class="s2">&quot;def&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="s2">&quot;ghi&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">:</span> <span class="s2">&quot;jkl&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;6&quot;</span><span class="p">:</span> <span class="s2">&quot;mno&quot;</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">:</span> <span class="s2">&quot;pqrs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;8&quot;</span><span class="p">:</span> <span class="s2">&quot;tuv&quot;</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">:</span> <span class="s2">&quot;wxyz&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">go</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
-            <span class="c1"># one letter per digit: done</span>
+            <span class="c1"># all digits used: save</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="p">):</span>
                 <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
@@ -402,15 +405,17 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">digits</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
-        <span class="n">keys</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span> <span class="s2">&quot;def&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="s2">&quot;ghi&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">:</span> <span class="s2">&quot;jkl&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;6&quot;</span><span class="p">:</span> <span class="s2">&quot;mno&quot;</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">:</span> <span class="s2">&quot;pqrs&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;8&quot;</span><span class="p">:</span> <span class="s2">&quot;tuv&quot;</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">:</span> <span class="s2">&quot;wxyz&quot;</span><span class="p">}</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span> <span class="s2">&quot;def&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="s2">&quot;ghi&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">:</span> <span class="s2">&quot;jkl&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;6&quot;</span><span class="p">:</span> <span class="s2">&quot;mno&quot;</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">:</span> <span class="s2">&quot;pqrs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;8&quot;</span><span class="p">:</span> <span class="s2">&quot;tuv&quot;</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">:</span> <span class="s2">&quot;wxyz&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">go</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
-            <span class="c1"># one letter per digit: done</span>
+            <span class="c1"># all digits used: save</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="p">):</span>
                 <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>

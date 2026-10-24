@@ -94,7 +94,7 @@ biggest = -heapq.heappop(heap)
         while len(heap) > 1:
             a = -heapq.heappop(heap)
             b = -heapq.heappop(heap)
-            # a >= b. Keep what is left.
+            # a >= b: keep what is left
             if a != b:
                 heapq.heappush(
                     heap, -(a - b))

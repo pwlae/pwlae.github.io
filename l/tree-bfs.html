@@ -173,22 +173,23 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">])</span>
-    <span class="k">while</span> <span class="n">queue</span><span class="p">:</span>
-        <span class="c1"># queue holds exactly one level</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
+    <span class="c1"># q is the queue of nodes</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="n">root</span><span class="p">])</span>
+    <span class="k">while</span> <span class="n">q</span><span class="p">:</span>
+        <span class="c1"># q holds exactly one level</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
         <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
-            <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
             <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
-                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
-                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
         <span class="c1"># one whole level is done</span>
         <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></code></pre>
-<p>The trick is <code>size = len(queue)</code> <b>before</b> the inner loop. The children you add during the loop belong to the next level, and the loop stops before reaching them. For our tree this returns <code>[[4], [2, 7], [1, 3, 6, 9]]</code>.</p>
+<p>The trick is <code>size = len(q)</code> <b>before</b> the inner loop. The children you add during the loop belong to the next level, and the loop stops before reaching them. For our tree this returns <code>[[4], [2, 7], [1, 3, 6, 9]]</code>.</p>
 <p>Each node goes into the queue once and out once: <b>O(n)</b> time. The queue holds at most one level, which can be about half the nodes: <b>O(n)</b> space.</p>
 
 <h3>BFS or DFS?</h3>
@@ -213,12 +214,13 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
             <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
-                <span class="n">total</span> <span class="o">+=</span> <span class="n">node</span><span class="o">.</span><span class="n">val</span>
-                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
-                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
-                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+                <span class="c1"># cur: the current node</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="n">cur</span><span class="o">.</span><span class="n">val</span>
+                <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
             <span class="c1"># average of this level</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">total</span> <span class="o">/</span> <span class="n">size</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span>
@@ -238,7 +240,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                 <span class="n">node</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
                 <span class="n">left</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span>
                 <span class="n">right</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span>
-                <span class="c1"># a leaf: the nearest one</span>
+                <span class="c1"># leaf: the nearest one</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">left</span> <span class="ow">or</span> <span class="n">right</span><span class="p">):</span>
                     <span class="k">return</span> <span class="n">depth</span>
                 <span class="k">if</span> <span class="n">left</span><span class="p">:</span>
@@ -271,7 +273,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="c1"># both on this level?</span>
             <span class="k">if</span> <span class="n">px</span> <span class="ow">and</span> <span class="n">py</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">px</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">py</span>
-            <span class="c1"># only one: different levels</span>
+            <span class="c1"># only one: not same level</span>
             <span class="k">if</span> <span class="n">px</span> <span class="ow">or</span> <span class="n">py</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">False</span></code></pre></div></details></div>
@@ -288,12 +290,13 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="c1"># one level per pass</span>
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)):</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
-                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
-                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
-                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+                <span class="c1"># cur: the current node</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></code></pre></div></details></div>
 
@@ -303,7 +306,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 
 <aside class="recap"><h3>Remember</h3><ul>
     <li>BFS = queue: take from the front, add children to the back. Level by level.</li>
-    <li>Template: <code>for _ in range(len(queue)):</code> handles exactly one level.</li>
+    <li>Template: <code>for _ in range(len(q)):</code> handles exactly one level.</li>
     <li>Use BFS for "per level" and "nearest / shortest" questions; it can stop at the first match.</li>
   </ul></aside>
 <section class="answers"><h3>Answers</h3><ol><li><b>637. Average of Levels in Binary Tree</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
@@ -317,12 +320,13 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
             <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
-                <span class="n">total</span> <span class="o">+=</span> <span class="n">node</span><span class="o">.</span><span class="n">val</span>
-                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
-                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
-                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+                <span class="c1"># cur: the current node</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="n">cur</span><span class="o">.</span><span class="n">val</span>
+                <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
             <span class="c1"># average of this level</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">total</span> <span class="o">/</span> <span class="n">size</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span>
@@ -340,7 +344,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                 <span class="n">node</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
                 <span class="n">left</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span>
                 <span class="n">right</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span>
-                <span class="c1"># a leaf: the nearest one</span>
+                <span class="c1"># leaf: the nearest one</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">left</span> <span class="ow">or</span> <span class="n">right</span><span class="p">):</span>
                     <span class="k">return</span> <span class="n">depth</span>
                 <span class="k">if</span> <span class="n">left</span><span class="p">:</span>
@@ -371,7 +375,7 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="c1"># both on this level?</span>
             <span class="k">if</span> <span class="n">px</span> <span class="ow">and</span> <span class="n">py</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">px</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">py</span>
-            <span class="c1"># only one: different levels</span>
+            <span class="c1"># only one: not same level</span>
             <span class="k">if</span> <span class="n">px</span> <span class="ow">or</span> <span class="n">py</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="kc">False</span></code></pre></li><li><b>102. Binary Tree Level Order Traversal</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
@@ -386,12 +390,13 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
             <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="c1"># one level per pass</span>
             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)):</span>
-                <span class="n">node</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
-                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
-                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
-                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+                <span class="c1"># cur: the current node</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cur</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+                    <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
             <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></code></pre></li></ol></section></article><nav class="pager no-print"><a class="prev" href="tree-dfs.html"><small>&larr; Previous</small>Binary trees: depth-first</a><a class="next" href="bst.html"><small>Next &rarr;</small>Binary search trees</a></nav>
 <footer class="site-foot">

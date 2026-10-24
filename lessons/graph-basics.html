@@ -99,7 +99,7 @@ def dfs(graph, node, visited):
         self, n: int,
         trust: List[List[int]]
     ) -> int:
-        # score = arrows in - arrows out
+        # score: arrows in - arrows out
         score = [0] * (n + 1)
         for a, b in trust:
             score[a] -= 1
@@ -165,7 +165,7 @@ def dfs(graph, node, visited):
                 return
             if image[r][c] != old:
                 return
-            # painting = marking visited
+            # painting marks it visited
             image[r][c] = color
             dfs(r + 1, c)
             dfs(r - 1, c)

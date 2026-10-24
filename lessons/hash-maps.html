@@ -20,13 +20,13 @@ flowchart TD
 <h3>In Python</h3>
 <pre><code class="language-python">seen = set()
 seen.add(4)
-4 in seen               # True, O(1)
+4 in seen    # True, O(1)
 
-where = {}              # value -> index
+where = {}   # value -> index
 where[10] = 0
-10 in where             # True, O(1): checks keys
-where[10]               # 0
-where.get(99)           # None instead of an error
+10 in where  # True, O(1): checks keys
+where[10]    # 0
+where.get(99)  # None, not an error
 </code></pre>
 <p>Keys must be things that can't change: numbers, strings and tuples work. Lists can't be keys (use <code>tuple(my_list)</code> if you need to).</p>
 
@@ -34,7 +34,8 @@ where.get(99)           # None instead of an error
 <p>Many problems ask "is there a pair that…?". The obvious answer checks every pair with two loops: O(n²). The hash-table answer walks the list <b>once</b>, and for each number asks the set or dict "have I already seen the partner I need?". That's O(n) time, paid for with O(n) memory.</p>
 <pre><code class="language-python">seen = set()
 for x in nums:
-    if partner_of(x) in seen:   # O(1) lookup instead of a second loop
+    # O(1) lookup, no second loop
+    if partner_of(x) in seen:
         ...found it...
     seen.add(x)
 </code></pre>
@@ -60,14 +61,17 @@ flowchart TD
   <hint>Walk through the list with a <code>set</code>. If the number is already in the set, you found a duplicate.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def containsDuplicate(self, nums: List[int]) -> bool:
+    def containsDuplicate(
+        self, nums: List[int]
+    ) -> bool:
         seen = set()
         for x in nums:
             if x in seen:
                 return True
             seen.add(x)
         return False
-# O(n) time, O(n) space. One-liner: return len(set(nums)) != len(nums)
+# O(n) time, O(n) space. One-liner:
+# return len(set(nums)) != len(nums)
 </code></pre>
   </solution>
 </leetcode>
@@ -76,8 +80,12 @@ flowchart TD
   <hint>Exactly the worked example. A <code>dict</code> from number to index, and check for <code>target - x</code> <i>before</i> you store <code>x</code>.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def twoSum(self, nums: List[int], target: int) -> List[int]:
-        seen = {}                    # number -> its index
+    def twoSum(
+        self, nums: List[int],
+        target: int
+    ) -> List[int]:
+        # number -> its index
+        seen = {}
         for i, x in enumerate(nums):
             need = target - x
             if need in seen:
@@ -91,18 +99,24 @@ flowchart TD
   <hint>Two words are anagrams if every letter appears the same number of times in both. Count letters in a <code>dict</code> for each word and compare the two dicts.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def isAnagram(self, s: str, t: str) -> bool:
+    def isAnagram(
+        self, s: str, t: str
+    ) -> bool:
         if len(s) != len(t):
             return False
         count = {}
         for ch in s:
-            count[ch] = count.get(ch, 0) + 1
+            n = count.get(ch, 0)
+            count[ch] = n + 1
         for ch in t:
-            count[ch] = count.get(ch, 0) - 1
-            if count[ch] &lt; 0:        # t has more of this letter than s
+            n = count.get(ch, 0)
+            count[ch] = n - 1
+            # t has more of this letter
+            if count[ch] &lt; 0:
                 return False
         return True
-# O(n). Also fine: return sorted(s) == sorted(t), which is O(n log n).
+# O(n). Also fine, but O(n log n):
+# return sorted(s) == sorted(t)
 </code></pre>
   </solution>
 </leetcode>
@@ -111,14 +125,19 @@ flowchart TD
   <hint>Count the letters available in the magazine. Then "spend" them one by one for the note. If a count would go below zero, you can't make the note.</hint>
   <solution>
 <pre><code class="language-python">class Solution:
-    def canConstruct(self, ransomNote: str, magazine: str) -> bool:
-        available = {}
+    def canConstruct(
+        self, ransomNote: str,
+        magazine: str
+    ) -> bool:
+        # letters we can still use
+        have = {}
         for ch in magazine:
-            available[ch] = available.get(ch, 0) + 1
+            n = have.get(ch, 0)
+            have[ch] = n + 1
         for ch in ransomNote:
-            if available.get(ch, 0) == 0:
+            if have.get(ch, 0) == 0:
                 return False
-            available[ch] -= 1
+            have[ch] -= 1
         return True
 </code></pre>
   </solution>

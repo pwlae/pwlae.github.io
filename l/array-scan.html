@@ -158,11 +158,12 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 
 <h3>In Python</h3>
 <pre class="code" data-lang="python"><code><span class="k">def</span><span class="w"> </span><span class="nf">scan</span><span class="p">(</span><span class="n">nums</span><span class="p">):</span>
-    <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>          <span class="c1"># the answer so far</span>
-    <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>       <span class="c1"># what we are tracking right now</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>     <span class="c1"># the answer so far</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># what we track now</span>
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
-        <span class="n">current</span> <span class="o">=</span> <span class="o">...</span>              <span class="c1"># update using x</span>
-        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>  <span class="c1"># keep the best one seen</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># update using x</span>
+        <span class="c1"># keep the best one seen</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">best</span></code></pre>
 <p>It visits each item once, so it is <b>O(n) time</b>. It only keeps a couple of variables, so it is <b>O(1) extra space</b>. You can't do much better than that.</p>
 
@@ -189,9 +190,12 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
 <p>All three are one loop with one or two variables.</p>
 
 <div class="lc" id="p-max-consecutive-ones"><a class="lc-link" href="https://leetcode.com/problems/max-consecutive-ones/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">485. Max Consecutive Ones</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="max-consecutive-ones"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/max-consecutive-ones/</span></div><details class="hint"><summary>Hint</summary><div>This is exactly the worked example. Reset <code>current</code> on a 0, and update <code>best</code> on every step.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">findMaxConsecutiveOnes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findMaxConsecutiveOnes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>          <span class="c1"># length of the run of 1s ending here</span>
+        <span class="c1"># length of the run of 1s here</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">current</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -201,23 +205,33 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
         <span class="k">return</span> <span class="n">best</span></code></pre></div></details></div>
 
 <div class="lc" id="p-find-the-highest-altitude"><a class="lc-link" href="https://leetcode.com/problems/find-the-highest-altitude/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">1732. Find the Highest Altitude</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~5 min</span><label class="solved"><input type="checkbox" data-slug="find-the-highest-altitude"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/find-the-highest-altitude/</span></div><details class="hint"><summary>Hint</summary><div>You start at altitude 0. <code>current</code> is your altitude now: add each gain to it. <code>best</code> is the highest altitude so far, and it starts at 0 because the start point counts.</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">largestAltitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>             <span class="c1"># the starting point (altitude 0) counts</span>
-        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>          <span class="c1"># altitude right now</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">largestAltitude</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># the start (altitude 0) counts</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># altitude now</span>
         <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gain</span><span class="p">:</span>
             <span class="n">current</span> <span class="o">+=</span> <span class="n">g</span>
             <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">best</span></code></pre></div></details></div>
 
 <div class="lc" id="p-best-time-to-buy-and-sell-stock"><a class="lc-link" href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" rel="noopener" target="_blank"><svg class="lc-logo" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg><span class="lc-name">LeetCode</span><span class="lc-title">121. Best Time to Buy and Sell Stock</span></a><div class="lc-meta"><span class="lvl lvl-easy">Easy</span> <span class="mins">~15 min</span><label class="solved"><input type="checkbox" data-slug="best-time-to-buy-and-sell-stock"> Solved</label><span class="print-only">&#9744; solved &middot; https://leetcode.com/problems/best-time-to-buy-and-sell-stock/</span></div><details class="hint"><summary>Hint</summary><div>Walk through the days. Keep the <b>lowest price so far</b> (the best day to have bought). On each day, ask: "if I sold today, what would I make?"</div></details><details class="solution"><summary>Solution</summary><div><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">lowest</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>   <span class="c1"># cheapest price seen so far</span>
-        <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>                <span class="c1"># best profit so far (0 = don&#39;t trade)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># cheapest price seen so far</span>
+        <span class="n">lowest</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="c1"># best profit (0 = don&#39;t trade)</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">:</span>
             <span class="n">lowest</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lowest</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
-            <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">p</span> <span class="o">-</span> <span class="n">lowest</span><span class="p">)</span>   <span class="c1"># sell today?</span>
+            <span class="c1"># profit if we sell today</span>
+            <span class="n">profit</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">lowest</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">profit</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">best</span>
-<span class="c1"># One pass: O(n) time, O(1) space. Two nested loops would be O(n²),</span>
+<span class="c1"># One pass: O(n) time, O(1) space.</span>
+<span class="c1"># Two nested loops would be O(n²),</span>
 <span class="c1"># too slow for 100,000 prices.</span></code></pre></div></details></div>
 
 <details class="fact"><summary>Interesting fact: Why computers love walking through arrays</summary><div><p>Memory is slow compared with the processor. So when a CPU reads one number from memory, it actually fetches a whole block around it (a <b>cache line</b>, usually 64 bytes) and keeps it close by. When the CPU notices you are reading in order, it starts fetching the next blocks <b>before you ask</b>.</p>
@@ -229,9 +243,12 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
     <li>Say what <code>current</code> means in words first. Use <code>float('-inf')</code> / <code>float('inf')</code> as safe starting values.</li>
   </ul></aside>
 <section class="answers"><h3>Answers</h3><ol><li><b>485. Max Consecutive Ones</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">findMaxConsecutiveOnes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findMaxConsecutiveOnes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>          <span class="c1"># length of the run of 1s ending here</span>
+        <span class="c1"># length of the run of 1s here</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nums</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">current</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -239,21 +256,31 @@ th,td{border:1px solid var(--line);padding:.35rem .6rem;text-align:left}
                 <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">best</span></code></pre></li><li><b>1732. Find the Highest Altitude</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">largestAltitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>             <span class="c1"># the starting point (altitude 0) counts</span>
-        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>          <span class="c1"># altitude right now</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">largestAltitude</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># the start (altitude 0) counts</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># altitude now</span>
         <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gain</span><span class="p">:</span>
             <span class="n">current</span> <span class="o">+=</span> <span class="n">g</span>
             <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">best</span></code></pre></li><li><b>121. Best Time to Buy and Sell Stock</b><pre class="code" data-lang="python"><code><span class="k">class</span><span class="w"> </span><span class="nc">Solution</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">lowest</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>   <span class="c1"># cheapest price seen so far</span>
-        <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>                <span class="c1"># best profit so far (0 = don&#39;t trade)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># cheapest price seen so far</span>
+        <span class="n">lowest</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="c1"># best profit (0 = don&#39;t trade)</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">:</span>
             <span class="n">lowest</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lowest</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
-            <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">p</span> <span class="o">-</span> <span class="n">lowest</span><span class="p">)</span>   <span class="c1"># sell today?</span>
+            <span class="c1"># profit if we sell today</span>
+            <span class="n">profit</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">lowest</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">profit</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">best</span>
-<span class="c1"># One pass: O(n) time, O(1) space. Two nested loops would be O(n²),</span>
+<span class="c1"># One pass: O(n) time, O(1) space.</span>
+<span class="c1"># Two nested loops would be O(n²),</span>
 <span class="c1"># too slow for 100,000 prices.</span></code></pre></li></ol></section></article><nav class="pager no-print"><a class="prev" href="big-o.html"><small>&larr; Previous</small>Big O in plain words</a><a class="next" href="strings.html"><small>Next &rarr;</small>Strings</a></nav>
 <footer class="site-foot">
   <p>Problems open on <a href="https://leetcode.com" rel="noopener">leetcode.com</a>, or in the LeetCode app if your phone has it. LeetCode is a trademark of its owner. This guide is an independent study aid. Solved marks are saved only in this browser.</p>
